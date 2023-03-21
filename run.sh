@@ -1,4 +1,3 @@
-# npm install n8n -g
 npm run build
 npm link
 
