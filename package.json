@@ -30,21 +30,28 @@
   "n8n": {
     "n8nNodesApiVersion": 1,
     "credentials": [
-      "dist/credentials/TDLibApi.credentials.js"
+      "dist/credentials/TelegramTDLibApi.credentials.js"
     ],
     "nodes": [
-      "dist/nodes/TDLib/TDLib.node.js"
+      "dist/nodes/TDLib/TelegramTDLib.node.js",
+      "dist/nodes/TDLib/TelegramTDLibTrigger.node.js"
     ]
   },
   "devDependencies": {
     "@types/express": "^4.17.6",
     "@types/request-promise-native": "~1.0.15",
     "@typescript-eslint/parser": "~5.45",
+    "@types/node": "^14.14.6",
+    "tdl":"*",
     "eslint-plugin-n8n-nodes-base": "^1.11.0",
     "gulp": "^4.0.2",
     "n8n-core": "*",
     "n8n-workflow": "*",
     "prettier": "^2.7.1",
-    "typescript": "~4.8.4"
+    "typescript": "~4.8.4",
+    "tdl": "^7.2.0",
+    "tdl-tdlib-addon": "^1.2.2",
+    "tdlib-types": "^0.1001008.1",
+    "typedi": "^0.10.0"
   }
 }

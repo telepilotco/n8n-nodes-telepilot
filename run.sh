@@ -1,4 +1,5 @@
-npm run build
+rm -rf dist/
+pnpm run build
 npm link
 
 cd ~/.n8n/

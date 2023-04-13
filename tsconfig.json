@@ -1,5 +1,6 @@
 {
 	"compilerOptions": {
+        "experimentalDecorators": true,
 		"strict": true,
 		"module": "commonjs",
 		"moduleResolution": "node",
@@ -19,7 +20,7 @@
 		"declaration": true,
 		"sourceMap": true,
 		"skipLibCheck": true,
-		"outDir": "./dist/",
+		"outDir": "./dist/"
 	},
 	"include": [
 		"credentials/**/*",
