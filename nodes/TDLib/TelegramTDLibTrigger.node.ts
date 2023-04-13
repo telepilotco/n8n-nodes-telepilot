@@ -6,6 +6,8 @@ import {
 	INodeTypeDescription, ITriggerFunctions, ITriggerResponse,
 } from 'n8n-workflow';
 
+const debug = require('debug')('tdl')
+
 import {TelegramTDLibNodeConnectionManager} from "./TelegramTDLibNodeConnectionManager";
 
 export class TelegramTDLibTrigger implements INodeType {
@@ -36,17 +38,20 @@ export class TelegramTDLibTrigger implements INodeType {
 	async trigger(this: ITriggerFunctions): Promise<ITriggerResponse> {
 		const credentials = await this.getCredentials('telegramTdLibApi');
 
-		const cM = Container.get(TelegramTDLibNodeConnectionManager)
+		const cM = Container.get(TelegramTDLibNodeConnectionManager);
+
+		debug("trigger");
 
 		// @ts-ignore
 		const client = cM.getActiveTDLibClient(credentials.apiId as number, credentials.apiHash as string);
 
 		client.on('update',
 			(update: IDataObject) => {
-				if (update._ === "updateNewMessage") {
+				// if (update._ === "updateNewMessage") {
 					console.log('Got update:', JSON.stringify(update, null, 2))
+					debug('Got update:', JSON.stringify(update, null, 2))
 					this.emit([this.helpers.returnJsonArray([update])]);
-				}
+				// }
 			})
 
 		// The "closeFunction" function gets called by n8n whenever

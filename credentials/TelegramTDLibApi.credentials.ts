@@ -1,7 +1,14 @@
+// @ts-ignore
 import {
 	ICredentialType,
 	INodeProperties,
+	ICredentialDataDecryptedObject,
+	// IHttpRequestOptions,
 } from 'n8n-workflow';
+import {Container} from "typedi";
+import {TelegramTDLibNodeConnectionManager} from "../nodes/TDLib/TelegramTDLibNodeConnectionManager";
+
+const debug = require('debug')('tdl-cred')
 
 export class TelegramTDLibApi implements ICredentialType {
 	name = 'telegramTdLibApi';
@@ -56,4 +63,48 @@ export class TelegramTDLibApi implements ICredentialType {
 			required: false,
 		},
 	];
+
+	async authenticate(
+		credentials: ICredentialDataDecryptedObject,
+		requestOptions: any,
+	): Promise<any> {
+		const {
+			apiId,
+			apiHash,
+			phoneNumber,
+			auth_code
+		} = credentials as { apiId: number, apiHash: string, phoneNumber: string, auth_code: string };
+
+		debug('authenticate: ' + apiId);
+
+		try {
+			const client = Container.get(TelegramTDLibNodeConnectionManager).getActiveTDLibClient(
+				apiId as number,
+				apiHash as string
+			)
+
+			client.on('error', console.error)
+
+			await client.login(() => ({
+				getPhoneNumber: () => {
+					return phoneNumber
+				},
+				getAuthCode: (retry: boolean) => {
+					return auth_code
+				}
+			}))
+			// await client.close();
+		} catch (error) {
+			return {
+				status: 'Error',
+				message: error.message,
+			};
+		}
+		return {
+			status: 'OK',
+			message: 'Connection successful!',
+		};
+
+
+	}
 }
