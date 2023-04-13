@@ -6,4 +6,4 @@ cd ~/.n8n/
 mkdir -p nodes && cd nodes
 npm link n8n-nodes-tdlib
 
-n8n start
+DEBUG=tdl,tdl-cred EXECUTIONS_PROCESS=main n8n start

@@ -7,7 +7,14 @@ import {
 	INodeExecutionData,
 	INodeType,
 	INodeTypeDescription,
+	// ICredentialsDecrypted,
+	// ICredentialTestFunctions,
+	// INodeCredentialTestResult,
+	// IDataObject,
 } from 'n8n-workflow';
+
+// import {TelegramTDLibNodeConnectionManager} from "./TelegramTDLibNodeConnectionManager";
+// import { Container } from 'typedi';
 
 export class TelegramTDLib implements INodeType {
 	// @ts-ignore
@@ -123,8 +130,8 @@ export class TelegramTDLib implements INodeType {
 	};
 	// The execute method will go here
 
-	/*
-	methods = {
+
+	/*methods = {
 		credentialTest: {
 			async telegramTdLibConnectionTest(
 				this: ICredentialTestFunctions,
@@ -165,8 +172,7 @@ export class TelegramTDLib implements INodeType {
 				};
 			},
 		},
-	};
-	 */
+	};*/
 
 
 	async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
