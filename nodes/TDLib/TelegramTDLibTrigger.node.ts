@@ -6,9 +6,12 @@ import {
 	INodeTypeDescription, ITriggerFunctions, ITriggerResponse,
 } from 'n8n-workflow';
 
-const debug = require('debug')('tdl')
+const debug = require('debug')('tdl-trigger')
 
 import {TelegramTDLibNodeConnectionManager} from "./TelegramTDLibNodeConnectionManager";
+
+// import {Client} from "tdl";
+// const { TDLib } = require('tdl-tdlib-addon')
 
 export class TelegramTDLibTrigger implements INodeType {
 	description: INodeTypeDescription = {
@@ -20,17 +23,25 @@ export class TelegramTDLibTrigger implements INodeType {
 		version: 1,
 		description: 'Listens to events using Telegram API via TDLib',
 		defaults: {
-				name: 'Telegram TDLib Trigger',
+			name: 'Telegram TDLib Trigger',
 		},
 		inputs: [],
 		outputs: ['main'],
 		credentials: [
-				{
-						name: 'telegramTdLibApi',
-						required: true,
-				},
+			{
+				name: 'telegramTdLibApi',
+				required: true,
+			},
 		],
 		properties: [
+			{
+				displayName: 'updateEvents',
+				name: 'updateEvents',
+				type: 'string',
+				default: '',
+				placeholder: 'updateNewMessage,updateMessageContent',
+				description: 'Comma-separated update events, that should activate this trigger',
+			},
 		],
 	};
 	// The execute method will go here
@@ -38,26 +49,35 @@ export class TelegramTDLibTrigger implements INodeType {
 	async trigger(this: ITriggerFunctions): Promise<ITriggerResponse> {
 		const credentials = await this.getCredentials('telegramTdLibApi');
 
-		const cM = Container.get(TelegramTDLibNodeConnectionManager);
+		const cM = Container.get(TelegramTDLibNodeConnectionManager)
 
-		debug("trigger");
+		const client = await cM.getActiveTDLibClientAndLogin(credentials.apiId as number, credentials.apiHash as string);
 
-		// @ts-ignore
-		const client = cM.getActiveTDLibClient(credentials.apiId as number, credentials.apiHash as string);
+		const updateEvents = this.getNodeParameter('updateEvents', '') as string;
+		const updateEventsArray = updateEvents.split(',');
 
-		client.on('update',
-			(update: IDataObject) => {
-				// if (update._ === "updateNewMessage") {
-					console.log('Got update:', JSON.stringify(update, null, 2))
-					debug('Got update:', JSON.stringify(update, null, 2))
-					this.emit([this.helpers.returnJsonArray([update])]);
-				// }
-			})
+		function _emit(_this: ITriggerFunctions, data: IDataObject) {
+			_this.emit([_this.helpers.returnJsonArray([data])]);
+		}
+
+		function _listener(this: ITriggerFunctions, update: IDataObject) {
+			const incomingEvent = update._ as string;
+			if (updateEventsArray.includes(incomingEvent) || updateEventsArray.length == 0) {
+				debug('Got update: ' + JSON.stringify(update, null, 2));
+				_emit(this, update);
+			}
+		}
+
+		if (this.getMode() !== 'manual') {
+			client.on('update', _listener);
+			client.on('error', debug);
+		}
 
 		// The "closeFunction" function gets called by n8n whenever
 		// the workflow gets deactivated and can so clean up.
 		async function closeFunction() {
-			//tbd
+			debug('closeFunction(' + updateEventsArray + ')');
+			client.removeListener('update', _listener);
 		}
 
 		// The "manualTriggerFunction" function gets called by n8n
@@ -67,13 +87,24 @@ export class TelegramTDLibTrigger implements INodeType {
 		// for a new user who doesn't know how this works, it's better to wait and show a respective info message
 		const manualTriggerFunction = async () => {
 			await new Promise((resolve, reject) => {
-				setTimeout(() => {
+				const timeoutHandler = setTimeout(() => {
 					reject(
 						new Error(
-							'Aborted, no message received within 30secs. This 30sec timeout is only set for "manually triggered execution". Active Workflows will listen indefinitely.',
+							'555Aborted, no message received within 30secs. This 30sec timeout is only set for "manually triggered execution". Active Workflows will listen indefinitely.',
 						),
 					);
 				}, 30000);
+				client.on('update',
+					(update: IDataObject) => {
+						const incomingEvent = update._ as string;
+						if (updateEventsArray.includes(incomingEvent) || updateEventsArray.length == 0) {
+							debug('Got update in manual: ' + JSON.stringify(update, null, 2));
+							_emit(this, update);
+
+							clearTimeout(timeoutHandler);
+							resolve(true);
+						}
+					});
 			});
 		};
 
@@ -83,3 +114,5 @@ export class TelegramTDLibTrigger implements INodeType {
 		};
 	}
 }
+
+exports.TelegramTDLibTrigger = TelegramTDLibTrigger;

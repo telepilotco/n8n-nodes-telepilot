@@ -117,9 +117,19 @@ To activate this, `tdlib`'s `Client` should be initialized with `ClientOptions.u
     * scrapping chat messages via getChatHistory Node
 
 ## 2023-04-12
-
     * recreating Telegram TDLib node that was accidentally deleted
 
         cd packages/nodes-base
         pnpm install tdl tdl-tdlib-addon tdlib-types
 
+## 2023-04-14
+    * playing with binary files: adjusted run.sh to build td.node dynamically so it can be fetched from default path `../build/Release/td.node`
+    * investigating how to pre-build arm64 tdlib in github
+    * working on `prebuilt-tdlib-m1` (form of `tdl/packages/prebuilt-tdlib`)
+    * `prebuilt-tdlib-m1` is being built locally and used in `n8n-tdlib-node`, all good
+    
+
+
+## 2023-05-15
+	* using QR code for auth
+	* extracting TDLib node from n8n into installable community node

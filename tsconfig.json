@@ -20,7 +20,9 @@
 		"declaration": true,
 		"sourceMap": true,
 		"skipLibCheck": true,
-		"outDir": "./dist/"
+		"outDir": "./dist/",
+		"emitDecoratorMetadata": true,
+		"experimentalDecorators": true
 	},
 	"include": [
 		"credentials/**/*",
