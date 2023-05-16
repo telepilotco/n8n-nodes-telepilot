@@ -51,7 +51,7 @@ export class TelegramTDLibTrigger implements INodeType {
 
 		const cM = Container.get(TelegramTDLibNodeConnectionManager)
 
-		const client = await cM.getActiveTDLibClientAndLogin(credentials.apiId as number, credentials.apiHash as string);
+		const client = await cM.getActiveTDLibClient(credentials.apiId as number, credentials.apiHash as string);
 
 		const updateEvents = this.getNodeParameter('updateEvents', '') as string;
 		const updateEventsArray = updateEvents.split(',');
