@@ -133,3 +133,7 @@ To activate this, `tdlib`'s `Client` should be initialized with `ClientOptions.u
 ## 2023-05-15
 	* using QR code for auth
 	* extracting TDLib node from n8n into installable community node
+
+## 2023-05-16
+	* logging in, closing session and deleting database is working in community node
+	* TODO: handle connection correctly, when session was already initiated and user is already logged in

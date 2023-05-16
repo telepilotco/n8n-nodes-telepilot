@@ -18,6 +18,7 @@ const debug = require('debug')('tdl-node')
 // } from 'request';
 import {Container} from "typedi";
 import {TelegramTDLibNodeConnectionManager} from "./TelegramTDLibNodeConnectionManager";
+const { Client } = require('tdl');
 
 
 // import {Client} from "tdl";
@@ -49,6 +50,10 @@ export class TelegramTDLib implements INodeType {
 				name: 'resource',
 				type: 'options',
 				options: [
+					{
+						name: 'Login',
+						value: 'login',
+					},
 					{
 						name: 'User',
 						value: 'user',
@@ -82,6 +87,48 @@ export class TelegramTDLib implements INodeType {
 				noDataExpression: true,
 				required: true,
 				description: 'Get Chat History',
+			},
+
+			//Operations login
+			{
+				displayName: 'Operation',
+				name: 'operation',
+				type: 'options',
+				displayOptions: {
+					show: {
+						resource: [
+							'login',
+						],
+					},
+				},
+				options: [
+					{
+						name: 'Login with QR Code',
+						value: 'login',
+						description: 'Login with QR Code',
+						action: 'Login with QR Code',
+					},
+					// {
+					// 	name: 'Logout',
+					// 	value: 'logout',
+					// 	description: 'Logout',
+					// 	action: 'Logout',
+					// },
+					{
+						name: 'Close Session',
+						value: 'closeSession',
+						description: 'Close Session',
+						action: 'Close Session',
+					},
+					{
+						name: 'Remove td_database',
+						value: 'removeTdDatabase',
+						description: 'Remove td_database',
+						action: 'Remove td_database',
+					},
+				],
+				default: 'login',
+				noDataExpression: true,
 			},
 
 			//Operations user
@@ -595,15 +642,43 @@ export class TelegramTDLib implements INodeType {
 		const operation = this.getNodeParameter('operation', 0) as string;
 
 		const credentials = await this.getCredentials('telegramTdLibApi');
-		debug("has?: " + Container.has(TelegramTDLibNodeConnectionManager));
+		// debug("has?: " + Container.has(TelegramTDLibNodeConnectionManager));
 		const cM = Container.get(TelegramTDLibNodeConnectionManager);
-		debug(cM)
-		const client = await cM.getActiveTDLibClientAndLogin(credentials.apiId as number, credentials.apiHash as string);
-		debug(client)
+		// debug(cM)
+		// debug(client)
 
 		debug('Executing tdlib node, resource=' + resource + ', operation=' + operation);
 
-		let result = [];
+
+		let result;
+		let client: typeof Client;
+		if (resource === 'login') {
+		  if (operation === 'login') {
+				result = await cM.TDLibClientLoginWithQRCode(credentials.apiId as number, credentials.apiHash as string);
+				result.split("\n").forEach(s => {
+					returnData.push(s);
+				})
+			// } else if (operation === 'logout') {
+			// 	client = await cM.getActiveTDLibClient(credentials.apiId as number, credentials.apiHash as string);
+			// 	result = await client.invoke({
+			// 		_: 'logOut'
+			// 	});
+			// 	returnData.push(result);
+			} else if (operation === 'closeSession') {
+				try {
+					result = await cM.closeTdLibLocalSession(credentials.apiId as number);
+				} catch (e) {
+					throw e;
+				}
+				returnData.push(result);
+			} else if (operation === 'removeTdDatabase') {
+				result = await cM.deleteTdLibLocalInstance(credentials.apiId as number)
+				returnData.push(result);
+			}
+		} else {
+			client = await cM.getActiveTDLibClient(credentials.apiId as number, credentials.apiHash as string);
+		}
+
 		// For each item, make an API call to create a contact
 		if (resource === 'user') {
 			if (operation === 'getMe') {
@@ -713,7 +788,7 @@ export class TelegramTDLib implements INodeType {
 				returnData.push(result);
 			}
 		}
-		debug('finished execution, length=' + JSON.stringify(result).length)
+		// debug('finished execution, length=' + JSON.stringify(result).length)
 		// Map data to n8n data structure
 		return [this.helpers.returnJsonArray(returnData)];
 	}

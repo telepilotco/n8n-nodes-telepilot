@@ -9,6 +9,8 @@ const { getTdjson } = require('prebuilt-tdlib-m1')
 const debug = require('debug')('tdl-cm')
 var QRCode = require('qrcode-terminal');
 
+const fs = require('fs/promises');
+
 
 
 @Service()
@@ -16,16 +18,65 @@ export class TelegramTDLibNodeConnectionManager {
 
 	private clients: Record<number, typeof Client> = {};
 
+	private TD_DATABASE_PATH_PREFIX = "/tmp"
+	private TD_FILES_PATH_PREFIX = "/tmp"
+
 
 	constructor() {
 
 	}
 
-	async getActiveTDLibClientAndLogin(apiId: number, apiHash: string): Promise<typeof Client> {
-		let client = await this.getActiveTDLibClient(apiId, apiHash);
-		// await client.login();
-		//FIXME: return null if not logged in - need to listen to event
-		return client;
+	async closeTdLibLocalSession(apiId: number) {
+		let clients_keys = Object.keys(this.clients);
+		if (!clients_keys.includes(apiId.toString()) || this.clients[apiId] === undefined) {
+			throw new Error ("Unauthorized, please Login first")
+		}
+		const client = this.clients[apiId];
+
+		let result = await client.invoke({
+			_: 'close'
+		})
+		delete this.clients[apiId];
+		return result;
+	}
+	async deleteTdLibLocalInstance(apiId: number): Promise<Record<string, string>> {
+		let clients_keys = Object.keys(this.clients);
+		if (!clients_keys.includes(apiId.toString()) || this.clients[apiId] === undefined) {
+			throw new Error ("Unauthorized, please Login first")
+		}
+		const client = this.clients[apiId];
+
+		try {
+			await client.invoke({
+				_: 'close'
+			})
+		} catch (e) {
+			debug("Connection was already closed")
+		}
+
+		let result: Record<string, string> = {}
+		const removeDir = async (dirPath: string) => {
+			await fs.rm(dirPath, {recursive: true});
+		}
+
+		const db_database_path = this.getTdDatabasePathForClient(apiId);
+		await removeDir(db_database_path)
+		result["db_database"] = `Removed ${db_database_path}`
+
+		const db_files_path = this.getTdFilesPathForClient(apiId);
+		await removeDir(db_files_path)
+		result["db_files"] = `Removed ${db_files_path}`
+
+		delete this.clients[apiId];
+		return result;
+	}
+
+	getTdDatabasePathForClient(apiId: number) {
+		return `${this.TD_DATABASE_PATH_PREFIX}/${apiId}/_td_database`
+	}
+
+	getTdFilesPathForClient(apiId: number) {
+		return `${this.TD_FILES_PATH_PREFIX}/${apiId}/_td_files`
 	}
 
 	async getActiveTDLibClient(apiId: number, apiHash: string): Promise<typeof Client> {
@@ -33,6 +84,22 @@ export class TelegramTDLibNodeConnectionManager {
 		debug('getActiveTDLibClients.keys:' + clients_keys);
 		debug('getActiveTDLibClients.in keys:' + !clients_keys.includes(apiId.toString()));
 		debug('getActiveTDLibClients.value:' + this.clients[apiId]);
+		if (!clients_keys.includes(apiId.toString()) || this.clients[apiId] === undefined) {
+			throw new Error ("Unauthorized, please Login first")
+		}
+		return this.clients[apiId];
+	}
+
+	async terminateTdLibSession(apiId: number, apiHash: string): Promise<typeof Client> {
+
+	}
+
+	async TDLibClientLoginWithQRCode(apiId: number, apiHash: string): Promise<string> {
+		let clients_keys = Object.keys(this.clients);
+		debug('getActiveTDLibClients.keys:' + clients_keys);
+		debug('getActiveTDLibClients.in keys:' + !clients_keys.includes(apiId.toString()));
+		debug('getActiveTDLibClients.value:' + this.clients[apiId]);
+		let qrCode = ""
 		if (!clients_keys.includes(apiId.toString()) || this.clients[apiId] === undefined) {
 			// }
 
@@ -44,10 +111,12 @@ export class TelegramTDLibNodeConnectionManager {
 			), {
 				apiId,//: 1371420, // Your api_id
 				apiHash,//: '10c6868cae8a1ce09f7d87f27d691bbd',
-				databaseDirectory: `/tmp/${apiId}/_td_database`,
-				filesDirectory: `/tmp/${apiId}/_td_files`
+				databaseDirectory: this.getTdDatabasePathForClient(apiId),
+				filesDirectory: this.getTdFilesPathForClient(apiId)
 				// useTestDc: true
 			});
+
+			this.clients[apiId] = client;
 
 			// this.client.on('update',
 			// 	(update: IDataObject) => {
@@ -76,6 +145,12 @@ export class TelegramTDLibNodeConnectionManager {
 			///////////////////////////
 
 			const qrCodeAuthHandler = (update: IDataObject) => {
+
+				const qrCodeWriter = (s: string) => {
+					debug(s)
+					qrCode+=s;
+				}
+
 				if (update._ === "updateAuthorizationState") {
 					debug('Got update:', JSON.stringify(update, null, 2))
 					const authorization_state = update.authorization_state as IDataObject;
@@ -84,7 +159,7 @@ export class TelegramTDLibNodeConnectionManager {
 						debug("qr_link:" + qr_link);
 						QRCode.setErrorLevel('Q');
 						debug("generating qr code");
-						QRCode.generate(qr_link, function(code: any) {debug(code)});
+						QRCode.generate(qr_link,{ small: true }, function(code: any) {qrCodeWriter(code)});
 						debug("generated qr code");
 						// return {
 						// 	status: 'Authenticating',
@@ -113,21 +188,21 @@ export class TelegramTDLibNodeConnectionManager {
 			debug(JSON.stringify(result));
 			///////////////////////////////
 
-
 			while (authenticated == 0) {
 				await sleep(500);
 			}
-			this.clients[apiId] = client;
 
-			if (authenticated < 0) {
-				throw new Error('Not authenticated');
-			}
-
-
+			// if (authenticated < 0) {
+			// 	throw new Error(qrCode);
+			// 	// throw new Error('Not authenticated');
+			// }
+		} else {
+			throw new Error("Already logged in");
 		}
 
 		debug("returning for " + apiId)
-		return this.clients[apiId];
+		// return this.clients[apiId];
+		return qrCode;
 	}
 
 }
