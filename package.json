@@ -26,8 +26,8 @@
   },
   "files": [
     "dist",
-    "prebuilds/tdlib-bridge-arm64/bridge.node",
-    "prebuilds/tdlib-macos-arm64/lib.dylib"
+    "prebuilds/tdlib-bridge/*",
+    "prebuilds/tdlib/*"
   ],
   "n8n": {
     "n8nNodesApiVersion": 1,
