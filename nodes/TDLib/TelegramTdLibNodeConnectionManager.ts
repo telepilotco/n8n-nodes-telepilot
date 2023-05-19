@@ -117,11 +117,12 @@ export class TelegramTdLibNodeConnectionManager {
 		if (!clients_keys.includes(apiId.toString()) || this.clients[apiId] === undefined) {
 			// }
 
+			const _prefix = process.platform + "-" + process.arch;
 			debug('new TDLibClient:' + apiId)
 			// if (this.client === undefined) {
 			let client = new Client(new TDLib(
-				__dirname + "/../../../prebuilds/tdlib-macos-arm64/lib.dylib", // process.env.LIBRARY_FILE,
-				__dirname + "/../../../prebuilds/tdlib-bridge-arm64/bridge.node"// process.env.ADDON_PATH
+				__dirname + "/../../../prebuilds/tdlib-macos/" + _prefix + ".dylib", // process.env.LIBRARY_FILE,
+				__dirname + "/../../../prebuilds/tdlib-bridge/" + _prefix + ".node"// process.env.ADDON_PATH
 			), {
 				apiId,//: 1371420, // Your api_id
 				apiHash,//: '10c6868cae8a1ce09f7d87f27d691bbd',
