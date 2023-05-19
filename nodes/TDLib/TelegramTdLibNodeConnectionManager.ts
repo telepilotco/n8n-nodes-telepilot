@@ -1,20 +1,34 @@
 import 'reflect-metadata';
 import { Service } from 'typedi';
-import {IDataObject, sleep} from "n8n-workflow";
-// import { Client } from "tdl";
+import {IDataObject} from "n8n-workflow";
 const { Client } = require('tdl');
 const { TDLib } = require('tdl-tdlib-addon');
-const { getTdjson } = require('prebuilt-tdlib-m1')
 
 const debug = require('debug')('tdl-cm')
 var QRCode = require('qrcode-terminal');
 
 const fs = require('fs/promises');
 
+// const path = require('path')
+// function prebuild (pathcomps/*: string[] */) {
+// 	return path.resolve(__dirname, '../../../prebuilds', ...pathcomps)
+// }
+//
+// function getTdjson ()/*: string */ {
+// 	if (process.arch !== 'arm64')
+// 		throw new Error(`The ${process.arch} architecture is not supported`)
+// 	switch (process.platform) {
+// 		case 'darwin': return prebuild(['tdlib-macos-arm64', 'libtdjson.dylib'])
+// 		default: throw new Error(`The ${process.platform} OS is not supported`)
+// 	}
+// }
 
+function sleep(ms: number) {
+	return new Promise( resolve => setTimeout(resolve, ms) );
+}
 
 @Service()
-export class TelegramTDLibNodeConnectionManager {
+export class TelegramTdLibNodeConnectionManager {
 
 	private clients: Record<number, typeof Client> = {};
 
@@ -106,8 +120,8 @@ export class TelegramTDLibNodeConnectionManager {
 			debug('new TDLibClient:' + apiId)
 			// if (this.client === undefined) {
 			let client = new Client(new TDLib(
-				getTdjson(), // process.env.LIBRARY_FILE,
-				// process.env.ADDON_PATH
+				__dirname + "/../../../prebuilds/tdlib-macos-arm64/libtdjson.dylib", // process.env.LIBRARY_FILE,
+				__dirname + "/../../../prebuilds/tdlib-bridge-arm64/td.node"// process.env.ADDON_PATH
 			), {
 				apiId,//: 1371420, // Your api_id
 				apiHash,//: '10c6868cae8a1ce09f7d87f27d691bbd',

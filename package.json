@@ -1,15 +1,15 @@
 {
   "name": "n8n-nodes-tdlib",
   "version": "0.1.0",
-  "description": "",
+  "description": "Here comes one big TODO",
   "keywords": [
     "n8n-community-node-package"
   ],
   "license": "MIT",
   "homepage": "",
   "author": {
-    "name": "",
-    "email": ""
+    "name": "TODOist",
+    "email": "todo@todo.io"
   },
   "repository": {
     "type": "git",
@@ -30,11 +30,11 @@
   "n8n": {
     "n8nNodesApiVersion": 1,
     "credentials": [
-      "dist/credentials/TelegramTDLibApi.credentials.js"
+      "dist/credentials/TelegramTdLibApi.credentials.js"
     ],
     "nodes": [
-      "dist/nodes/TDLib/TelegramTDLib.node.js",
-      "dist/nodes/TDLib/TelegramTDLibTrigger.node.js"
+      "dist/nodes/TDLib/TelegramTdLib.node.js",
+      "dist/nodes/TDLib/TelegramTdLibTrigger.node.js"
     ]
   },
   "devDependencies": {
@@ -45,10 +45,9 @@
     "debug": "^4.3.4",
     "eslint-plugin-n8n-nodes-base": "^1.11.0",
     "gulp": "^4.0.2",
-    "n8n-core": "*",
-    "n8n-workflow": "*",
+    "n8n-core": "^0.161.0",
+    "n8n-workflow": "^0.143.0",
     "prettier": "^2.7.1",
-    "prebuilt-tdlib-m1": "/Users/skopchalyuk/projects/2023-n8n-tdlib-node/prebuilt-tdlib-m1",
     "@types/qrcode-terminal": "^0.12.0",
     "qrcode-terminal": "^0.12.0",
     "tdl": "^7.2.0",

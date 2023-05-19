@@ -3,7 +3,7 @@ import {
 	INodeProperties,
 } from 'n8n-workflow';
 
-export class TelegramTDLibApi implements ICredentialType {
+export class TelegramTdLibApi implements ICredentialType {
 	name = 'telegramTdLibApi';
 	displayName = 'Telegram API Using TdLib API';
 	properties: INodeProperties[] = [
