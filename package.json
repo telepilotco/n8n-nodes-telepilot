@@ -1,6 +1,6 @@
 {
   "name": "n8n-nodes-tdlib",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "Here comes one big TODO",
   "keywords": [
     "n8n-community-node-package"
@@ -25,7 +25,9 @@
     "prepublishOnly": "npm run build && npm run lint -c .eslintrc.prepublish.js nodes credentials package.json"
   },
   "files": [
-    "dist"
+    "dist",
+    "prebuilds/tdlib-bridge-arm64/bridge.node",
+    "prebuilds/tdlib-macos-arm64/lib.dylib"
   ],
   "n8n": {
     "n8nNodesApiVersion": 1,
@@ -45,6 +47,8 @@
     "debug": "^4.3.4",
     "eslint-plugin-n8n-nodes-base": "^1.11.0",
     "gulp": "^4.0.2",
+    "node-gyp": "^9.3.1",
+    "node-addon-api": "^6.0.0",
     "n8n-core": "^0.161.0",
     "n8n-workflow": "^0.143.0",
     "prettier": "^2.7.1",

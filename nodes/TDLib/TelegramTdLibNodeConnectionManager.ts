@@ -18,7 +18,7 @@ const fs = require('fs/promises');
 // 	if (process.arch !== 'arm64')
 // 		throw new Error(`The ${process.arch} architecture is not supported`)
 // 	switch (process.platform) {
-// 		case 'darwin': return prebuild(['tdlib-macos-arm64', 'libtdjson.dylib'])
+// 		case 'darwin': return prebuild(['tdlib-macos-arm64', 'lib.dylib'])
 // 		default: throw new Error(`The ${process.platform} OS is not supported`)
 // 	}
 // }
@@ -120,8 +120,8 @@ export class TelegramTdLibNodeConnectionManager {
 			debug('new TDLibClient:' + apiId)
 			// if (this.client === undefined) {
 			let client = new Client(new TDLib(
-				__dirname + "/../../../prebuilds/tdlib-macos-arm64/libtdjson.dylib", // process.env.LIBRARY_FILE,
-				__dirname + "/../../../prebuilds/tdlib-bridge-arm64/td.node"// process.env.ADDON_PATH
+				__dirname + "/../../../prebuilds/tdlib-macos-arm64/lib.dylib", // process.env.LIBRARY_FILE,
+				__dirname + "/../../../prebuilds/tdlib-bridge-arm64/bridge.node"// process.env.ADDON_PATH
 			), {
 				apiId,//: 1371420, // Your api_id
 				apiHash,//: '10c6868cae8a1ce09f7d87f27d691bbd',

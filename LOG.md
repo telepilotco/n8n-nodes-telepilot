@@ -123,7 +123,7 @@ To activate this, `tdlib`'s `Client` should be initialized with `ClientOptions.u
         pnpm install tdl tdl-tdlib-addon tdlib-types
 
 ## 2023-04-14
-    * playing with binary files: adjusted run.sh to build td.node dynamically so it can be fetched from default path `../build/Release/td.node`
+    * playing with binary files: adjusted run.sh to build td.node dynamically so it can be fetched from default path `../build/Release/bridge.node`
     * investigating how to pre-build arm64 tdlib in github
     * working on `prebuilt-tdlib-m1` (form of `tdl/packages/prebuilt-tdlib`)
     * `prebuilt-tdlib-m1` is being built locally and used in `n8n-tdlib-node`, all good
@@ -137,3 +137,6 @@ To activate this, `tdlib`'s `Client` should be initialized with `ClientOptions.u
 ## 2023-05-16
 	* logging in, closing session and deleting database is working in community node
 	* TODO: handle connection correctly, when session was already initiated and user is already logged in
+
+## 2023-05-19
+	* project is built and published in npm-registry
