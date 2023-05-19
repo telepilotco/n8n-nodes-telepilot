@@ -13,7 +13,7 @@ cd td/
 git pull
 
 brew install gperf openssl zlib
-#sudo apt-get install install gperf openssl zlib
+#sudo apt-get install gperf openssl zlib1g-dev -y
 cmake --version
 
 mkdir -p build && cd build
@@ -33,3 +33,4 @@ cd ..
 mkdir -p prebuilds/tdlib/
 cp td/build/libtdjson.dylib prebuilds/tdlib/`uname -s | tr '[:upper:]' '[:lower:]'`-`uname -m`.dylib
 
+npm pack --dry-run
