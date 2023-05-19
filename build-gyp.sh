@@ -29,6 +29,7 @@ uname -a
 /opt/homebrew/opt/openssl@1.1/bin/openssl version
 otool -L build/libtdjson.dylib
 
+cd ..
 mkdir -p prebuilds/tdlib/
-cp build/libtdjson.dylib prebuilds/tdlib/`uname -s | tr '[:upper:]' '[:lower:]'`-`uname -m`.node
+cp td/build/libtdjson.dylib prebuilds/tdlib/`uname -s | tr '[:upper:]' '[:lower:]'`-`uname -m`.dylib
 
