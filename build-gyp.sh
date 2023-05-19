@@ -13,7 +13,7 @@ cd td/
 git pull
 
 brew install gperf openssl zlib
-#sudo apt-get install gperf openssl zlib1g-dev -y
+#sudo apt-get install gperf openssl zlib1g-dev gcc g++ musl-dev make cmake binutils -y
 cmake --version
 
 mkdir -p build && cd build
