@@ -140,3 +140,14 @@ To activate this, `tdlib`'s `Client` should be initialized with `ClientOptions.u
 
 ## 2023-05-19
 	* project is built and published in npm-registry
+	* using Verdaccio private npm registry:
+```
+		docker pull verdaccio/verdaccio
+		docker run -it --rm --name verdaccio -p 4873:4873 verdaccio/verdaccio
+
+		npm config set registry http://0.0.0.0:4873/	
+		npm adduser
+		npm login
+```
+
+
