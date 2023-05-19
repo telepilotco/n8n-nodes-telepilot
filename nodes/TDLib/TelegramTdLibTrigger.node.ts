@@ -8,17 +8,17 @@ import {
 
 const debug = require('debug')('tdl-trigger')
 
-import {TelegramTDLibNodeConnectionManager} from "./TelegramTDLibNodeConnectionManager";
+import {TelegramTdLibNodeConnectionManager} from "./TelegramTdLibNodeConnectionManager";
 
 // import {Client} from "tdl";
 // const { TDLib } = require('tdl-tdlib-addon')
 
-export class TelegramTDLibTrigger implements INodeType {
+export class TelegramTdLibTrigger implements INodeType {
 	description: INodeTypeDescription = {
 		// Basic node details will go here
 		displayName: 'Telegram TDLib Trigger',
 		name: 'telegramTdLibTrigger',
-		icon: 'file:TelegramTDLib.png',
+		icon: 'file:TelegramTDLib.svg',
 		group: ['trigger'],
 		version: 1,
 		description: 'Listens to events using Telegram API via TDLib',
@@ -49,9 +49,9 @@ export class TelegramTDLibTrigger implements INodeType {
 	async trigger(this: ITriggerFunctions): Promise<ITriggerResponse> {
 		const credentials = await this.getCredentials('telegramTdLibApi');
 
-		const cM = Container.get(TelegramTDLibNodeConnectionManager)
+		const cM = Container.get(TelegramTdLibNodeConnectionManager)
 
-		const client = await cM.getActiveTDLibClient(credentials.apiId as number, credentials.apiHash as string);
+		const client = await cM.getActiveTDLibClient(credentials?.apiId as number, credentials?.apiHash as string);
 
 		const updateEvents = this.getNodeParameter('updateEvents', '') as string;
 		const updateEventsArray = updateEvents.split(',');
@@ -115,4 +115,4 @@ export class TelegramTDLibTrigger implements INodeType {
 	}
 }
 
-exports.TelegramTDLibTrigger = TelegramTDLibTrigger;
+exports.TelegramTDLibTrigger = TelegramTdLibTrigger;

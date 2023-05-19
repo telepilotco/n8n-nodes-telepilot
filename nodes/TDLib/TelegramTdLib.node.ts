@@ -1,35 +1,28 @@
 import 'reflect-metadata';
-import {
-	IExecuteFunctions,
-} from 'n8n-core';
+import { IExecuteFunctions } from 'n8n-core';
 
-import {
-	INodeExecutionData,
-	INodeType,
-	INodeTypeDescription,
-} from 'n8n-workflow';
+import { INodeExecutionData, INodeType, INodeTypeDescription } from 'n8n-workflow';
 
-const debug = require('debug')('tdl-node')
+const debug = require('debug')('tdl-node');
 
 // var QRCode = require('qrcode-terminal');
 
 // import {
 // 	OptionsWithUri,
 // } from 'request';
-import {Container} from "typedi";
-import {TelegramTDLibNodeConnectionManager} from "./TelegramTDLibNodeConnectionManager";
+import { Container } from 'typedi';
+import { TelegramTdLibNodeConnectionManager } from './TelegramTdLibNodeConnectionManager';
 const { Client } = require('tdl');
-
 
 // import {Client} from "tdl";
 // const { TDLib } = require('tdl-tdlib-addon')
 
-export class TelegramTDLib implements INodeType {
+export class TelegramTdLib implements INodeType {
 	description: INodeTypeDescription = {
 		// Basic node details will go here
 		displayName: 'Telegram TDLib',
 		name: 'telegramTdLib',
-		icon: 'file:TelegramTDLib.png',
+		icon: 'file:TelegramTDLib.svg',
 		group: ['transform'],
 		version: 1,
 		description: 'Consume Telegram API via TDLib',
@@ -39,7 +32,7 @@ export class TelegramTDLib implements INodeType {
 		credentials: [
 			{
 				name: 'telegramTdLibApi',
-				required: true
+				required: true,
 			},
 		],
 		inputs: ['main'],
@@ -51,36 +44,36 @@ export class TelegramTDLib implements INodeType {
 				type: 'options',
 				options: [
 					{
-						name: 'Login',
-						value: 'login',
-					},
-					{
-						name: 'User',
-						value: 'user',
+						name: 'Chat',
+						value: 'chat',
 					},
 					{
 						name: 'Contact',
 						value: 'contact',
 					},
 					{
+						name: 'File',
+						value: 'file',
+					},
+					{
 						name: 'Group',
 						value: 'group',
 					},
 					{
-						name: 'Chat',
-						value: 'chat',
+						name: 'Login',
+						value: 'login',
+					},
+					{
+						name: 'Media',
+						value: 'media',
 					},
 					{
 						name: 'Message',
 						value: 'message',
 					},
 					{
-						name: 'File',
-						value: 'file',
-					},
-					{
-						name: 'Media',
-						value: 'media',
+						name: 'User',
+						value: 'user',
 					},
 				],
 				default: 'chat',
@@ -96,17 +89,14 @@ export class TelegramTDLib implements INodeType {
 				type: 'options',
 				displayOptions: {
 					show: {
-						resource: [
-							'login',
-						],
+						resource: ['login'],
 					},
 				},
 				options: [
 					{
 						name: 'Login with QR Code',
 						value: 'login',
-						description: 'Login with QR Code',
-						action: 'Login with QR Code',
+						action: 'Login with qr code',
 					},
 					// {
 					// 	name: 'Logout',
@@ -117,14 +107,12 @@ export class TelegramTDLib implements INodeType {
 					{
 						name: 'Close Session',
 						value: 'closeSession',
-						description: 'Close Session',
-						action: 'Close Session',
+						action: 'Close session',
 					},
 					{
-						name: 'Remove td_database',
+						name: 'Remove Td_database',
 						value: 'removeTdDatabase',
-						description: 'Remove td_database',
-						action: 'Remove td_database',
+						action: 'Remove td database',
 					},
 				],
 				default: 'login',
@@ -138,65 +126,54 @@ export class TelegramTDLib implements INodeType {
 				type: 'options',
 				displayOptions: {
 					show: {
-						resource: [
-							'user',
-						],
+						resource: ['user'],
 					},
 				},
 				options: [
 					{
-						name: 'Get Me',
-						value: 'getMe',
-						description: 'Get Me',
-						action: 'Get Me',
-					},
-					{
-						name: 'Get User',
-						value: 'getUser',
-						description: 'Get User',
-						action: 'Get User',
-					},
-					{
-						name: 'Get User Full Info',
-						value: 'getUserFullInfo',
-						description: 'Get User Full Info',
-						action: 'Get User Full Info',
+						name: 'Create New Secret Chat',
+						value: 'createNewSecretChat',
+						action: 'Create new secret chat',
 					},
 					{
 						name: 'Create Private Chat',
 						value: 'createPrivateChat',
-						description: 'Create Private Chat',
-						action: 'Create Private Chat',
+						action: 'Create private chat',
 					},
 					{
-						name: 'Create New Secret Chat',
-						value: 'createNewSecretChat',
-						description: 'Create New Secret Chat',
-						action: 'Create New Secret Chat',
+						name: 'Get Me',
+						value: 'getMe',
+						action: 'Get me',
 					},
 					{
-						name: 'Set Name',
-						value: 'setName',
-						description: 'Set Name',
-						action: 'Set Name',
+						name: 'Get User',
+						value: 'getUser',
+						action: 'Get user',
 					},
 					{
-						name: 'Set Bio',
-						value: 'setBio',
-						description: 'Set Bio',
-						action: 'Set Bio',
-					},
-					{
-						name: 'Set Username',
-						value: 'setUsername',
-						description: 'Set Username',
-						action: 'Set Username',
+						name: 'Get User Full Info',
+						value: 'getUserFullInfo',
+						action: 'Get user full info',
 					},
 					{
 						name: 'Search User by Phone Number',
 						value: 'searchUserByPhoneNumber',
-						description: 'Search User by Phone Number',
-						action: 'Search User by Phone Number',
+						action: 'Search user by phone number',
+					},
+					{
+						name: 'Set Bio',
+						value: 'setBio',
+						action: 'Set bio',
+					},
+					{
+						name: 'Set Name',
+						value: 'setName',
+						action: 'Set name',
+					},
+					{
+						name: 'Set Username',
+						value: 'setUsername',
+						action: 'Set username',
 					},
 				],
 				default: 'getMe',
@@ -210,20 +187,17 @@ export class TelegramTDLib implements INodeType {
 				type: 'options',
 				displayOptions: {
 					show: {
-						resource: [
-							'contact',
-						],
+						resource: ['contact'],
 					},
 				},
 				options: [
 					{
 						name: 'Get Contacts',
 						value: 'getContacts',
-						description: 'Get all User Contacts',
-						action: 'Get all User Contacts',
+						action: 'Get all user contacts',
 					},
 				],
-				default: 'getSupergroupMembers',
+				default: 'getContacts',
 				noDataExpression: true,
 			},
 
@@ -234,17 +208,14 @@ export class TelegramTDLib implements INodeType {
 				type: 'options',
 				displayOptions: {
 					show: {
-						resource: [
-							'group',
-						],
+						resource: ['group'],
 					},
 				},
 				options: [
 					{
 						name: 'Get Supergroup Members',
 						value: 'getSupergroupMembers',
-						description: 'Get Supergroup Members',
-						action: 'Get Supergroup Members',
+						action: 'Get supergroup members',
 					},
 				],
 				default: 'getSupergroupMembers',
@@ -258,41 +229,34 @@ export class TelegramTDLib implements INodeType {
 				type: 'options',
 				displayOptions: {
 					show: {
-						resource: [
-							'chat',
-						],
+						resource: ['chat'],
 					},
 				},
 				options: [
 					{
-						name: 'Get Chats',
-						value: 'getChats',
-						description: 'Get Chats from main list',
-						action: 'Get Chats',
-					},
-					{
 						name: 'Get Chat',
 						value: 'getChat',
-						description: 'Get Chat Information',
-						action: 'Get Chat',
+						action: 'Get chat',
 					},
 					{
 						name: 'Get Chat History',
 						value: 'getChatHistory',
-						description: 'Get Chat History',
-						action: 'Get Chat History',
+						action: 'Get chat history',
 					},
 					{
-						name: 'Search Public Chat (by username)',
+						name: 'Get Chats',
+						value: 'getChats',
+						action: 'Get chats',
+					},
+					{
+						name: 'Search Public Chat (by Username)',
 						value: 'searchPublicChat',
-						description: 'Get chat_id by username',
-						action: 'Search Public Chats',
+						action: 'Search public chats',
 					},
 					{
-						name: 'Search Public Chats (search in username, title)',
+						name: 'Search Public Chats (Search in Username, Title)',
 						value: 'searchPublicChats',
-						description: 'Get chat_id using query that searches in username and title',
-						action: 'Search Public Chats',
+						action: 'Search public chats',
 					},
 				],
 				default: 'getChatHistory',
@@ -306,41 +270,34 @@ export class TelegramTDLib implements INodeType {
 				type: 'options',
 				displayOptions: {
 					show: {
-						resource: [
-							'message',
-						],
+						resource: ['message'],
 					},
 				},
 				options: [
 					{
-						name: 'Send Message',
-						value: 'sendMessage',
-						description: 'Send Message',
-						action: 'Send Message',
-					},
-					{
-						name: 'Send Message Album',
-						value: 'sendMessageAlbum',
-						description: 'Send Message Album',
-						action: 'Send Message Album',
-					},
-					{
 						name: 'Delete Messages',
 						value: 'deleteMessages',
-						description: 'Delete Messages',
-						action: 'Delete Messages',
+						action: 'Delete messages',
 					},
 					{
 						name: 'Edit Message Text',
 						value: 'editMessageText',
-						description: 'Edit Message Text',
-						action: 'Edit Message Text',
+						action: 'Edit message text',
+					},
+					{
+						name: 'Send Message',
+						value: 'sendMessage',
+						action: 'Send message',
+					},
+					{
+						name: 'Send Message Album',
+						value: 'sendMessageAlbum',
+						action: 'Send message album',
 					},
 					{
 						name: 'Set Message Reaction',
 						value: 'setMessageReaction',
-						description: 'Set Message Reaction',
-						action: 'Set Message Reaction',
+						action: 'Set message reaction',
 					},
 				],
 				default: 'sendMessage',
@@ -354,24 +311,20 @@ export class TelegramTDLib implements INodeType {
 				type: 'options',
 				displayOptions: {
 					show: {
-						resource: [
-							'file',
-						],
+						resource: ['file'],
 					},
 				},
 				options: [
 					{
 						name: 'Get Remote File',
 						value: 'getRemoteFile',
-						description: 'Get Remote File',
-						action: 'Get Remote File',
+						action: 'Get remote file',
 					},
 					{
 						name: 'Download File',
 						value: 'downloadFile',
-						description: 'Download File',
-						action: 'Download File',
-					}
+						action: 'Download file',
+					},
 				],
 				default: 'downloadFile',
 				noDataExpression: true,
@@ -386,18 +339,11 @@ export class TelegramTDLib implements INodeType {
 				required: true,
 				displayOptions: {
 					show: {
-						operation: [
-							'getUser',
-							'getUserFullInfo',
-							'createPrivateChat',
-							'createNewSecretChat'
-						],
-						resource: [
-							'user',
-						],
+						operation: ['getUser', 'getUserFullInfo', 'createPrivateChat', 'createNewSecretChat'],
+						resource: ['user'],
 					},
 				},
-				default:'',
+				default: '',
 				placeholder: '122323',
 				description: 'ID of chat',
 			},
@@ -408,17 +354,13 @@ export class TelegramTDLib implements INodeType {
 				required: true,
 				displayOptions: {
 					show: {
-						operation: [
-							'createPrivateChat'
-						],
-						resource: [
-							'user',
-						],
+						operation: ['createPrivateChat'],
+						resource: ['user'],
 					},
 				},
 				default: false,
 				placeholder: '122323',
-				description: 'ID of chat',
+				description: 'Whether creation of private chat should be forced',
 			},
 			//Chat
 			{
@@ -428,37 +370,29 @@ export class TelegramTDLib implements INodeType {
 				required: true,
 				displayOptions: {
 					show: {
-						operation: [
-							'getChat',
-							'getChatHistory',
-						],
-						resource: [
-							'chat',
-						],
+						operation: ['getChat', 'getChatHistory'],
+						resource: ['chat'],
 					},
 				},
-				default:'',
+				default: '',
 				placeholder: '122323',
 				description: 'ID of chat',
 			},
 			{
-				displayName: 'From Message Id',
+				displayName: 'From Message ID',
 				name: 'from_message_id',
 				type: 'string',
 				required: true,
 				displayOptions: {
 					show: {
-						operation: [
-							'getChatHistory',
-						],
-						resource: [
-							'chat',
-						],
+						operation: ['getChatHistory'],
+						resource: ['chat'],
 					},
 				},
-				default:'0',
+				default: '0',
 				placeholder: '133222323',
-				description: 'Identifier of the message starting from which history must be fetched; use 0 to get results from the last message',
+				description:
+					'Identifier of the message starting from which history must be fetched; use 0 to get results from the last message',
 			},
 
 			{
@@ -468,15 +402,11 @@ export class TelegramTDLib implements INodeType {
 				required: true,
 				displayOptions: {
 					show: {
-						operation: [
-							'searchPublicChat',
-						],
-						resource: [
-							'chat',
-						],
+						operation: ['searchPublicChat'],
+						resource: ['chat'],
 					},
 				},
-				default:'',
+				default: '',
 				placeholder: 'Text',
 				description: 'Username to use in searchPublicChat',
 			},
@@ -487,15 +417,11 @@ export class TelegramTDLib implements INodeType {
 				required: true,
 				displayOptions: {
 					show: {
-						operation: [
-							'searchPublicChats',
-						],
-						resource: [
-							'chat',
-						],
+						operation: ['searchPublicChats'],
+						resource: ['chat'],
 					},
 				},
-				default:'',
+				default: '',
 				placeholder: 'Text',
 				description: 'Query used to search public chats by looking in their username and title',
 			},
@@ -508,15 +434,11 @@ export class TelegramTDLib implements INodeType {
 				required: true,
 				displayOptions: {
 					show: {
-						operation: [
-							'downloadFile',
-						],
-						resource: [
-							'file',
-						],
+						operation: ['downloadFile'],
+						resource: ['file'],
 					},
 				},
-				default:'',
+				default: '',
 				placeholder: 'Text',
 				description: 'Identifier of the file to download',
 			},
@@ -527,18 +449,14 @@ export class TelegramTDLib implements INodeType {
 				required: true,
 				displayOptions: {
 					show: {
-						operation: [
-							'getRemoteFile',
-						],
-						resource: [
-							'file',
-						],
+						operation: ['getRemoteFile'],
+						resource: ['file'],
 					},
 				},
-				default:'',
+				default: '',
 				placeholder: 'Text',
 				description: 'Identifier of the Remote file to download',
-			}
+			},
 		],
 	};
 	// The execute method will go here
@@ -635,7 +553,6 @@ export class TelegramTDLib implements INodeType {
 
 	*/
 
-
 	async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
 		const returnData = [];
 		const resource = this.getNodeParameter('resource', 0) as string;
@@ -643,62 +560,67 @@ export class TelegramTDLib implements INodeType {
 
 		const credentials = await this.getCredentials('telegramTdLibApi');
 		// debug("has?: " + Container.has(TelegramTDLibNodeConnectionManager));
-		const cM = Container.get(TelegramTDLibNodeConnectionManager);
+		const cM = Container.get(TelegramTdLibNodeConnectionManager);
 		// debug(cM)
 		// debug(client)
 
 		debug('Executing tdlib node, resource=' + resource + ', operation=' + operation);
 
-
 		let result;
 		let client: typeof Client;
 		if (resource === 'login') {
-		  if (operation === 'login') {
-				result = await cM.TDLibClientLoginWithQRCode(credentials.apiId as number, credentials.apiHash as string);
-				result.split("\n").forEach(s => {
+			if (operation === 'login') {
+				result = await cM.TDLibClientLoginWithQRCode(
+					credentials?.apiId as number,
+					credentials?.apiHash as string,
+				);
+				result.split('\n').forEach((s) => {
 					returnData.push(s);
-				})
-			// } else if (operation === 'logout') {
-			// 	client = await cM.getActiveTDLibClient(credentials.apiId as number, credentials.apiHash as string);
-			// 	result = await client.invoke({
-			// 		_: 'logOut'
-			// 	});
-			// 	returnData.push(result);
+				});
+				// } else if (operation === 'logout') {
+				// 	client = await cM.getActiveTDLibClient(credentials.apiId as number, credentials.apiHash as string);
+				// 	result = await client.invoke({
+				// 		_: 'logOut'
+				// 	});
+				// 	returnData.push(result);
 			} else if (operation === 'closeSession') {
 				try {
-					result = await cM.closeTdLibLocalSession(credentials.apiId as number);
+					result = await cM.closeTdLibLocalSession(credentials?.apiId as number);
 				} catch (e) {
 					throw e;
 				}
 				returnData.push(result);
 			} else if (operation === 'removeTdDatabase') {
-				result = await cM.deleteTdLibLocalInstance(credentials.apiId as number)
+				result = await cM.deleteTdLibLocalInstance(credentials?.apiId as number);
 				returnData.push(result);
 			}
 		} else {
-			client = await cM.getActiveTDLibClient(credentials.apiId as number, credentials.apiHash as string);
+			client = await cM.getActiveTDLibClient(
+				credentials?.apiId as number,
+				credentials?.apiHash as string,
+			);
 		}
 
 		// For each item, make an API call to create a contact
 		if (resource === 'user') {
 			if (operation === 'getMe') {
 				const result = await client.invoke({
-					_: 'getMe'
-				})
+					_: 'getMe',
+				});
 				returnData.push(result);
 			} else if (operation === 'getUser') {
 				const user_id = this.getNodeParameter('user_id', 0) as string;
 				result = await client.invoke({
 					_: 'getUser',
-					user_id
-				})
+					user_id,
+				});
 				returnData.push(result);
 			} else if (operation === 'getUserFullInfo') {
 				const user_id = this.getNodeParameter('user_id', 0) as string;
 				result = await client.invoke({
 					_: 'getUserFullInfo',
-					user_id
-				})
+					user_id,
+				});
 				returnData.push(result);
 			} else if (operation === 'createPrivateChat') {
 				const user_id = this.getNodeParameter('user_id', 0) as string;
@@ -706,22 +628,22 @@ export class TelegramTDLib implements INodeType {
 				result = await client.invoke({
 					_: 'createPrivateChat',
 					user_id,
-					force
-				})
+					force,
+				});
 				returnData.push(result);
 			} else if (operation === 'createNewSecretChat') {
 				const user_id = this.getNodeParameter('user_id', 0) as string;
 				result = await client.invoke({
 					_: 'createNewSecretChat',
 					user_id,
-				})
+				});
 				returnData.push(result);
 			}
 		} else if (resource === 'contact') {
 			if (operation === 'getContacts') {
 				result = await client.invoke({
-					_: 'getContacts'
-				})
+					_: 'getContacts',
+				});
 				returnData.push(result);
 			}
 		} else if (resource === 'chat') {
@@ -734,28 +656,28 @@ export class TelegramTDLib implements INodeType {
 					from_message_id,
 					offset: 0,
 					limit: 1,
-					only_local: false
-				})
+					only_local: false,
+				});
 				returnData.push(result);
 			} else if (operation === 'getChats') {
 				const result = await client.invoke({
 					_: 'getChats',
-					limit: 9999
-				})
+					limit: 9999,
+				});
 				returnData.push(result);
 			} else if (operation === 'getChat') {
 				const chat_id = this.getNodeParameter('chat_id', 0) as string;
 				const result = await client.invoke({
 					_: 'getChat',
-					chat_id
-				})
+					chat_id,
+				});
 				returnData.push(result);
 			} else if (operation === 'searchPublicChat') {
 				const username = this.getNodeParameter('username', 0) as string;
 				const result = await client.invoke({
 					_: 'searchPublicChat',
-					username
-				})
+					username,
+				});
 				debug(username);
 				debug(result);
 				returnData.push(result);
@@ -763,8 +685,8 @@ export class TelegramTDLib implements INodeType {
 				const query = this.getNodeParameter('query', 0) as string;
 				const result = await client.invoke({
 					_: 'searchPublicChats',
-					query
-				})
+					query,
+				});
 				debug(query);
 				debug(result);
 				returnData.push(result);
@@ -775,7 +697,7 @@ export class TelegramTDLib implements INodeType {
 				const result = await client.invoke({
 					_: 'getRemoteFile',
 					remote_file_id,
-				})
+				});
 				returnData.push(result);
 			} else if (operation === 'downloadFile') {
 				const file_id = this.getNodeParameter('file_id', 0) as string;
@@ -783,8 +705,8 @@ export class TelegramTDLib implements INodeType {
 					_: 'downloadFile',
 					file_id,
 					priority: 16,
-					synchronous: true
-				})
+					synchronous: true,
+				});
 				returnData.push(result);
 			}
 		}
