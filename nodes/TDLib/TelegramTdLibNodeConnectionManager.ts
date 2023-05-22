@@ -120,8 +120,31 @@ export class TelegramTdLibNodeConnectionManager {
 			const _prefix = process.platform + "-" + process.arch;
 			debug('new TDLibClient:' + apiId)
 			// if (this.client === undefined) {
+
+			let libraryFile = "";
+			if (process.arch === "x64") {
+				switch(process.platform) {
+					case "win32":
+						libraryFile = "tdjson.dll";
+						break;
+					case 'darwin':
+						libraryFile = 'libtdjson.dylib'
+						break;
+					default:
+						libraryFile = 'libtdjson.so'
+				}
+			} else if (process.arch == "arm64") {
+				if (process.platform == "darwin") {
+					libraryFile = __dirname + "/../../../prebuilds/tdlib/" + _prefix + ".dylib" // process.env.LIBRARY_FILE,
+				} else if (process.platform == "linux") {
+					libraryFile = __dirname + "/../../../prebuilds/tdlib/" + _prefix + ".so" // process.env.LIBRARY_FILE,
+				} else {
+					throw new Error("non-supported architecture. arm64 !darwin !linux")
+				}
+			}
+
 			let client = new Client(new TDLib(
-				__dirname + "/../../../prebuilds/tdlib-macos/" + _prefix + ".dylib", // process.env.LIBRARY_FILE,
+				libraryFile,
 				__dirname + "/../../../prebuilds/tdlib-bridge/" + _prefix + ".node"// process.env.ADDON_PATH
 			), {
 				apiId,//: 1371420, // Your api_id

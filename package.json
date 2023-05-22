@@ -1,6 +1,6 @@
 {
   "name": "n8n-nodes-tdlib",
-  "version": "0.1.2",
+  "version": "0.1.4",
   "description": "Here comes one big TODO",
   "keywords": [
     "n8n-community-node-package"
@@ -52,6 +52,7 @@
     "n8n-core": "^0.161.0",
     "n8n-workflow": "^0.143.0",
     "prettier": "^2.7.1",
+    "prebuilt-tdlib": "td-1.8.12",
     "@types/qrcode-terminal": "^0.12.0",
     "qrcode-terminal": "^0.12.0",
     "tdl": "^7.2.0",
