@@ -137,7 +137,8 @@ export class TelegramTdLibNodeConnectionManager {
 				if (process.platform == "darwin") {
 					libraryFile = __dirname + "/../../../prebuilds/tdlib/" + _prefix + ".dylib" // process.env.LIBRARY_FILE,
 				} else if (process.platform == "linux") {
-					libraryFile = __dirname + "/../../../prebuilds/tdlib/" + _prefix + ".so" // process.env.LIBRARY_FILE,
+					// libraryFile = __dirname + "/../../../prebuilds/tdlib/" + _prefix + ".so" // process.env.LIBRARY_FILE,
+					throw new Error("non-supported architecture. arm64 !darwin !linux")
 				} else {
 					throw new Error("non-supported architecture. arm64 !darwin !linux")
 				}
