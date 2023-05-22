@@ -149,5 +149,17 @@ To activate this, `tdlib`'s `Client` should be initialized with `ClientOptions.u
 		npm adduser
 		npm login
 ```
+	* TODO: fix built on linux-x64:
+```
+	npm install prebuilt-tdlib
+	cp node_modules/prebuilt-tdlib/prebuilds/tdlib-linux-x64/libtdjson.so prebuilds/tdlib/`uname -s | tr '[:upper:]' '[:lower:]'`-`uname -m`.dylib
+
+	echo "registry=http://0.0.0.0:4873/" > ~/.npmrc
+	echo "//0.0.0.0:4873/:_authToken=\"2Whgztawlk4WMZB7VdqGVA==\"" >> ~/.npmrc
+
+```
+	* TODO: test on x64 running without docker, with npm-globally install n8n
 
 
+## 2023-05-22
+	* adding x64 libs
