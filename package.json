@@ -1,6 +1,6 @@
 {
   "name": "n8n-nodes-tdlib",
-  "version": "0.1.4",
+  "version": "0.1.5q",
   "description": "Here comes one big TODO",
   "keywords": [
     "n8n-community-node-package"
@@ -44,7 +44,6 @@
     "@types/node": "^14.14.6",
     "@types/request-promise-native": "~1.0.15",
     "@typescript-eslint/parser": "~5.45",
-    "debug": "^4.3.4",
     "eslint-plugin-n8n-nodes-base": "^1.11.0",
     "gulp": "^4.0.2",
     "node-gyp": "^9.3.1",
@@ -52,13 +51,16 @@
     "n8n-core": "^0.161.0",
     "n8n-workflow": "^0.143.0",
     "prettier": "^2.7.1",
+    "typescript": "~4.8.4"
+  },
+  "dependencies": {
+    "debug": "^4.3.4",
     "prebuilt-tdlib": "td-1.8.12",
     "@types/qrcode-terminal": "^0.12.0",
     "qrcode-terminal": "^0.12.0",
     "tdl": "^7.2.0",
     "tdl-tdlib-addon": "^1.2.2",
     "tdlib-types": "^0.1001008.1",
-    "typedi": "^0.10.0",
-    "typescript": "~4.8.4"
+    "typedi": "^0.10.0"
   }
 }
