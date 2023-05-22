@@ -163,3 +163,4 @@ To activate this, `tdlib`'s `Client` should be initialized with `ClientOptions.u
 
 ## 2023-05-22
 	* adding x64 libs
+	* community node is working on x64 linux!
