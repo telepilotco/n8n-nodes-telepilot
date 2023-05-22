@@ -129,13 +129,13 @@ export class TelegramTdLibNodeConnectionManager {
 			if (process.arch === "x64") {
 				switch(process.platform) {
 					case "win32":
-						libraryFile = "tdjson.dll";
+						libraryFile = __dirname + "/../../../../prebuilt-tdlib/prebuilds/tdlib-linux-x64/tdjson.dll";
 						break;
 					case 'darwin':
-						libraryFile = 'libtdjson.dylib'
+						libraryFile = __dirname + "/../../../../prebuilt-tdlib/prebuilds/tdlib-linux-x64/libtdjson.dylib";
 						break;
 					default:
-						libraryFile = 'libtdjson.so'
+						libraryFile = __dirname + "/../../../../prebuilt-tdlib/prebuilds/tdlib-linux-x64/libtdjson.so";
 				}
 			} else if (process.arch == "arm64") {
 				if (process.platform == "darwin") {
