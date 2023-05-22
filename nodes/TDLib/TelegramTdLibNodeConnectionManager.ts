@@ -117,7 +117,11 @@ export class TelegramTdLibNodeConnectionManager {
 		if (!clients_keys.includes(apiId.toString()) || this.clients[apiId] === undefined) {
 			// }
 
-			const _prefix = process.platform + "-" + process.arch;
+			let _prefix = process.platform + "-x86_64";
+			if (process.arch === "arm64") {
+				_prefix = process.platform + "-" + process.arch;
+			}
+
 			debug('new TDLibClient:' + apiId)
 			// if (this.client === undefined) {
 
