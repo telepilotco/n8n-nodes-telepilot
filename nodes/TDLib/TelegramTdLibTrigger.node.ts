@@ -97,7 +97,7 @@ export class TelegramTdLibTrigger implements INodeType {
 				client.on('update',
 					(update: IDataObject) => {
 						const incomingEvent = update._ as string;
-						if (updateEventsArray.includes(incomingEvent) || updateEventsArray.length == 0) {
+						if (updateEventsArray.includes(incomingEvent) || updateEvents.length == 0) {
 							debug('Got update in manual: ' + JSON.stringify(update, null, 2));
 							_emit(this, update);
 
