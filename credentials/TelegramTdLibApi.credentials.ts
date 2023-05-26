@@ -1,4 +1,5 @@
 import {
+	ICredentialTestRequest,
 	ICredentialType,
 	INodeProperties,
 } from 'n8n-workflow';
@@ -7,12 +8,23 @@ export class TelegramTdLibApi implements ICredentialType {
 	name = 'telegramTdLibApi';
 	displayName = 'Telegram API Using TdLib API';
 	properties: INodeProperties[] = [
+		// {
+		// 	displayName: 'Use Test DC?',
+		// 	name: 'use_test_dc',
+		// 	type: 'boolean',
+		// 	default: false,
+		// 	description: 'TBD',
+		// 	required: true,
+		// },
 		{
-			displayName: 'Use Test DC?',
-			name: 'use_test_dc',
-			type: 'boolean',
-			default: false,
-			description: 'TBD',
+			displayName: 'License Key',
+			name: 'license_key',
+			type: 'string',
+			default: 'FREE_LICENSE',
+			placeholder:
+				'123857',
+			description:
+				'License key to use this product',
 			required: true,
 		},
 		{
@@ -41,27 +53,24 @@ export class TelegramTdLibApi implements ICredentialType {
 			placeholder:
 				'+49171111111111',
 			description:
-				'Your Telegram Account Phone Number TBD',
+				'Your Telegram Account Phone Number',
 			required: true,
 		},
 		{
 			displayName: 'Use QR Code Authentication',
 			name: 'use_qr_code_auth',
 			type: 'boolean',
-			default: false,
+			default: true,
 			description: 'QR Code Authentication',
 			required: false,
 		},
-		{
-			displayName: 'Auth Code',
-			name: 'auth_code',
-			type: 'string',
-			default: '',
-			placeholder:
-				'123857',
-			description:
-				'Telegram 2FA Auth code that was sent after you tried to connect for the first time',
-			required: false,
-		},
 	];
+
+	test: ICredentialTestRequest = {
+		request: {
+			baseURL: 'http://ls.telepilot.co:4413',
+			url: '=?key={{$credentials.license_key}}',
+			method: 'POST',
+		},
+	};
 }
