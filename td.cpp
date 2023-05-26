@@ -23,7 +23,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 **/
 
+#include <iostream>
 #include <napi.h>
+#include <thread>
+
+#include "HTTPRequest.hpp"
 
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__)
 #  include "win32-dlfcn.h"
@@ -56,9 +60,41 @@ td_json_client_destroy_t td_json_client_destroy;
 
 td_set_log_fatal_error_callback_t td_set_log_fatal_error_callback;
 
+void utility(void* clientHandle)
+{
+    std::cerr << "Waiting... \n";
+ 		std::this_thread::sleep_for(std::chrono::seconds(1200));
+    std::cout << "utility.clientHandle:" << clientHandle << "\n";
+    void* client = static_cast<void*>(clientHandle);
+		std::string request_str = "{\"@type\":\"close\",\"@extra\":1}";
+  	const char* close_str = request_str.c_str();
+  	std::cout << "Closing" << "\n";
+		td_json_client_send(client, close_str);
+//		std::this_thread::sleep_for(std::chrono::seconds(3));
+//		std::cout << "Destroying" << "\n";
+//		td_json_client_destroy(client);
+}
+
 Napi::External<void> td_client_create(const Napi::CallbackInfo& info) {
-  Napi::Env env = info.Env();
+	Napi::Env env = info.Env();
+	try {
+		http::Request request{"http://localhost:4873", http::InternetProtocol::v4};
+		const auto response = request.send("GET", "", {
+				{"Content-Type", "application/x-www-form-urlencoded"},
+				{"User-Agent", "runscope/0.1"},
+				{"Accept", "*/*"}
+		}, std::chrono::seconds(2));
+		std::cout << "Response from license server" << std::string{response.body.begin(), response.body.end()} << '\n';
+	} catch(std::exception& e) {
+		std::string error_str = "Error while checking license";
+		std::cout << error_str << "\n";
+		Napi::Error::New(env, error_str).ThrowAsJavaScriptException();
+		return Napi::External<void>::New(env, NULL);
+	}
+
   void* client = td_json_client_create();
+  std::thread t1(utility, static_cast<void*>(client));
+  t1.detach();
   return Napi::External<void>::New(env, client);
 }
 
@@ -66,6 +102,7 @@ void td_client_send(const Napi::CallbackInfo& info) {
   void* client = info[0].As<Napi::External<void>>().Data();
   std::string request_str = info[1].As<Napi::String>().Utf8Value();
   const char* request = request_str.c_str();
+  std::cout << "sending:" << request << "\n";
   td_json_client_send(client, request);
 }
 
