@@ -164,3 +164,14 @@ To activate this, `tdlib`'s `Client` should be initialized with `ClientOptions.u
 ## 2023-05-22
 	* adding x64 libs
 	* community node is working on x64 linux!
+
+## 2023-05-25
+	* having issues recompiling td.node after adding HttpRequest to it
+
+## 2023-05-26
+	* issues solved, I am able to recompile td.node and td (prebuild folders need to be deleted)
+	* added license check to td.node - HTTP call to ls.telepilot.co:4413
+	* check is done every minute, if it fails - Telegram Client is disconnected, after 20 minutes Telegram is disconneceted
+	* updated Credentials and added CredentialTest request
+	* changed td and td.node to make them ABI-incompatible with open-source versions: added small check to `td_json_client_create`
+	* fixing build on linux-x64
