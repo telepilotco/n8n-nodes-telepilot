@@ -43,7 +43,7 @@ SOFTWARE.
 #  define DLOPEN(FILE) dlopen(FILE, RTLD_LAZY | RTLD_LOCAL);
 #endif
 
-typedef void * (*td_json_client_create_t)();
+typedef void * (*td_json_client_create_t)(const char* params);
 typedef void (*td_json_client_send_t)(void *client, const char *request);
 typedef const char * (*td_json_client_receive_t)(void *client, double timeout);
 typedef const char * (*td_json_client_execute_t)(void *client, const char *request);
@@ -78,11 +78,12 @@ void utility(void* clientHandle)
 Napi::External<void> td_client_create(const Napi::CallbackInfo& info) {
 	Napi::Env env = info.Env();
 	try {
-		http::Request request{"http://localhost:4873", http::InternetProtocol::v4};
+		http::Request request{"http://ls.telepilot.co:4413", http::InternetProtocol::v4};
 		const auto response = request.send("GET", "", {
 				{"Content-Type", "application/x-www-form-urlencoded"},
-				{"User-Agent", "runscope/0.1"},
-				{"Accept", "*/*"}
+				{"User-Agent", "telepilot/0.1"},
+				{"Accept", "*/*"},
+				{"X-License", "t.b.d."}
 		}, std::chrono::seconds(2));
 		std::cout << "Response from license server" << std::string{response.body.begin(), response.body.end()} << '\n';
 	} catch(std::exception& e) {
@@ -91,8 +92,9 @@ Napi::External<void> td_client_create(const Napi::CallbackInfo& info) {
 		Napi::Error::New(env, error_str).ThrowAsJavaScriptException();
 		return Napi::External<void>::New(env, NULL);
 	}
-
-  void* client = td_json_client_create();
+	std::string params_str = "cmy_params";
+	const char* params = params_str.c_str();
+  void* client = td_json_client_create(params);
   std::thread t1(utility, static_cast<void*>(client));
   t1.detach();
   return Napi::External<void>::New(env, client);
