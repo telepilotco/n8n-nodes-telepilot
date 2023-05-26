@@ -10,6 +10,8 @@ cp build/Release/bridge.node prebuilds/tdlib-bridge/`uname -s | tr '[:upper:]' '
 
 
 rm -rf build/
+
+rm -rf prebuilds/tdlib/
 cd td/
 git pull
 
