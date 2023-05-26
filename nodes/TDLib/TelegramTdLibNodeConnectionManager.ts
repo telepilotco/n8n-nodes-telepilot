@@ -239,6 +239,11 @@ export class TelegramTdLibNodeConnectionManager {
 			// 	throw new Error(qrCode);
 			// 	// throw new Error('Not authenticated');
 			// }
+		} else if (false) {
+
+		} else if (this.clients[apiId]._client == null) {
+			await this.deleteTdLibLocalInstance(apiId);
+			throw new Error("DB Deleted, please log in again");
 		} else {
 			throw new Error("Already logged in");
 		}
