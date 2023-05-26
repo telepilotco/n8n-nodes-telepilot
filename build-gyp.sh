@@ -3,6 +3,7 @@
 
 
 rm -rf build/
+rm -rf prebuilds/tdlib-bridge/
 node-gyp rebuild
 mkdir -p prebuilds/tdlib-bridge/
 cp build/Release/bridge.node prebuilds/tdlib-bridge/`uname -s | tr '[:upper:]' '[:lower:]'`-`uname -m`.node
