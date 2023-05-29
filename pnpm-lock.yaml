@@ -7,9 +7,6 @@ dependencies:
   debug:
     specifier: ^4.3.4
     version: 4.3.4
-  prebuilt-tdlib:
-    specifier: td-1.8.12
-    version: 0.1008012.0
   qrcode-terminal:
     specifier: ^0.12.0
     version: 0.12.0
@@ -3524,10 +3521,6 @@ packages:
     resolution: {integrity: sha512-xTgYBc3fuo7Yt7JbiuFxSYGToMoz8fLoE6TC9Wx1P/u+LfeThMOAqmuyECnlBaaJb+u1m9hHiXUEtwW4OzfUJg==}
     engines: {node: '>=0.10.0'}
     dev: true
-
-  /prebuilt-tdlib@0.1008012.0:
-    resolution: {integrity: sha512-ELenKUmbcedzUKi2wHdOHSxBiwePCM0ONEuSAVerhsaiBgJ6f/M7VEVJ7854hQqiL0is46AMbXsS/BbU32ymDg==}
-    dev: false
 
   /prelude-ls@1.2.1:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}

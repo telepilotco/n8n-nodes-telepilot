@@ -125,7 +125,7 @@ void td_client_send(const Napi::CallbackInfo& info) {
   void* client = info[0].As<Napi::External<void>>().Data();
   std::string request_str = info[1].As<Napi::String>().Utf8Value();
   const char* request = request_str.c_str();
-  std::cout << "sending:" << request << "\n";
+//  std::cout << "sending:" << request << "\n";
   td_json_client_send(client, request);
 }
 
