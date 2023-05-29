@@ -181,4 +181,5 @@ To activate this, `tdlib`'s `Client` should be initialized with `ClientOptions.u
 	* added license and updatedp package.json
 	* fixed libssl.so issue on linux-x64
 	* Created AWS Image template with Ubuntu-2020 (Version 2) for linux-x64 build
+	* links to self-hosted cloudron alternatives: https://www.reddit.com/r/selfhosted/comments/k5ataj/decent_open_source_alternative_to_cloudron/
 
