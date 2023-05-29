@@ -1,14 +1,14 @@
 {
   "name": "n8n-nodes-telepilot",
-  "version": "0.1.8",
-  "description": "Here comes one big TODO",
+  "version": "0.0.1",
+  "description": "Your personal Telegram co-pilot",
   "keywords": [
     "n8n-community-node-package"
   ],
-  "license": "MIT",
+  "license": "CC BY-NC-ND",
   "homepage": "https://telepilot.co/",
   "author": {
-    "name": "TODOist",
+    "name": "TelePilot",
     "email": "contact@telepilot.co"
   },
   "repository": {
@@ -32,11 +32,11 @@
   "n8n": {
     "n8nNodesApiVersion": 1,
     "credentials": [
-      "dist/credentials/TelegramTelePilotApi.credentials.js"
+      "dist/credentials/TelePilotApi.credentials.js"
     ],
     "nodes": [
-      "dist/nodes/TelePilot/TelegramTelePilot.node.js",
-      "dist/nodes/TelePilot/TelegramTelePilotTrigger.node.js"
+      "dist/nodes/TelePilot/TelePilot.node.js",
+      "dist/nodes/TelePilot/TelePilotTrigger.node.js"
     ]
   },
   "devDependencies": {
