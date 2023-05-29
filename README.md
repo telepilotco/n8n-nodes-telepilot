@@ -4,18 +4,27 @@
 
 ## Overview
 
-`n8n-nodes-telepilot` is a module for the n8n automation engine that utilizes the provides full ability to interact with Telegram servers with your User. 
-It allows creating Userbots within n8n and provides all the possibilities of a normal client along with n8n automation.
+`n8n-nodes-telepilot is a module for the n8n automation engine that provides the ability to configure your personal Telegram assistant. 
+It works alongside your main client, allowing you to interact with Telegram servers and see all the messages you can see, 
+while also enabling your assistant to react to those messages.
+
+With `n8n-nodes-telepilot`, you can enhance your Telegram user experience by automating various actions and responses. 
+Your personal Telegram Co-Pilot acts as real-time assistant, providing additional functionalities and making your Telegram usage more efficient.
 
 ## Features
 
+- Interact with other users
+- Respond to private messages: Co-Pilot can respond to private messages from other users, allowing for automated answers
 - Interact with channels and groups:
-	- Interact with other users
-	- Scrape data
+	- Download messages
+	- Topic Notification: Stay updated on specific topics of interest by receiving notifications when they are being discussed in Telegram. 
+    Configure your personal Telegram assistant to monitor and alert you whenever a particular topic is mentioned.
+	- Keyword Notification: Never miss important messages by setting up keyword notifications.
+    Define specific words or phrases that you are interested in, and your Telegram assistant will notify you whenever those keywords are posted in any message. 
+    Stay informed and engaged with the conversations that matter to you.
 	- Moderating groups
-- Respond to private messages: Userbots can respond to private messages from other users, allowing for automated answers.
-- Schedule messages: Userbots can schedule messages using the Telegram native feature.
-- Get more API events: Userbots can receive API events that normal bots don't know about, such as when a message gets deleted through the client.
+  - Schedule message posting: you can schedule messages using your Telegram Co-Pilot
+- Get more API events: Telepilot can receive API events that normal bots don't know about, such as when a message gets deleted through the client.
 
 
 ## Installation
