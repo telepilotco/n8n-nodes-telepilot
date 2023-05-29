@@ -5,33 +5,26 @@ import { INodeExecutionData, INodeType, INodeTypeDescription } from 'n8n-workflo
 
 const debug = require('debug')('tdl-node');
 
-// var QRCode = require('qrcode-terminal');
 
-// import {
-// 	OptionsWithUri,
-// } from 'request';
 import { Container } from 'typedi';
-import { TelegramTdLibNodeConnectionManager } from './TelegramTdLibNodeConnectionManager';
+import { TelePilotNodeConnectionManager } from './TelePilotNodeConnectionManager';
 const { Client } = require('tdl');
 
-// import {Client} from "tdl";
-// const { TDLib } = require('tdl-tdlib-addon')
-
-export class TelegramTdLib implements INodeType {
+export class TelePilot implements INodeType {
 	description: INodeTypeDescription = {
 		// Basic node details will go here
-		displayName: 'Telegram TDLib',
-		name: 'telegramTdLib',
-		icon: 'file:TelegramTDLib.svg',
+		displayName: 'Telegram Co-Pilot',
+		name: 'telePilot',
+		icon: 'file:TelePilot.svg',
 		group: ['transform'],
 		version: 1,
-		description: 'Consume Telegram API via TDLib',
+		description: 'Your Personal Telegram Co-Pilot',
 		defaults: {
-			name: 'Telegram TDLib',
+			name: 'Telegram Co-Pilot',
 		},
 		credentials: [
 			{
-				name: 'telegramTdLibApi',
+				name: 'telePilotApi',
 				required: true,
 			},
 		],
@@ -461,116 +454,23 @@ export class TelegramTdLib implements INodeType {
 	};
 	// The execute method will go here
 
-	/*
-	methods = {
-		credentialTest: {
-			async telegramTdLibConnectionTest(
-				this: ICredentialTestFunctions,
-				credential: ICredentialsDecrypted,
-			): Promise<INodeCredentialTestResult> {
-				const credentials = credential.data as IDataObject;
-				const qrCodeAuth = credentials.use_qr_code_auth as boolean;
-
-				let authenticated = false;
-
-				debug('telegramTdLibConnectionTest');
-
-				const client = await Container.get(TelegramTDLibNodeConnectionManager).getActiveTDLibClientAndLogin(
-					credentials.apiId as number,
-					credentials.apiHash as string,
-				)
-				await sleep(2000);
-				debug('telegramTdLibConnectionTest:' + client)
-
-				debug('qrCodeAuth:' + qrCodeAuth)
-
-				if (qrCodeAuth) {
-
-					const qrCodeAuthHandler = (update: IDataObject) => {
-						if (update._ === "updateAuthorizationState") {
-							debug('Got update:', JSON.stringify(update, null, 2))
-							const authorization_state = update.authorization_state as IDataObject;
-							if (authorization_state._ === 'authorizationStateWaitOtherDeviceConfirmation') {
-								const qr_link = authorization_state.link;
-								debug("qr_link:" + qr_link);
-								QRCode.setErrorLevel('Q');
-								debug("generating qr code");
-								QRCode.generate(qr_link, function(code: any) {debug(code)});
-								debug("generated qr code");
-								// return {
-								// 	status: 'Authenticating',
-								// 	message: code,
-								// };
-							}
-						} else if (update._ == 'authorizationStateReady') {
-							debug('Got update:', JSON.stringify(update, null, 2))
-							client.removeListener('on', qrCodeAuthHandler);
-							authenticated = true;
-							debug("removed 'on' update handler: qrCodeAuthHandler")
-						}
-					}
-
-					client
-						.on('update', qrCodeAuthHandler)
-
-					let result = await client.invoke({
-						_: 'requestQrCodeAuthentication'
-					});
-
-					debug(JSON.stringify(result));
-					while (!authenticated) {
-						await sleep(1000);
-					}
-					return {
-						status: 'OK',
-						message: 'Connection successful!',
-					};
-				} else {
-					try {
-						client.on('error', debug)
-
-						await client.login(() => ({
-							getPhoneNumber: () => {return credentials.phoneNumber},
-							getAuthCode: (retry: boolean) => { return credentials.auth_code}
-						}))
-
-						// await client.close();
-					} catch (error) {
-						return {
-							status: 'Error',
-							message: error.message,
-						};
-					}
-				}
-
-				return {
-					status: 'OK',
-					message: 'Connection successful!',
-				};
-			},
-		},
-	};
-
-	*/
-
 	async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
 		const returnData = [];
 		const resource = this.getNodeParameter('resource', 0) as string;
 		const operation = this.getNodeParameter('operation', 0) as string;
 
-		const credentials = await this.getCredentials('telegramTdLibApi');
-		// debug("has?: " + Container.has(TelegramTDLibNodeConnectionManager));
-		const cM = Container.get(TelegramTdLibNodeConnectionManager);
+		const credentials = await this.getCredentials('telePilotApi');
+		const cM = Container.get(TelePilotNodeConnectionManager);
 		// debug(cM)
 		// debug(client)
 
-		debug('Executing tdlib node, resource=' + resource + ', operation=' + operation);
+		debug('Executing telePilot node, resource=' + resource + ', operation=' + operation);
 
 		let result;
 		let client: typeof Client;
 		if (resource === 'login') {
 			if (operation === 'login') {
-				result = await cM.TDLibClientLoginWithQRCode(
+				result = await cM.clientLoginWithQRCode(
 					credentials?.apiId as number,
 					credentials?.apiHash as string,
 				);
@@ -578,24 +478,24 @@ export class TelegramTdLib implements INodeType {
 					returnData.push(s);
 				});
 				// } else if (operation === 'logout') {
-				// 	client = await cM.getActiveTDLibClient(credentials.apiId as number, credentials.apiHash as string);
+				// 	client = await cM.getActiveClient(credentials.apiId as number, credentials.apiHash as string);
 				// 	result = await client.invoke({
 				// 		_: 'logOut'
 				// 	});
 				// 	returnData.push(result);
 			} else if (operation === 'closeSession') {
 				try {
-					result = await cM.closeTdLibLocalSession(credentials?.apiId as number);
+					result = await cM.closeLocalSession(credentials?.apiId as number);
 				} catch (e) {
 					throw e;
 				}
 				returnData.push(result);
 			} else if (operation === 'removeTdDatabase') {
-				result = await cM.deleteTdLibLocalInstance(credentials?.apiId as number);
+				result = await cM.deleteLocalInstance(credentials?.apiId as number);
 				returnData.push(result);
 			}
 		} else {
-			client = await cM.getActiveTDLibClient(
+			client = await cM.getActiveClient(
 				credentials?.apiId as number,
 				credentials?.apiHash as string,
 			);
