@@ -1,17 +1,15 @@
 #npm install -g node-gyp
 #pnpm install
 
-
 rm -rf build/
-rm -rf prebuilds/tdlib-bridge/
+rm -rf prebuilds/bridge/
 node-gyp rebuild
-mkdir -p prebuilds/tdlib-bridge/
-cp build/Release/bridge.node prebuilds/tdlib-bridge/`uname -s | tr '[:upper:]' '[:lower:]'`-`uname -m`.node
-
+mkdir -p prebuilds/bridge/
+cp build/Release/bridge.node prebuilds/bridge/`uname -s | tr '[:upper:]' '[:lower:]'`-`uname -m`.node
 
 rm -rf build/
 
-rm -rf prebuilds/tdlib/
+rm -rf prebuilds/lib/
 cd td/
 git pull
 
@@ -36,7 +34,8 @@ uname -a
 otool -L build/libtdjson.dylib
 
 cd ..
-mkdir -p prebuilds/tdlib/
-cp td/build/libtdjson.dylib prebuilds/tdlib/`uname -s | tr '[:upper:]' '[:lower:]'`-`uname -m`.dylib
+mkdir -p prebuilds/lib/
+cp td/build/libtdjson.dylib prebuilds/lib/`uname -s | tr '[:upper:]' '[:lower:]'`-`uname -m`.dylib
+#cp td/build/libtdjson.so prebuilds/lib/`uname -s | tr '[:upper:]' '[:lower:]'`-`uname -m`.so
 
 npm pack --dry-run

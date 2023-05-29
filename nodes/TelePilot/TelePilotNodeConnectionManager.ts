@@ -28,7 +28,7 @@ function sleep(ms: number) {
 }
 
 @Service()
-export class TelegramTdLibNodeConnectionManager {
+export class TelePilotNodeConnectionManager {
 
 	private clients: Record<number, typeof Client> = {};
 
@@ -40,7 +40,7 @@ export class TelegramTdLibNodeConnectionManager {
 
 	}
 
-	async closeTdLibLocalSession(apiId: number) {
+	async closeLocalSession(apiId: number) {
 		let clients_keys = Object.keys(this.clients);
 		if (!clients_keys.includes(apiId.toString()) || this.clients[apiId] === undefined) {
 			throw new Error ("Unauthorized, please Login first")
@@ -53,7 +53,7 @@ export class TelegramTdLibNodeConnectionManager {
 		delete this.clients[apiId];
 		return result;
 	}
-	async deleteTdLibLocalInstance(apiId: number): Promise<Record<string, string>> {
+	async deleteLocalInstance(apiId: number): Promise<Record<string, string>> {
 		let clients_keys = Object.keys(this.clients);
 		if (!clients_keys.includes(apiId.toString()) || this.clients[apiId] === undefined) {
 			throw new Error ("Unauthorized, please Login first")
@@ -93,26 +93,26 @@ export class TelegramTdLibNodeConnectionManager {
 		return `${this.TD_FILES_PATH_PREFIX}/${apiId}/_td_files`
 	}
 
-	async getActiveTDLibClient(apiId: number, apiHash: string): Promise<typeof Client> {
+	async getActiveClient(apiId: number, apiHash: string): Promise<typeof Client> {
 		let clients_keys = Object.keys(this.clients);
-		debug('getActiveTDLibClients.keys:' + clients_keys);
-		debug('getActiveTDLibClients.in keys:' + !clients_keys.includes(apiId.toString()));
-		debug('getActiveTDLibClients.value:' + this.clients[apiId]);
+		debug('getActiveClient.keys:' + clients_keys);
+		debug('getActiveClient.in keys:' + !clients_keys.includes(apiId.toString()));
+		debug('getActiveClient.value:' + this.clients[apiId]);
 		if (!clients_keys.includes(apiId.toString()) || this.clients[apiId] === undefined) {
 			throw new Error ("Unauthorized, please Login first")
 		}
 		return this.clients[apiId];
 	}
 
-	async terminateTdLibSession(apiId: number, apiHash: string): Promise<typeof Client> {
+	async terminateSession(apiId: number, apiHash: string): Promise<typeof Client> {
 
 	}
 
-	async TDLibClientLoginWithQRCode(apiId: number, apiHash: string): Promise<string> {
+	async clientLoginWithQRCode(apiId: number, apiHash: string): Promise<string> {
 		let clients_keys = Object.keys(this.clients);
-		debug('getActiveTDLibClients.keys:' + clients_keys);
-		debug('getActiveTDLibClients.in keys:' + !clients_keys.includes(apiId.toString()));
-		debug('getActiveTDLibClients.value:' + this.clients[apiId]);
+		debug('clientLoginWithQRCode.keys:' + clients_keys);
+		debug('clientLoginWithQRCode.in keys:' + !clients_keys.includes(apiId.toString()));
+		debug('clientLoginWithQRCode.value:' + this.clients[apiId]);
 		let qrCode = ""
 		if (!clients_keys.includes(apiId.toString()) || this.clients[apiId] === undefined) {
 			// }
@@ -122,26 +122,29 @@ export class TelegramTdLibNodeConnectionManager {
 				_prefix = process.platform + "-" + process.arch;
 			}
 
-			debug('new TDLibClient:' + apiId)
+			debug('new TelePilot Client:' + apiId)
 			// if (this.client === undefined) {
 
 			let libraryFile = "";
 			if (process.arch === "x64") {
 				switch(process.platform) {
 					case "win32":
-						libraryFile = __dirname + "/../../../../prebuilt-tdlib/prebuilds/tdlib-windows-x64/tdjson.dll";
+						//libraryFile = __dirname + "/../../../../prebuilt-tdlib/prebuilds/tdlib-windows-x64/tdjson.dll";
+						throw new Error("non-supported architecture. x64 win32")
 						break;
 					case 'darwin':
-						libraryFile = __dirname + "/../../../../prebuilt-tdlib/prebuilds/tdlib-macos-x64/libtdjson.dylib";
+						//libraryFile = __dirname + "/../../../../prebuilt-tdlib/prebuilds/tdlib-macos-x64/libtdjson.dylib";
+						throw new Error("non-supported architecture. x64 darwin")
 						break;
 					default:
-						libraryFile = __dirname + "/../../../../prebuilt-tdlib/prebuilds/tdlib-linux-x64/libtdjson.so";
+						// libraryFile = __dirname + "/../../../../prebuilt-tdlib/prebuilds/tdlib-linux-x64/libtdjson.so";
+						libraryFile = __dirname + "/../../../prebuilds/lib/" + _prefix + ".so"
 				}
 			} else if (process.arch == "arm64") {
 				if (process.platform == "darwin") {
-					libraryFile = __dirname + "/../../../prebuilds/tdlib/" + _prefix + ".dylib" // process.env.LIBRARY_FILE,
+					libraryFile = __dirname + "/../../../prebuilds/lib/" + _prefix + ".dylib" // process.env.LIBRARY_FILE,
 				} else if (process.platform == "linux") {
-					// libraryFile = __dirname + "/../../../prebuilds/tdlib/" + _prefix + ".so" // process.env.LIBRARY_FILE,
+					// libraryFile = __dirname + "/../../../prebuilds/lib/" + _prefix + ".so" // process.env.LIBRARY_FILE,
 					throw new Error("non-supported architecture. arm64 !darwin !linux")
 				} else {
 					throw new Error("non-supported architecture. arm64 !darwin !linux")
@@ -150,7 +153,7 @@ export class TelegramTdLibNodeConnectionManager {
 
 			let client = new Client(new TDLib(
 				libraryFile,
-				__dirname + "/../../../prebuilds/tdlib-bridge/" + _prefix + ".node"// process.env.ADDON_PATH
+				__dirname + "/../../../prebuilds/bridge/" + _prefix + ".node"// process.env.ADDON_PATH
 			), {
 				apiId,//: 1371420, // Your api_id
 				apiHash,//: '10c6868cae8a1ce09f7d87f27d691bbd',
@@ -242,7 +245,7 @@ export class TelegramTdLibNodeConnectionManager {
 		} else if (false) {
 
 		} else if (this.clients[apiId]._client == null) {
-			await this.deleteTdLibLocalInstance(apiId);
+			await this.deleteLocalInstance(apiId);
 			throw new Error("DB Deleted, please log in again");
 		} else {
 			throw new Error("Already logged in");

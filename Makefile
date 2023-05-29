@@ -1,5 +1,7 @@
 UNAME := $(shell uname)
 
+.ONESHELL:
+
 init:
 	npm install -g node-gyp
 	npm install n8n -g
@@ -39,31 +41,35 @@ clean-local-n8n:
 	rm -rf ~/.n8n/nodes/
 
 build-bridge:
-	rm -rf prebuilds/tdlib-bridge/
+	rm -rf prebuilds/bridge/
 	node-gyp rebuild
-	mkdir -p prebuilds/tdlib-bridge/
-	cp build/Release/bridge.node prebuilds/tdlib-bridge/`uname -s | tr '[:upper:]' '[:lower:]'`-`uname -m`.node
+	mkdir -p prebuilds/bridge/
+	cp build/Release/bridge.node prebuilds/bridge/`uname -s | tr '[:upper:]' '[:lower:]'`-`uname -m`.node
 
+test:
+	cd td
+	ls
 
 build-lib:
-	rm -rf prebuilds/tdlib/
-	cd td/
-	mkdir -p build && cd build
+	rm -rf prebuilds/lib/
+	cd td/ ; mkdir -p build
 ifeq ($(UNAME), Linux)
-	cmake -DCMAKE_BUILD_TYPE=Release ..
+	cd td/build ; cmake -DCMAKE_BUILD_TYPE=Release ..
 endif
 ifeq ($(UNAME), Darwin)
-	cmake -DCMAKE_BUILD_TYPE=Release \
-	-DOPENSSL_ROOT_DIR=/opt/homebrew/opt/openssl@1.1 \
-  -DZLIB_INCLUDE_DIR=/opt/homebrew/opt/zlib/include \
-  -DZLIB_LIBRARY=/opt/homebrew/opt/zlib/lib/libz.a \
-  -DOPENSSL_USE_STATIC_LIBS=TRUE -DZLIB_USE_STATIC_LIBS=TRUE \
-  ..
+	cd td/build ; cmake -DCMAKE_BUILD_TYPE=Release \
+-DOPENSSL_ROOT_DIR=/opt/homebrew/opt/openssl@1.1 \
+-DZLIB_INCLUDE_DIR=/opt/homebrew/opt/zlib/include \
+-DZLIB_LIBRARY=/opt/homebrew/opt/zlib/lib/libz.a \
+-DOPENSSL_USE_STATIC_LIBS=TRUE -DZLIB_USE_STATIC_LIBS=TRUE ..
 endif
-	cmake --build . --target tdjson -- -j 3
-	cd ..
-	otool -L build/libtdjson.dylib
-	cd ..
-	mkdir -p prebuilds/tdlib/
-	cp td/build/libtdjson.dylib prebuilds/tdlib/`uname -s | tr '[:upper:]' '[:lower:]'`-`uname -m`.dylib
+	cd td/build ; cmake --build . --target tdjson -- -j 3
+	cd td/ ; otool -L build/libtdjson.dylib
+	mkdir -p prebuilds/lib/
+ifeq ($(UNAME), Darwin)
+	cp td/build/libtdjson.dylib prebuilds/lib/`uname -s | tr '[:upper:]' '[:lower:]'`-`uname -m`.dylib
+endif
+ifeq ($(UNAME), Linux)
+	cp td/build/libtdjson.so prebuilds/lib/`uname -s | tr '[:upper:]' '[:lower:]'`-`uname -m`.so
+endif
 	npm pack --dry-run

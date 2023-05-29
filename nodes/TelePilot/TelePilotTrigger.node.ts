@@ -8,28 +8,25 @@ import {
 
 const debug = require('debug')('tdl-trigger')
 
-import {TelegramTdLibNodeConnectionManager} from "./TelegramTdLibNodeConnectionManager";
+import {TelePilotNodeConnectionManager} from "./TelePilotNodeConnectionManager";
 
-// import {Client} from "tdl";
-// const { TDLib } = require('tdl-tdlib-addon')
-
-export class TelegramTdLibTrigger implements INodeType {
+export class TelePilotTrigger implements INodeType {
 	description: INodeTypeDescription = {
 		// Basic node details will go here
-		displayName: 'Telegram TDLib Trigger',
-		name: 'telegramTdLibTrigger',
-		icon: 'file:TelegramTDLib.svg',
+		displayName: 'Telegram Co-Pilot Trigger',
+		name: 'telePilotTrigger',
+		icon: 'file:TelePilot.svg',
 		group: ['trigger'],
 		version: 1,
-		description: 'Listens to events using Telegram API via TDLib',
+		description: 'Your Personal Telegram Co-Pilot Listener',
 		defaults: {
-			name: 'Telegram TDLib Trigger',
+			name: 'TelePilot Trigger',
 		},
 		inputs: [],
 		outputs: ['main'],
 		credentials: [
 			{
-				name: 'telegramTdLibApi',
+				name: 'telePilotApi',
 				required: true,
 			},
 		],
@@ -47,11 +44,11 @@ export class TelegramTdLibTrigger implements INodeType {
 	// The execute method will go here
 
 	async trigger(this: ITriggerFunctions): Promise<ITriggerResponse> {
-		const credentials = await this.getCredentials('telegramTdLibApi');
+		const credentials = await this.getCredentials('telePilotApi');
 
-		const cM = Container.get(TelegramTdLibNodeConnectionManager)
+		const cM = Container.get(TelePilotNodeConnectionManager)
 
-		const client = await cM.getActiveTDLibClient(credentials?.apiId as number, credentials?.apiHash as string);
+		const client = await cM.getActiveClient(credentials?.apiId as number, credentials?.apiHash as string);
 
 		const updateEvents = this.getNodeParameter('updateEvents', '') as string;
 		const updateEventsArray = updateEvents.split(',');
@@ -115,4 +112,4 @@ export class TelegramTdLibTrigger implements INodeType {
 	}
 }
 
-exports.TelegramTDLibTrigger = TelegramTdLibTrigger;
+exports.TelePilotTrigger = TelePilotTrigger;

@@ -1,19 +1,19 @@
 {
-  "name": "n8n-nodes-tdlib",
+  "name": "n8n-nodes-telepilot",
   "version": "0.1.8",
   "description": "Here comes one big TODO",
   "keywords": [
     "n8n-community-node-package"
   ],
   "license": "MIT",
-  "homepage": "",
+  "homepage": "https://telepilot.co/",
   "author": {
     "name": "TODOist",
-    "email": "todo@todo.io"
+    "email": "contact@telepilot.co"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/sergk8/n8n-nodes-tdlib.git"
+    "url": "https://github.com/telepilotco/n8n-nodes-telepilot.git"
   },
   "main": "index.js",
   "scripts": {
@@ -26,17 +26,17 @@
   },
   "files": [
     "dist",
-    "prebuilds/tdlib-bridge/*",
-    "prebuilds/tdlib/*"
+    "prebuilds/bridge/*",
+    "prebuilds/lib/*"
   ],
   "n8n": {
     "n8nNodesApiVersion": 1,
     "credentials": [
-      "dist/credentials/TelegramTdLibApi.credentials.js"
+      "dist/credentials/TelegramTelePilotApi.credentials.js"
     ],
     "nodes": [
-      "dist/nodes/TDLib/TelegramTdLib.node.js",
-      "dist/nodes/TDLib/TelegramTdLibTrigger.node.js"
+      "dist/nodes/TelePilot/TelegramTelePilot.node.js",
+      "dist/nodes/TelePilot/TelegramTelePilotTrigger.node.js"
     ]
   },
   "devDependencies": {
@@ -55,7 +55,6 @@
   },
   "dependencies": {
     "debug": "^4.3.4",
-    "prebuilt-tdlib": "td-1.8.12",
     "@types/qrcode-terminal": "^0.12.0",
     "qrcode-terminal": "^0.12.0",
     "tdl": "^7.2.0",
