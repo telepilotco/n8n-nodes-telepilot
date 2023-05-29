@@ -52,9 +52,9 @@ test:
 
 build-lib:
 	rm -rf prebuilds/lib/
-	cd td/ ; mkdir -p build
+	mkdir -p td/build
 ifeq ($(UNAME), Linux)
-	cd td/build ; cmake -DCMAKE_BUILD_TYPE=Release ..
+	cd td/build ; cmake -DCMAKE_BUILD_TYPE=Release -DOPENSSL_USE_STATIC_LIBS=TRUE -DZLIB_USE_STATIC_LIBS=TRUE ..
 endif
 ifeq ($(UNAME), Darwin)
 	cd td/build ; cmake -DCMAKE_BUILD_TYPE=Release \

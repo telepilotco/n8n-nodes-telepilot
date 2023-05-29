@@ -175,3 +175,10 @@ To activate this, `tdlib`'s `Client` should be initialized with `ClientOptions.u
 	* updated Credentials and added CredentialTest request
 	* changed td and td.node to make them ABI-incompatible with open-source versions: added small check to `td_json_client_create`
 	* fixing build on linux-x64
+
+
+## 2023-05-29
+	* added license and updatedp package.json
+	* fixed libssl.so issue on linux-x64
+	* Created AWS Image template with Ubuntu-2020 (Version 2) for linux-x64 build
+
