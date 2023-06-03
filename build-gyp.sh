@@ -15,6 +15,15 @@ npm install -g pnpm
 npm install --save-dev babel-cli
 pnpm install
 
+### musl
+
+sudo apt install docker.io
+sudo docker -t build build .
+docker create --name dummy build
+docker cp -L dummy:/td/build/libtdjson.so libtdjson.so
+ldd libtdjson.so
+
+
 ##############################
 
 rm -rf build/
