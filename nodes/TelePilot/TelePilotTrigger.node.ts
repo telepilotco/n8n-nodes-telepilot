@@ -6,7 +6,7 @@ import {
 	INodeTypeDescription, ITriggerFunctions, ITriggerResponse,
 } from 'n8n-workflow';
 
-const debug = require('debug')('tdl-trigger')
+const debug = require('debug')('telepilot-trigger')
 
 import {TelePilotNodeConnectionManager} from "./TelePilotNodeConnectionManager";
 

@@ -2,9 +2,9 @@ import 'reflect-metadata';
 import { Service } from 'typedi';
 import {IDataObject} from "n8n-workflow";
 const { Client } = require('tdl');
-const { TDLib } = require('tdl-tdlib-addon');
+const { BridgeLib } = require('../../bridge');
 
-const debug = require('debug')('tdl-cm')
+const debug = require('debug')('telepilot-cm')
 var QRCode = require('qrcode-terminal');
 
 const fs = require('fs/promises');
@@ -151,7 +151,7 @@ export class TelePilotNodeConnectionManager {
 				}
 			}
 
-			let client = new Client(new TDLib(
+			let client = new Client(new BridgeLib(
 				libraryFile,
 				__dirname + "/../../../prebuilds/bridge/" + _prefix + ".node"// process.env.ADDON_PATH
 			), {

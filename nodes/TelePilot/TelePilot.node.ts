@@ -3,12 +3,11 @@ import { IExecuteFunctions } from 'n8n-core';
 
 import { INodeExecutionData, INodeType, INodeTypeDescription } from 'n8n-workflow';
 
-const debug = require('debug')('tdl-node');
+const debug = require('debug')('telepilot-node');
 
 
 import { Container } from 'typedi';
 import { TelePilotNodeConnectionManager } from './TelePilotNodeConnectionManager';
-const { Client } = require('tdl');
 
 export class TelePilot implements INodeType {
 	description: INodeTypeDescription = {
@@ -482,7 +481,7 @@ export class TelePilot implements INodeType {
 		debug('Executing telePilot node, resource=' + resource + ', operation=' + operation);
 
 		let result;
-		let client: typeof Client;
+		let client;
 		if (resource === 'login') {
 			if (operation === 'login') {
 				result = await cM.clientLoginWithQRCode(
