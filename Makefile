@@ -5,6 +5,7 @@ UNAME := $(shell uname)
 init:
 	npm install -g node-gyp
 	npm install n8n -g
+	npm install --save-dev babel-cli
 	pnpm install
 ifeq ($(UNAME), Darwin)
 	curl -sL https://github.com/nodejs/node-gyp/raw/main/macOS_Catalina_acid_test.sh | bash

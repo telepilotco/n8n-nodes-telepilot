@@ -12,6 +12,7 @@ git clone --recursive https://github.com/telepilotco/n8n-nodes-telepilot.git
 cd n8n-nodes-telepilot
 npm install -g node-gyp
 npm install -g pnpm
+npm install --save-dev babel-cli
 pnpm install
 
 ##############################
