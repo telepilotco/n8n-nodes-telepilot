@@ -1,0 +1,18 @@
+FROM node:16.20.0-alpine
+RUN apk update
+RUN apk --no-cache add python3 make cmake gcc g++
+
+ADD . /bridge
+WORKDIR /bridge
+RUN npm install -g node-gyp
+RUN npm install -g pnpm
+RUN npm install --save-dev babel-cli
+RUN pnpm install
+
+RUN rm -rf build/
+RUN rm -rf prebuilds/bridge
+RUN node-gyp rebuild
+RUN mkdir -p prebuilds/bridge/
+RUN cp build/Release/bridge.node prebuilds/bridge/`uname -s | tr '[:upper:]' '[:lower:]'`-`uname -m`.node
+
+
