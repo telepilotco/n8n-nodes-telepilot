@@ -53,15 +53,15 @@ export class TelePilotTrigger implements INodeType {
 		const updateEvents = this.getNodeParameter('updateEvents', '') as string;
 		const updateEventsArray = updateEvents.split(',');
 
-		function _emit(_this: ITriggerFunctions, data: IDataObject) {
-			_this.emit([_this.helpers.returnJsonArray([data])]);
+		const _emit = (data: IDataObject) => {
+			this.emit([this.helpers.returnJsonArray([data])]);
 		}
 
-		function _listener(this: ITriggerFunctions, update: IDataObject) {
+		const _listener = (update: IDataObject) => {
 			const incomingEvent = update._ as string;
-			if (updateEventsArray.includes(incomingEvent) || updateEventsArray.length == 0) {
+			if (updateEventsArray.includes(incomingEvent) || updateEvents.length == 0) {
 				debug('Got update: ' + JSON.stringify(update, null, 2));
-				_emit(this, update);
+				_emit(update);
 			}
 		}
 
@@ -70,18 +70,11 @@ export class TelePilotTrigger implements INodeType {
 			client.on('error', debug);
 		}
 
-		// The "closeFunction" function gets called by n8n whenever
-		// the workflow gets deactivated and can so clean up.
 		async function closeFunction() {
 			debug('closeFunction(' + updateEventsArray + ')');
 			client.removeListener('update', _listener);
 		}
 
-		// The "manualTriggerFunction" function gets called by n8n
-		// when a user is in the workflow editor and starts the
-		// workflow manually.
-		// for AMQP it doesn't make much sense to wait here but
-		// for a new user who doesn't know how this works, it's better to wait and show a respective info message
 		const manualTriggerFunction = async () => {
 			await new Promise((resolve, reject) => {
 				const timeoutHandler = setTimeout(() => {
@@ -91,17 +84,19 @@ export class TelePilotTrigger implements INodeType {
 						),
 					);
 				}, 30000);
-				client.on('update',
-					(update: IDataObject) => {
-						const incomingEvent = update._ as string;
-						if (updateEventsArray.includes(incomingEvent) || updateEvents.length == 0) {
-							debug('Got update in manual: ' + JSON.stringify(update, null, 2));
-							_emit(this, update);
 
-							clearTimeout(timeoutHandler);
-							resolve(true);
-						}
-					});
+				const _listener2 = (update: IDataObject) => {
+					const incomingEvent = update._ as string;
+					if (updateEventsArray.includes(incomingEvent) || updateEvents.length == 0) {
+						debug('Got update in manual: ' + JSON.stringify(update, null, 2));
+						_emit(update);
+
+						clearTimeout(timeoutHandler);
+						client.removeListener('update', _listener2);
+						resolve(true);
+					}
+				}
+				client.on('update',	_listener2);
 			});
 		};
 
