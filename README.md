@@ -42,7 +42,7 @@ For a hassle-free experience, take one of these templates for self-hosting:
 - Get more API events: Telepilot can receive API events that normal bots don't know about, such as when a message gets deleted through the client.
 
 
-## Installation and Configuration
+## Installation
 
 ### Install as n8n community node
 
@@ -52,8 +52,20 @@ To use this package in your n8n project, follow these steps:
 2. Select "Install Community node"
 3. Specify the name `n8n-nodes-telepilot`, click checkbox that you understand the risks and click "Install"
 
-### Create Telegram API_ID
+### Manual installation
 
+To get started install the package in your n8n root directory:
+
+`npm install n8n-nodes-telepilot`
+
+For Docker-based deployments, add the following line before the font installation command in your [n8n Dockerfile](https://github.com/n8n-io/n8n/blob/master/docker/images/n8n/Dockerfile):
+
+`RUN cd /usr/local/lib/node_modules/n8n && npm install n8n-nodes-telepilot`
+
+## TelePilot setup
+
+### Connect TelePilot with your Telegram Account
+![Connect Telepilot with your Telegram Account](https://telepilot.co/assets/images/telegram-api-1.png)
 - Log in to your Telegram core: https://my.telegram.org with your phone number that you wish to use TelePilot with
 - Go to [API development tools](https://my.telegram.org/apps) and fill out the form:
   - App title: `telepilot`
@@ -61,12 +73,14 @@ To use this package in your n8n project, follow these steps:
 - Receive basic addresses as well as the `api_id` and `api_hash` parameters required for user authorization.
 
 ### Create Credentials in your n8n
-
+![Configure TelePilot Credentials](https://telepilot.co/assets/images/credentials-1.png)
 To initiate connection with Telegram servers, you need to provide the following credentials:
-- `license_code`: you can use free license, if you real one, write us an email at `contact@telepilot.co`
+- `license_key`: you can use free license, if you need real one drop us an email at `contact@telepilot.co`
 - `api_id`: copy-paste it from https://my.telegram.org/apps page
 - `api_hash`: copy-paste it from https://my.telegram.org/apps page
 - `phone_number`: phone number used when registering the Telegram account.
+
+Click on "Save" and make sure that you see "Connection tested successfully" message. 
 
 ### Import workflows
 
@@ -74,13 +88,10 @@ You can import predefined workflows that we have created for you, check out [thi
 
 ### Integrate with various APIs and Services
 
-
-
-
 ## Usage
 This package provides various nodes and actions that allow you to interact with Telegram servers and enhance the Telegram user experience. 
 Please refer to the n8n Documentation for detailed information on each node and its usage.
 May you have any questions, reach out to us: contact@telepilot.co
 
 ## License
-This project is licensed under the CC BY-NC-ND license.
+This project is licensed under the CC BY-NC-ND license, see LICENSE.md file.
