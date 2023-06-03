@@ -363,8 +363,8 @@ export class TelePilot implements INodeType {
 				required: true,
 				displayOptions: {
 					show: {
-						operation: ['getChat', 'getChatHistory'],
-						resource: ['chat'],
+						operation: ['getChat', 'getChatHistory', 'sendMessage'],
+						resource: ['chat', 'message'],
 					},
 				},
 				default: '',
@@ -449,6 +449,21 @@ export class TelePilot implements INodeType {
 				default: '',
 				placeholder: 'Text',
 				description: 'Identifier of the Remote file to download',
+			},
+			{
+				displayName: 'Message Text',
+				name: 'messageText',
+				type: 'string',
+				required: true,
+				displayOptions: {
+					show: {
+						operation: ['sendMessage'],
+						resource: ['message'],
+					},
+				},
+				default: '',
+				placeholder: 'Text',
+				description: 'Text of message to be send to Telegram user or chat',
 			},
 		],
 	};
@@ -606,6 +621,23 @@ export class TelePilot implements INodeType {
 					file_id,
 					priority: 16,
 					synchronous: true,
+				});
+				returnData.push(result);
+			}
+		} else if (resource === 'message') {
+			if (operation === 'sendMessage') {
+				const chat_id = this.getNodeParameter('chat_id', 0) as string;
+				const messageText = this.getNodeParameter('messageText', 0) as string;
+				const result = await client.invoke({
+					_: 'sendMessage',
+					chat_id,
+					input_message_content: {
+						_: 'inputMessageText',
+						text: {
+							_: 'formattedText',
+							text: messageText
+						}
+					}
 				});
 				returnData.push(result);
 			}
