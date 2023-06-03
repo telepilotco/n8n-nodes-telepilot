@@ -45,7 +45,7 @@ For a hassle-free experience, take one of these templates for self-hosting:
 ## Installation
 
 ### Install as n8n community node
-
+![Install Telepilot as n8n Community Node](https://telepilot.co/assets/images/install-community-node-1.png)
 To use this package in your n8n project, follow these steps:
 
 1. Go to Settings -> Community modules of your self-hosted n8n instance

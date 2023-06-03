@@ -3,6 +3,11 @@
   "version": "0.0.2-beta",
   "description": "Your personal Telegram co-pilot",
   "keywords": [
+    "telepilot.co",
+    "telepilot",
+    "telegram",
+    "telegram-api",
+    "node-addon",
     "n8n-community-node-package"
   ],
   "license": "CC BY-NC-ND",
@@ -17,7 +22,7 @@
   },
   "main": "index.js",
   "scripts": {
-    "build": "tsc && gulp build:icons",
+    "build": "babel src/ -d dist/ --root-mode upward && tsc && gulp build:icons",
     "dev": "tsc --watch",
     "format": "prettier nodes credentials --write",
     "lint": "eslint nodes credentials",
@@ -58,7 +63,6 @@
     "@types/qrcode-terminal": "^0.12.0",
     "qrcode-terminal": "^0.12.0",
     "tdl": "^7.2.0",
-    "tdl-tdlib-addon": "^1.2.2",
     "tdlib-types": "^0.1001008.1",
     "typedi": "^0.10.0"
   }

@@ -183,3 +183,8 @@ To activate this, `tdlib`'s `Client` should be initialized with `ClientOptions.u
 	* Created AWS Image template with Ubuntu-2020 (Version 2) for linux-x64 build
 	* links to self-hosted cloudron alternatives: https://www.reddit.com/r/selfhosted/comments/k5ataj/decent_open_source_alternative_to_cloudron/
 
+## 2023-06-03
+	* added `sendMessage` and fixed multiple workflow listeners / manual triggers issue
+	* updated README.md
+	* published version `n8n-nodes-telepilot@0.0.2-beta` to npmjs.org registry!
+	* Creating onboarding and documentation screenshots
