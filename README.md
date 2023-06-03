@@ -4,7 +4,7 @@
 
 ## Overview
 
-`n8n-nodes-telepilot is a module for the n8n automation engine that provides the ability to configure your personal Telegram assistant. 
+`n8n-nodes-telepilot` is a module for the n8n automation engine that provides the ability to configure your personal Telegram assistant. 
 It works alongside your main client, allowing you to interact with Telegram servers and see all the messages you can see, 
 while also enabling your assistant to react to those messages.
 
