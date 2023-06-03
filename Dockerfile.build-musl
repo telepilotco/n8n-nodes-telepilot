@@ -3,7 +3,7 @@ RUN apk update
 RUN apk --no-cache add \
 	gcc g++ musl-dev make cmake binutils linux-headers git gperf \
 	openssl-dev openssl-libs-static zlib-dev zlib-static
-ADD . /td/
+ADD ./td/ /td/
 WORKDIR /td
 RUN mkdir -p build
 WORKDIR /td/build

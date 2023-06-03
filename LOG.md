@@ -186,5 +186,12 @@ To activate this, `tdlib`'s `Client` should be initialized with `ClientOptions.u
 ## 2023-06-03
 	* added `sendMessage` and fixed multiple workflow listeners / manual triggers issue
 	* updated README.md
-	* published version `n8n-nodes-telepilot@0.0.2-beta` to npmjs.org registry!
+	* published version `n8n-nodes-telepilot@0.0.3-beta` to npmjs.org registry!
 	* Creating onboarding and documentation screenshots
+	* Bug: does not run on docker - musl build is required
+
+```
+ERROR: Dynamic Loading Error: Error loading shared library ld-linux-x86-64.so.2: 
+No such file or directory 
+(needed by /home/node/.n8n/nodes/node_modules/n8n-nodes-telepilot/dist/nodes/TelePilot/../../../prebuilds/lib/linux-x86_64.so)
+```
