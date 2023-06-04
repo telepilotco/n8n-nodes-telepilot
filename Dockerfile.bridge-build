@@ -1,6 +1,6 @@
 FROM node:16.20.0-alpine
 RUN apk update
-RUN apk --no-cache add python3 make cmake gcc g++
+RUN apk --no-cache add python3 make cmake gcc g++ gcompat patchelf
 
 ADD . /bridge
 WORKDIR /bridge
@@ -13,6 +13,8 @@ RUN rm -rf build/
 RUN rm -rf prebuilds/bridge
 RUN node-gyp rebuild
 RUN mkdir -p prebuilds/bridge/
+
+RUN patchelf --add-needed libgcompat.so.0 build/Release/bridge.node
 RUN cp build/Release/bridge.node prebuilds/bridge/`uname -s | tr '[:upper:]' '[:lower:]'`-`uname -m`.node
 
 
