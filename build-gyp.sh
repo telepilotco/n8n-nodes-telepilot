@@ -24,6 +24,21 @@ docker cp -L dummy:/td/build/libtdjson.so libtdjson.so
 ldd libtdjson.so
 
 
+
+##### musl build td.cpp
+sudo docker build -t build .
+sudo docker create --name bridge5 build
+sudo docker cp -L bridge5:/bridge/prebuilds/bridge/linux-x86_64.node linux-x86_64.node
+cp linux-x86_64.node prebuilds/bridge/
+cp linux-x86_64.node /var/data/n8n/nodes/node_modules/n8n-nodes-telepilot/prebuilds/bridge/linux-x86_64.node
+cp linux-x86_64.node ../tdl/linux-x86_64.node
+
+cd ~/sergcloud-pi4/services/svc.n8n/
+sudo bash stop.sh
+sudo bash stack-deploy.sh
+sudo docker ps
+sudo docker logs -f ...
+
 ##############################
 
 rm -rf build/

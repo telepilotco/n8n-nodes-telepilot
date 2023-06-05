@@ -195,3 +195,11 @@ ERROR: Dynamic Loading Error: Error loading shared library ld-linux-x86-64.so.2:
 No such file or directory 
 (needed by /home/node/.n8n/nodes/node_modules/n8n-nodes-telepilot/dist/nodes/TelePilot/../../../prebuilds/lib/linux-x86_64.so)
 ```
+
+
+## 2023-06-04
+	* fixed `Symbol not found: gnu_get_libc_version` issue on musl bridge build
+	* another issue - checking_license is not working, need more debug
+
+## 2023-06-05
+	* fixed musl - all working now in dockerized n8n
