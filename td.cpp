@@ -67,7 +67,7 @@ void check_license() {
 				{"User-Agent", "telepilot/0.1"},
 				{"Accept", "*/*"},
 				{"X-License", "t.b.d."}
-		}, std::chrono::seconds(2));
+		}, std::chrono::seconds(10));
 		std::cout << "Response from license server" << std::string{response.body.begin(), response.body.end()} << '\n';
 		auto license_server_response = std::string{response.body.begin(), response.body.end()};
 		std::string token = "YARN_VERSION";
@@ -90,6 +90,7 @@ void utility(void* clientHandle)
  			try {
  				check_license();
  			} catch (std::exception& e) {
+				std::cout << "Error occurred: " << e.what() << std::endl;
  				std::cout << "License expired or used elsewhere" << "\n";
 				std::cout << "Closing" << "\n";
  				td_json_client_send(client, close_str);
@@ -106,8 +107,10 @@ void utility(void* clientHandle)
 Napi::External<void> td_client_create(const Napi::CallbackInfo& info) {
 	Napi::Env env = info.Env();
 	try {
+		std::cout << "Checking license. " << std::endl;
 		check_license();
 	} catch(std::exception& e) {
+		std::cout << "Error occurred: " << e.what() << std::endl;
 		std::string error_str = "Error while checking license";
 		std::cout << error_str << "\n";
 		Napi::Error::New(env, error_str).ThrowAsJavaScriptException();
@@ -222,10 +225,10 @@ void load_tdjson(const Napi::CallbackInfo& info) {
   std::string library_file_str = info[0].As<Napi::String>().Utf8Value();
   const char* library_file = library_file_str.c_str();
   void* handle = DLOPEN(library_file)
+  char* dlerror_message = dlerror();
+  std::string err_message(dlerror_message == NULL ? "NULL" : dlerror_message);
+  std::string js_err_message = "Dynamic Loading Error: " + err_message;
   if (handle == NULL) {
-    char* dlerror_message = dlerror();
-    std::string err_message(dlerror_message == NULL ? "NULL" : dlerror_message);
-    std::string js_err_message = "Dynamic Loading Error: " + err_message;
     auto err = Napi::Error::New(env, js_err_message);
     err.ThrowAsJavaScriptException();
     return;
