@@ -1,6 +1,6 @@
 # n8n-nodes-telepilot
 
-[![npm version](https://badge.fury.io/js/n8n-nodes-telepilot.svg)](https://www.npmjs.com/package/n8n-nodes-telepilot)
+[![npm version](https://badge.fury.io/js/esta.svg)](https://www.npmjs.com/package/n8n-nodes-telepilot)
 
 ## Overview
 
