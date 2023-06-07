@@ -11,7 +11,7 @@ while also enabling your assistant to react to those messages.
 With `n8n-nodes-telepilot`, you can enhance your Telegram user experience by automating various actions and responses. 
 Your personal Telegram Co-Pilot acts as real-time assistant, providing additional functionalities and making your Telegram usage more efficient.
 
-At TelePilot, we prioritize your privacy. We do not have access to your Telegram messages because you have full control over your personal instance of TelePilot, 
+At [TelePilot](https://telepilot.co), we prioritize your privacy. We do not have access to your Telegram messages because you have full control over your personal instance of TelePilot, 
 which runs on your self-hosted n8n instance. The choice of hosting environment is entirely up to you. 
 
 Whether you prefer the convenience of cloud hosting or the control of running it on your own machine, TelePilot allows you to make that decision. 
@@ -33,7 +33,7 @@ For a hassle-free experience, take one of these templates for self-hosting:
 - Interact with channels and groups:
 	- Download messages
 	- Topic Notification: Stay updated on specific topics of interest by receiving notifications when they are being discussed in Telegram. 
-    Configure your personal Telegram assistant to monitor and alert you whenever a particular topic is mentioned.
+    Configure your [personal Telegram assistant]](https://telepilot.co) to monitor and alert you whenever a particular topic is mentioned.
 	- Keyword Notification: Never miss important messages by setting up keyword notifications.
     Define specific words or phrases that you are interested in, and your Telegram assistant will notify you whenever those keywords are posted in any message. 
     Stay informed and engaged with the conversations that matter to you.
@@ -45,12 +45,14 @@ For a hassle-free experience, take one of these templates for self-hosting:
 ## Installation
 
 ### Install as n8n community node
-![Install Telepilot as n8n Community Node](https://telepilot.co/assets/images/install-community-node-1.png)
+
 To use this package in your n8n project, follow these steps:
 
 1. Go to Settings -> Community modules of your self-hosted n8n instance
 2. Select "Install Community node"
 3. Specify the name `n8n-nodes-telepilot`, click checkbox that you understand the risks and click "Install"
+
+![Install Telepilot as n8n Community Node](https://telepilot.co/assets/images/install-community-node-1.png)
 
 ### Manual installation
 
@@ -66,21 +68,32 @@ For Docker-based deployments, add the following line before the font installatio
 
 ### Connect TelePilot with your Telegram Account
 ![Connect Telepilot with your Telegram Account](https://telepilot.co/assets/images/telegram-api-1.png)
+
 - Log in to your Telegram core: https://my.telegram.org with your phone number that you wish to use TelePilot with
 - Go to [API development tools](https://my.telegram.org/apps) and fill out the form:
   - App title: `telepilot`
   - Short name: `telepilot`
 - Receive basic addresses as well as the `api_id` and `api_hash` parameters required for user authorization.
 
-### Create Credentials in your n8n
-![Configure TelePilot Credentials](https://telepilot.co/assets/images/credentials-1.png)
-To initiate connection with Telegram servers, you need to provide the following credentials:
+### Create Credentials in your n8n instance
+
+Access the credentials UI by opening the left menu and selecting **Credentials**.
+
+![Configure TelePilot Credentials](https://telepilot.co/assets/images/credentials-0.png)
+
+Click on "Add Credential" button and browse for "Personal Telegram Co-Pilot API".
+
+To initiate connection with Telegram servers, you need to provide following:
 - `license_key`: you can use free license, if you need real one drop us an email at `contact@telepilot.co`
 - `api_id`: copy-paste it from https://my.telegram.org/apps page
 - `api_hash`: copy-paste it from https://my.telegram.org/apps page
 - `phone_number`: phone number used when registering the Telegram account.
 
-Click on "Save" and make sure that you see "Connection tested successfully" message. 
+![Configure TelePilot Credentials](https://telepilot.co/assets/images/credentials-1.png)
+
+After you have filled out all fields, click on "Save" and make sure that you see "Connection tested successfully" message.
+
+![Configure TelePilot Credentials](https://telepilot.co/assets/images/credentials-2.png)
 
 ### Import workflows
 
@@ -89,9 +102,11 @@ You can import predefined workflows that we have created for you, check out [thi
 ### Integrate with various APIs and Services
 
 ## Usage
+
 This package provides various nodes and actions that allow you to interact with Telegram servers and enhance the Telegram user experience. 
 Please refer to the n8n Documentation for detailed information on each node and its usage.
 May you have any questions, reach out to us: contact@telepilot.co
 
 ## License
+
 This project is licensed under the CC BY-NC-ND license, see LICENSE.md file.

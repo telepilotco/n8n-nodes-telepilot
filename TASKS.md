@@ -1,10 +1,16 @@
- Documentation: upload pictures for README.md to telepilot.co
- Website:	setup https://telepilot.co (web-server with TLS and link to npmjs.org)
+ +Documentation: upload pictures for README.md to telepilot.co
+ +Website:	setup https://telepilot.co (web-server with TLS and link to npmjs.org)
+ +Website: analytics with Plausible
+ +Website: setup with Hugo
+ Website: make blog with Hugo
+ 
  Documentation:	fix README.md
  
  Documentation: create videos of onboarding process
  Documentation: create sample workflows and upload them to telepilot.co
  Documentation: describe sample workflows
+
+ Website: Make sure Countries work in PLausible
  
  Website: create landing page
  Website: create "signed in user" area

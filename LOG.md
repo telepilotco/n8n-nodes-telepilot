@@ -203,3 +203,10 @@ No such file or directory
 
 ## 2023-06-05
 	* fixed musl - all working now in dockerized n8n
+
+## 2023-06-06
+	* setup analytics with Plausible on website
+	* setup Hugo for website
+
+## 2023--06-07
+	* Making blog with Hugo, added basic documentation
