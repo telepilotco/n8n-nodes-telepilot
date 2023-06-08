@@ -45,17 +45,17 @@ export class TelePilotApi implements ICredentialType {
 			description: 'TBD',
 			required: true,
 		},
-		{
-			displayName: 'Phone Number',
-			name: 'phoneNumber',
-			type: 'string',
-			default: '',
-			placeholder:
-				'+49171111111111',
-			description:
-				'Your Telegram Account Phone Number',
-			required: true,
-		},
+		// {
+		// 	displayName: 'Phone Number',
+		// 	name: 'phoneNumber',
+		// 	type: 'string',
+		// 	default: '',
+		// 	placeholder:
+		// 		'+49171111111111',
+		// 	description:
+		// 		'Your Telegram Account Phone Number',
+		// 	required: false,
+		// },
 		{
 			displayName: 'Use QR Code Authentication',
 			name: 'use_qr_code_auth',

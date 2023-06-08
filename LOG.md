@@ -216,3 +216,9 @@ No such file or directory
 	* created Telegram channel: https://t.me/telepilotco
 	* created Telegram group: @telepilotco_group
 	* created Telegram support contact: @telepilot_co
+
+## 2023--06-08
+	* pasted instructions on how to create login workflow to telegram channel
+	* pasted instructions on how to login with qr code to telegram channel
+	* established hugo build to `public/` folder which is then served by svc.caddy from svc.telepilotco
+	* verified telepilot.co domain and submitted sitemap.xml to google search console
