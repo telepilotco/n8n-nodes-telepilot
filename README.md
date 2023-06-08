@@ -107,10 +107,8 @@ Access the credentials UI by opening the left menu and selecting **Credentials**
 Click on "Add Credential" button and browse for "Personal Telegram Co-Pilot API".
 
 To initiate connection with Telegram servers, you need to provide following:
-- `license_key`: you can use free license, if you need real one drop us an email at `contact@telepilot.co`
 - `api_id`: copy-paste it from https://my.telegram.org/apps page
 - `api_hash`: copy-paste it from https://my.telegram.org/apps page
-- `phone_number`: phone number used when registering the Telegram account.
 
 ![Configure TelePilot Credentials](https://telepilot.co/assets/images/credentials-1.png)
 
