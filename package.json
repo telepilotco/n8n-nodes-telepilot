@@ -1,12 +1,13 @@
 {
   "name": "n8n-nodes-telepilot",
-  "version": "0.0.10-beta",
+  "version": "0.0.11-beta",
   "description": "Your personal Telegram co-pilot",
   "keywords": [
     "telepilot.co",
     "telepilot",
     "telegram",
     "telegram-api",
+    "MTProto",
     "node-addon",
     "n8n-community-node-package"
   ],
