@@ -210,3 +210,9 @@ No such file or directory
 
 ## 2023--06-07
 	* Making blog with Hugo, added basic documentation
+	* Published 0.0.9, unpublished 0.0.8
+	* created contact@telepilot.co community.n8n.io account
+	* posted response into n8n community: https://community.n8n.io/t/how-to-use-telegram-mtproto-in-n8n/9472
+	* created Telegram channel: https://t.me/telepilotco
+	* created Telegram group: @telepilotco_group
+	* created Telegram support contact: @telepilot_co
