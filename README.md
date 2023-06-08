@@ -2,6 +2,29 @@
 
 [![npm version](https://badge.fury.io/js/n8n-nodes-telepilot.svg)](https://www.npmjs.com/package/n8n-nodes-telepilot)
 
+## Beta testing
+
+Current build does not have all Telegram actions implemented and does not work on all n8n installations.
+
+Here is environment compatibility overview:
+
+|     OS | architecture | supported? |
+|--------|--------------|------|
+| docker | x64 | YES  |
+| docker | arm64 | NO   |
+| linux | x64 | NO     |
+| linux | arm64 | NO   |
+| macos | x64 | NO     |
+| macos | arm64 | NO  |
+| windows | x64 | NO  |
+| windows | arm64 | NO  |
+
+If you are interested in following our updates and news, check out:
+
+- our telegram channel https://t.me/telepilotco OR
+- our website https://telepilot.co
+
+
 ## Overview
 
 `n8n-nodes-telepilot` is a module for the n8n automation engine that provides the ability to configure your personal Telegram assistant. 
@@ -33,7 +56,7 @@ For a hassle-free experience, take one of these templates for self-hosting:
 - Interact with channels and groups:
 	- Download messages
 	- Topic Notification: Stay updated on specific topics of interest by receiving notifications when they are being discussed in Telegram. 
-    Configure your [personal Telegram assistant]](https://telepilot.co) to monitor and alert you whenever a particular topic is mentioned.
+    Configure your [personal Telegram assistant](https://telepilot.co) to monitor and alert you whenever a particular topic is mentioned.
 	- Keyword Notification: Never miss important messages by setting up keyword notifications.
     Define specific words or phrases that you are interested in, and your Telegram assistant will notify you whenever those keywords are posted in any message. 
     Stay informed and engaged with the conversations that matter to you.
