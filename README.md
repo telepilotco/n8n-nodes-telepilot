@@ -32,7 +32,7 @@ It works alongside your main client, allowing you to interact with Telegram serv
 while also enabling your assistant to react to those messages.
 
 With `n8n-nodes-telepilot`, you can enhance your Telegram user experience by automating various actions and responses. 
-Your personal Telegram Co-Pilot acts as real-time assistant, providing additional functionalities and making your Telegram usage more efficient.
+Your personal Telegram CoPilot acts as real-time assistant, providing additional functionalities and making your Telegram usage more efficient.
 
 At [TelePilot](https://telepilot.co), we prioritize your privacy. We do not have access to your Telegram messages because you have full control over your personal instance of TelePilot, 
 which runs on your self-hosted n8n instance. The choice of hosting environment is entirely up to you. 
@@ -52,7 +52,7 @@ For a hassle-free experience, take one of these templates for self-hosting:
 ## Features
 
 - Interact with other users
-- Respond to private messages: Co-Pilot can respond to private messages from other users, allowing for automated answers
+- Respond to private messages: CoPilot can respond to private messages from other users, allowing for automated answers
 - Interact with channels and groups:
 	- Download messages
 	- Topic Notification: Stay updated on specific topics of interest by receiving notifications when they are being discussed in Telegram. 
@@ -61,7 +61,7 @@ For a hassle-free experience, take one of these templates for self-hosting:
     Define specific words or phrases that you are interested in, and your Telegram assistant will notify you whenever those keywords are posted in any message. 
     Stay informed and engaged with the conversations that matter to you.
 	- Moderating groups
-  - Schedule message posting: you can schedule messages using your Telegram Co-Pilot
+  - Schedule message posting: you can schedule messages using your Telegram CoPilot
 - Get more API events: Telepilot can receive API events that normal bots don't know about, such as when a message gets deleted through the client.
 
 
@@ -104,7 +104,7 @@ Access the credentials UI by opening the left menu and selecting **Credentials**
 
 ![Configure TelePilot Credentials](https://telepilot.co/assets/images/credentials-0.png)
 
-Click on "Add Credential" button and browse for "Personal Telegram Co-Pilot API".
+Click on "Add Credential" button and browse for "Personal Telegram CoPilot API".
 
 To initiate connection with Telegram servers, you need to provide following:
 - `api_id`: copy-paste it from https://my.telegram.org/apps page

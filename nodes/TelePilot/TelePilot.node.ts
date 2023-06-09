@@ -12,14 +12,14 @@ import { TelePilotNodeConnectionManager } from './TelePilotNodeConnectionManager
 export class TelePilot implements INodeType {
 	description: INodeTypeDescription = {
 		// Basic node details will go here
-		displayName: 'Telegram Co-Pilot',
+		displayName: 'Telegram CoPilot',
 		name: 'telePilot',
 		icon: 'file:TelePilot.svg',
 		group: ['transform'],
 		version: 1,
-		description: 'Your Personal Telegram Co-Pilot',
+		description: 'Your Personal Telegram CoPilot',
 		defaults: {
-			name: 'Telegram Co-Pilot',
+			name: 'Telegram CoPilot',
 		},
 		credentials: [
 			{
