@@ -1,7 +1,7 @@
 {
   "name": "n8n-nodes-telepilot",
-  "version": "0.0.13-beta",
-  "description": "Your personal Telegram co-pilot",
+  "version": "0.0.14-beta",
+  "description": "Your personal Telegram CoPilot",
   "keywords": [
     "telepilot.co",
     "telepilot",

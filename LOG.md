@@ -222,3 +222,6 @@ No such file or directory
 	* pasted instructions on how to login with qr code to telegram channel
 	* established hugo build to `public/` folder which is then served by svc.caddy from svc.telepilotco
 	* verified telepilot.co domain and submitted sitemap.xml to google search console
+
+## 2023-06-09
+	* renamed "Co-Pilot" to "CoPilot"
