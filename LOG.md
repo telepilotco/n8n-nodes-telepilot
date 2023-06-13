@@ -225,3 +225,12 @@ No such file or directory
 
 ## 2023-06-09
 	* renamed "Co-Pilot" to "CoPilot"
+	* created plausible bug ticket https://github.com/plausible/analytics/discussions/3020 for google integration
+	* fixed IP address: it is now showing in Plausible (after I started caddy in "host" network mode)
+		This is not very good because it exposed plausible on port 8000
+
+## 2023-06-13
+	* checking what is implemented and what is to do, documenting
+	* implemented 'deleteMessages'
+	* changed 'events' to 'multiOptions'
+	* added TDLib events
