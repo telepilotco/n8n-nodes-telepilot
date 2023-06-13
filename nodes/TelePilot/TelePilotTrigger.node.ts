@@ -69,7 +69,7 @@ export class TelePilotTrigger implements INodeType {
 
 		const _listener = (update: IDataObject) => {
 			const incomingEvent = update._ as string;
-			if (updateEventsArray.includes(incomingEvent)) {
+			if (updateEventsArray.includes(incomingEvent) || updateEventsArray.length == 0) {
 				debug('Got update: ' + JSON.stringify(update, null, 2));
 				_emit(update);
 			}
@@ -90,14 +90,14 @@ export class TelePilotTrigger implements INodeType {
 				const timeoutHandler = setTimeout(() => {
 					reject(
 						new Error(
-							'555Aborted, no message received within 30secs. This 30sec timeout is only set for "manually triggered execution". Active Workflows will listen indefinitely.',
+							'Aborted, no message received within 30secs. This 30sec timeout is only set for "manually triggered execution". Active Workflows will listen indefinitely.',
 						),
 					);
 				}, 30000);
 
 				const _listener2 = (update: IDataObject) => {
 					const incomingEvent = update._ as string;
-					if (updateEventsArray.includes(incomingEvent)) {
+					if (updateEventsArray.includes(incomingEvent) || updateEventsArray.length == 0) {
 						debug('Got update in manual: ' + JSON.stringify(update, null, 2));
 						_emit(update);
 
