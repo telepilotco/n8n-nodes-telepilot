@@ -147,26 +147,26 @@ export class TelePilot implements INodeType {
 						value: 'getUserFullInfo',
 						action: 'Get user full info',
 					},
-					{
-						name: 'Search User by Phone Number',
-						value: 'searchUserByPhoneNumber',
-						action: 'Search user by phone number',
-					},
-					{
-						name: 'Set Bio',
-						value: 'setBio',
-						action: 'Set bio',
-					},
-					{
-						name: 'Set Name',
-						value: 'setName',
-						action: 'Set name',
-					},
-					{
-						name: 'Set Username',
-						value: 'setUsername',
-						action: 'Set username',
-					},
+					// {
+					// 	name: 'Search User by Phone Number',
+					// 	value: 'searchUserByPhoneNumber',
+					// 	action: 'Search user by phone number',
+					// },
+					// {
+					// 	name: 'Set Bio',
+					// 	value: 'setBio',
+					// 	action: 'Set bio',
+					// },
+					// {
+					// 	name: 'Set Name',
+					// 	value: 'setName',
+					// 	action: 'Set name',
+					// },
+					// {
+					// 	name: 'Set Username',
+					// 	value: 'setUsername',
+					// 	action: 'Set username',
+					// },
 				],
 				default: 'getMe',
 				noDataExpression: true,
@@ -245,11 +245,11 @@ export class TelePilot implements INodeType {
 						value: 'searchPublicChat',
 						action: 'Search public chats',
 					},
-					{
-						name: 'Search Public Chats (Search in Username, Title)',
-						value: 'searchPublicChats',
-						action: 'Search public chats',
-					},
+					// {
+					// 	name: 'Search Public Chats (Search in Username, Title)',
+					// 	value: 'searchPublicChats',
+					// 	action: 'Search public chats',
+					// },
 				],
 				default: 'getChatHistory',
 				noDataExpression: true,
@@ -271,26 +271,26 @@ export class TelePilot implements INodeType {
 						value: 'deleteMessages',
 						action: 'Delete messages',
 					},
-					{
-						name: 'Edit Message Text',
-						value: 'editMessageText',
-						action: 'Edit message text',
-					},
+					// {
+					// 	name: 'Edit Message Text',
+					// 	value: 'editMessageText',
+					// 	action: 'Edit message text',
+					// },
 					{
 						name: 'Send Message',
 						value: 'sendMessage',
 						action: 'Send message',
 					},
-					{
-						name: 'Send Message Album',
-						value: 'sendMessageAlbum',
-						action: 'Send message album',
-					},
-					{
-						name: 'Set Message Reaction',
-						value: 'setMessageReaction',
-						action: 'Set message reaction',
-					},
+					// {
+					// 	name: 'Send Message Album',
+					// 	value: 'sendMessageAlbum',
+					// 	action: 'Send message album',
+					// },
+					// {
+					// 	name: 'Set Message Reaction',
+					// 	value: 'setMessageReaction',
+					// 	action: 'Set message reaction',
+					// },
 				],
 				default: 'sendMessage',
 				noDataExpression: true,
@@ -362,7 +362,7 @@ export class TelePilot implements INodeType {
 				required: true,
 				displayOptions: {
 					show: {
-						operation: ['getChat', 'getChatHistory', 'sendMessage'],
+						operation: ['getChat', 'getChatHistory', 'sendMessage', 'deleteMessages'],
 						resource: ['chat', 'message'],
 					},
 				},
@@ -386,7 +386,37 @@ export class TelePilot implements INodeType {
 				description:
 					'Identifier of the message starting from which history must be fetched; use 0 to get results from the last message',
 			},
-
+			{
+				displayName: 'Message IDs',
+				name: 'message_ids',
+				type: 'string',
+				required: true,
+				displayOptions: {
+					show: {
+						operation: ['deleteMessages'],
+						resource: ['message'],
+					},
+				},
+				default: '0',
+				placeholder: '123,234,345',
+				description:
+					'Comma-separated identifiers of the messages to be deleted.',
+			},
+			{
+				displayName: 'Delete for all users?',
+				name: 'revoke',
+				type: 'boolean',
+				required: true,
+				displayOptions: {
+					show: {
+						operation: ['deleteMessages'],
+						resource: ['message'],
+					},
+				},
+				default: true,
+				description:
+					'Should given messages be deleted for all users?',
+			},
 			{
 				displayName: 'Chat Username',
 				name: 'username',
@@ -637,6 +667,21 @@ export class TelePilot implements INodeType {
 							text: messageText
 						}
 					}
+				});
+				returnData.push(result);
+			} else if (operation === 'deleteMessages') {
+				const chat_id = this.getNodeParameter('chat_id', 0) as string;
+				const message_ids = this.getNodeParameter('message_ids', 0) as string;
+				const revoke = this.getNodeParameter('revoke', 0) as boolean;
+
+				const idsArray = message_ids.split(',').map(s => s.toString().trim());
+				debug(chat_id)
+				debug(idsArray)
+				const result = await client.invoke({
+					_: 'deleteMessages',
+					chat_id,
+					message_ids: idsArray,
+					revoke
 				});
 				returnData.push(result);
 			}

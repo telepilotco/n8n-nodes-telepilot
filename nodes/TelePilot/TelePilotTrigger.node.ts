@@ -10,6 +10,9 @@ const debug = require('debug')('telepilot-trigger')
 
 import {TelePilotNodeConnectionManager} from "./TelePilotNodeConnectionManager";
 
+import { TDLibUpdateEvents } from './tdlib/updateEvents';
+
+
 export class TelePilotTrigger implements INodeType {
 	description: INodeTypeDescription = {
 		// Basic node details will go here
@@ -32,16 +35,22 @@ export class TelePilotTrigger implements INodeType {
 		],
 		properties: [
 			{
-				displayName: 'updateEvents',
-				name: 'updateEvents',
-				type: 'string',
-				default: '',
-				placeholder: 'updateNewMessage,updateMessageContent',
-				description: 'Comma-separated update events, that should activate this trigger',
+				displayName: 'Events',
+				name: 'events',
+				type: 'multiOptions',
+				options: [
+					{
+						name: '*',
+						value: '*',
+					},
+					...TDLibUpdateEvents
+				],
+				default: ['updateNewMessage', 'updateMessageContent'],
 			},
 		],
 	};
 	// The execute method will go here
+
 
 	async trigger(this: ITriggerFunctions): Promise<ITriggerResponse> {
 		const credentials = await this.getCredentials('telePilotApi');
@@ -50,8 +59,9 @@ export class TelePilotTrigger implements INodeType {
 
 		const client = await cM.getActiveClient(credentials?.apiId as number, credentials?.apiHash as string);
 
-		const updateEvents = this.getNodeParameter('updateEvents', '') as string;
-		const updateEventsArray = updateEvents.split(',');
+		const updateEventsArray = this.getNodeParameter('events', '') as string;
+		debug(updateEventsArray);
+		// const updateEventsArray = updateEvents.split(',');
 
 		const _emit = (data: IDataObject) => {
 			this.emit([this.helpers.returnJsonArray([data])]);
@@ -59,7 +69,7 @@ export class TelePilotTrigger implements INodeType {
 
 		const _listener = (update: IDataObject) => {
 			const incomingEvent = update._ as string;
-			if (updateEventsArray.includes(incomingEvent) || updateEvents.length == 0) {
+			if (updateEventsArray.includes(incomingEvent)) {
 				debug('Got update: ' + JSON.stringify(update, null, 2));
 				_emit(update);
 			}
@@ -87,7 +97,7 @@ export class TelePilotTrigger implements INodeType {
 
 				const _listener2 = (update: IDataObject) => {
 					const incomingEvent = update._ as string;
-					if (updateEventsArray.includes(incomingEvent) || updateEvents.length == 0) {
+					if (updateEventsArray.includes(incomingEvent)) {
 						debug('Got update in manual: ' + JSON.stringify(update, null, 2));
 						_emit(update);
 
