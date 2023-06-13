@@ -243,13 +243,13 @@ export class TelePilot implements INodeType {
 					{
 						name: 'Search Public Chat (by Username)',
 						value: 'searchPublicChat',
+						action: 'Search public chat by username',
+					},
+					{
+						name: 'Search Public Chats (Search in Username, Title)',
+						value: 'searchPublicChats',
 						action: 'Search public chats',
 					},
-					// {
-					// 	name: 'Search Public Chats (Search in Username, Title)',
-					// 	value: 'searchPublicChats',
-					// 	action: 'Search public chats',
-					// },
 				],
 				default: 'getChatHistory',
 				noDataExpression: true,
@@ -291,6 +291,11 @@ export class TelePilot implements INodeType {
 					// 	value: 'setMessageReaction',
 					// 	action: 'Set message reaction',
 					// },
+					{
+						name: 'Forward Messages',
+						value: 'forwardMessages',
+						action: 'Forward Messages'
+					}
 				],
 				default: 'sendMessage',
 				noDataExpression: true,
@@ -362,13 +367,28 @@ export class TelePilot implements INodeType {
 				required: true,
 				displayOptions: {
 					show: {
-						operation: ['getChat', 'getChatHistory', 'sendMessage', 'deleteMessages'],
+						operation: ['getChat', 'getChatHistory', 'sendMessage', 'deleteMessages', 'forwardMessages'],
 						resource: ['chat', 'message'],
 					},
 				},
 				default: '',
 				placeholder: '122323',
 				description: 'ID of chat',
+			},
+			{
+				displayName: 'From Chat ID',
+				name: 'from_chat_id',
+				type: 'string',
+				required: true,
+				displayOptions: {
+					show: {
+						operation: ['forwardMessages'],
+						resource: ['message'],
+					},
+				},
+				default: '',
+				placeholder: '122323',
+				description: 'ID of chat from which to forward messages.',
 			},
 			{
 				displayName: 'From Message ID',
@@ -393,7 +413,7 @@ export class TelePilot implements INodeType {
 				required: true,
 				displayOptions: {
 					show: {
-						operation: ['deleteMessages'],
+						operation: ['deleteMessages', 'forwardMessages'],
 						resource: ['message'],
 					},
 				},
@@ -674,14 +694,28 @@ export class TelePilot implements INodeType {
 				const message_ids = this.getNodeParameter('message_ids', 0) as string;
 				const revoke = this.getNodeParameter('revoke', 0) as boolean;
 
-				const idsArray = message_ids.split(',').map(s => s.toString().trim());
-				debug(chat_id)
-				debug(idsArray)
+				const idsArray = message_ids.toString().split(',').map(s => s.toString().trim());
 				const result = await client.invoke({
 					_: 'deleteMessages',
 					chat_id,
 					message_ids: idsArray,
 					revoke
+				});
+				returnData.push(result);
+			} else if (operation === 'forwardMessages') {
+				const chat_id = this.getNodeParameter('chat_id', 0) as string;
+				const from_chat_id = this.getNodeParameter('from_chat_id', 0) as string;
+
+				const message_ids: string = this.getNodeParameter('message_ids', 0) as string;
+				debug(message_ids)
+				const idsArray = message_ids.toString().split(',').map(s => s.toString().trim()).filter(s => s.length > 0);
+				debug(idsArray)
+
+				const result = await client.invoke({
+					_: 'forwardMessages',
+					chat_id,
+					from_chat_id,
+					message_ids: idsArray
 				});
 				returnData.push(result);
 			}

@@ -234,3 +234,6 @@ No such file or directory
 	* implemented 'deleteMessages'
 	* changed 'events' to 'multiOptions'
 	* added TDLib events
+	* added images for 6 promo workflows to main page
+	* created workflow section of the site (empty with slugs and titles)
+	* Create 4 promo workflows

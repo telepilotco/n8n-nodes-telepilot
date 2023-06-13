@@ -4,6 +4,15 @@ Website: translate all content
 Website: hosting that is not referred to me
 Website: check everything if it is somehow referred to me or not
 
+
+Website: workflow "Auto-Responder"
+Website: workflow "Search"
+Website: workflow "Listen to Events"
+Website: workflow "Trigger words"
+Website: workflow "Collect Links, Pictures, Files"
+Website: workflow "Boost with AI"
+
+
 Telegram: channel
 Telegram: group
 
@@ -13,7 +22,10 @@ Bridge: transmits license key with every check call
 Node: translate all actions? needed?
 
 
+
 ===========================
+
+Blog: How N-API can be used to add advanced integrations to n8n using custom nodes
 
 +Documentation: upload pictures for README.md to telepilot.co
  +Website:	setup https://telepilot.co (web-server with TLS and link to npmjs.org)
