@@ -6,12 +6,12 @@
 	"resources": {
 		"credentialDocumentation": [
 			{
-				"url": ""
+				"url": "https://telepilot.co/documentation/linking-telepilot-with-your-telegram-account/"
 			}
 		],
 		"primaryDocumentation": [
 			{
-				"url": ""
+				"url": "https://telepilot.co/documentation/"
 			}
 		]
 	}
