@@ -7,10 +7,12 @@ Website: check everything if it is somehow referred to me or not
 
 Website: workflow "Auto-Responder"
 Website: workflow "Search"
-Website: workflow "Listen to Events"
++Website: workflow "Listen to Events"
 Website: workflow "Trigger words"
 Website: workflow "Collect Links, Pictures, Files"
 Website: workflow "Boost with AI"
+
+Website: Documentation - list of all actions
 
 
 Telegram: channel
