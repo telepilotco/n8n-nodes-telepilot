@@ -294,7 +294,7 @@ export class TelePilot implements INodeType {
 					{
 						name: 'Forward Messages',
 						value: 'forwardMessages',
-						action: 'Forward Messages'
+						action: 'Forward messages'
 					}
 				],
 				default: 'sendMessage',
@@ -388,7 +388,7 @@ export class TelePilot implements INodeType {
 				},
 				default: '',
 				placeholder: '122323',
-				description: 'ID of chat from which to forward messages.',
+				description: 'ID of chat from which to forward messages',
 			},
 			{
 				displayName: 'From Message ID',
@@ -419,11 +419,10 @@ export class TelePilot implements INodeType {
 				},
 				default: '0',
 				placeholder: '123,234,345',
-				description:
-					'Comma-separated identifiers of the messages to be deleted.',
+				description: 'Comma-separated identifiers of the messages to be deleted',
 			},
 			{
-				displayName: 'Delete for all users?',
+				displayName: 'Delete for All Users?',
 				name: 'revoke',
 				type: 'boolean',
 				required: true,
@@ -434,8 +433,7 @@ export class TelePilot implements INodeType {
 					},
 				},
 				default: true,
-				description:
-					'Should given messages be deleted for all users?',
+				description: 'Whether given messages should be deleted for all users',
 			},
 			{
 				displayName: 'Chat Username',
