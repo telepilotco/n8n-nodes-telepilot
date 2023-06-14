@@ -236,4 +236,12 @@ No such file or directory
 	* added TDLib events
 	* added images for 6 promo workflows to main page
 	* created workflow section of the site (empty with slugs and titles)
-	* Create 4 promo workflows
+	* Created 5 promo workflows
+
+## 2023-06-14
+	* Wrote 2 blog articles to describe 2 promo workflows:
+		** https://telepilot.co/blog/getting-all-telegram-events/
+		** https://telepilot.co/blog/searching-for-users-channels-groups-in-telegram/
+	* posted these 2 articles in Telegram n8n channel
+	* added login documentation page to the site
+	* releasing and answering to anas on n8n forum
