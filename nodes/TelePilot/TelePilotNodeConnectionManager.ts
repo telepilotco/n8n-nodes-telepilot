@@ -43,7 +43,7 @@ export class TelePilotNodeConnectionManager {
 	async closeLocalSession(apiId: number) {
 		let clients_keys = Object.keys(this.clients);
 		if (!clients_keys.includes(apiId.toString()) || this.clients[apiId] === undefined) {
-			throw new Error ("Unauthorized, please Login first")
+			throw new Error ("You need to login first, please check our guide at https://telepilot.co/login-howto")
 		}
 		const client = this.clients[apiId];
 
@@ -56,7 +56,7 @@ export class TelePilotNodeConnectionManager {
 	async deleteLocalInstance(apiId: number): Promise<Record<string, string>> {
 		let clients_keys = Object.keys(this.clients);
 		if (!clients_keys.includes(apiId.toString()) || this.clients[apiId] === undefined) {
-			throw new Error ("Unauthorized, please Login first")
+			throw new Error ("You need to login first, please check our guide at https://telepilot.co/login-howto")
 		}
 		const client = this.clients[apiId];
 
@@ -99,7 +99,7 @@ export class TelePilotNodeConnectionManager {
 		debug('getActiveClient.in keys:' + !clients_keys.includes(apiId.toString()));
 		debug('getActiveClient.value:' + this.clients[apiId]);
 		if (!clients_keys.includes(apiId.toString()) || this.clients[apiId] === undefined) {
-			throw new Error ("Unauthorized, please Login first")
+			throw new Error ("You need to login first, please check our guide at https://telepilot.co/login-howto")
 		}
 		return this.clients[apiId];
 	}
@@ -198,7 +198,7 @@ export class TelePilotNodeConnectionManager {
 				}
 
 				if (update._ === "updateAuthorizationState") {
-					debug('Got update:', JSON.stringify(update, null, 2))
+					debug('Got update1:', JSON.stringify(update, null, 2))
 					const authorization_state = update.authorization_state as IDataObject;
 					if (authorization_state._ === 'authorizationStateWaitOtherDeviceConfirmation') {
 						const qr_link = authorization_state.link;
@@ -211,27 +211,43 @@ export class TelePilotNodeConnectionManager {
 						// 	status: 'Authenticating',
 						// 	message: code,
 						// };
+						authenticated = -1
+					} else if (authorization_state._ === 'authorizationStateReady') {
+						debug("setting authenticated to 1")
+						authenticated = 1
+					} else if (authorization_state._ === 'authorizationStateWaitTdlibParameters') {
+						debug("need to disable requestQrCodeAuthentication call")
 					}
 				} else if (update._ == 'authorizationStateReady') {
-					debug('Got update:', JSON.stringify(update, null, 2))
+					debug('Got update2:', JSON.stringify(update, null, 2))
 					client.removeListener('on', qrCodeAuthHandler);
 					authenticated = 1;//FIXME - check return
 					debug("removed 'on' update handler: qrCodeAuthHandler")
-				} else if (update._ === 'authorizationStateWaitPhoneNumber' || update._ === 'authorizationStateWaitTdlibParameters') {
+				} else if (update._ === 'authorizationStateWaitPhoneNumber') {
+
+				} else if (update._ === 'authorizationStateWaitTdlibParameters') {
 
 				} else {
-					authenticated = -1;//FIXME - check return
+					// debug("strange else")
+					// debug(update._)
+					// authenticated = -1;//FIXME - check return
 				}
 			}
 
 			client
 				.on('update', qrCodeAuthHandler)
 
-			let result = await client.invoke({
-				_: 'requestQrCodeAuthentication'
-			});
+			await sleep(1000);
+			debug("authenticated=" + authenticated);
 
-			debug(JSON.stringify(result));
+			if (authenticated < 1) {
+				let result = await client.invoke({
+					_: 'requestQrCodeAuthentication'
+				});
+				debug(JSON.stringify(result));
+			}
+
+
 			///////////////////////////////
 
 			while (authenticated == 0) {
@@ -246,9 +262,9 @@ export class TelePilotNodeConnectionManager {
 
 		} else if (this.clients[apiId]._client == null) {
 			await this.deleteLocalInstance(apiId);
-			throw new Error("DB Deleted, please log in again");
+			throw new Error("TD database was deleted, please log in again. Please check our guide at https://telepilot.co/login-howto");
 		} else {
-			throw new Error("Already logged in");
+			return 'Already logged in';
 		}
 
 		debug("returning for " + apiId)
