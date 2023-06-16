@@ -24,6 +24,52 @@ Bridge: transmits license key with every check call
 Node: translate all actions? needed?
 
 
+===========================
+
+
+## Implemented actions
+
+- getMe
+- getUser
+- getUserFullInfo
+- createPrivateChat
+- createNewSecretChat
+- getContacts
+- getChatHistory
+- getChats
+- getChat
+- searchPublicChat
+- getRemoteFile
+- downloadFile
+- sendMessage
+
+### All actions
+
++ user.createNewSecretChat
++ user.createPrivateChat
++ user.getMe
++ user.getUser
++ user.getUserFullInfo
+- user.searchUserByPhoneNumber
+- user.setBio
+- user.setName
+- user.setUsername
++ contact.getContacts
+- group.getSupergroupMembers
++ chat.getChat
++ chat.getChats
++ chat.getChatHistory
++ chat.searchPublicChat
+- chat.searchPublicChats
++ message.deleteMessages
++ message.forwardMessages
+- message.editMessageText
++ message.sendMessage
+- message.sendMessageAlbum
+- message.setMessageReaction
++ file.getRemoteFile
++ file.downloadFile
+
 
 ===========================
 
