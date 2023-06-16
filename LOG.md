@@ -246,12 +246,15 @@ No such file or directory
 	* added login documentation page to the site
 	* releasing and answering to anas on n8n forum
 	* enabled /workflows/ on website
-	* publishing 0.0.14-beta release notes in channel
+	* published 0.0.14-beta release notes in channel
 
 ## 2023-06-15
 	* tested updates - does not work, reinstall is required	
 	* wrote "Update" docu page and Telegram post
-	* improved login process and error messages - preparing for 0.0.15-beta
 	* wrote blog article about 5-auto-responder
+	* improved login process and error messages - preparing for 0.0.15-beta
 	* added /login-howto redirect for quick docu access
-	* publishing 0.0.15-beta releate notes in channel
+	* published 0.0.15-beta releate notes in channel
+
+## 2023-06-16
+	* Removing 20-minutes limitation for demo users from bridge module
