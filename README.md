@@ -116,17 +116,24 @@ After you have filled out all fields, click on "Save" and make sure that you see
 
 ![Configure TelePilot Credentials](https://telepilot.co/assets/images/credentials-2.png)
 
+## Login
+
+Once the credentials are set up, you need to log in.
+This is accomplished by authorizing Telepilot using your Telegram account via a QR code scan.
+
+For more detailed information, please refer to our login guide: https://telepilot.co/login-howto
+
+
 ### Import workflows
 
 You can import predefined workflows that we have created for you, check out [this page](https://telepilot.co/workflows)
 
-### Integrate with various APIs and Services
 
 ## Usage
 
 This package provides various nodes and actions that allow you to interact with Telegram servers and enhance the Telegram user experience. 
 Please refer to the n8n Documentation for detailed information on each node and its usage.
-May you have any questions, reach out to us: contact@telepilot.co
+May you have any questions, reach out to per email (contact@telepilot.co) or in our [Telegram Group](https://t.me/telepilotco_group)
 
 ## License
 
