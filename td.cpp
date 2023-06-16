@@ -63,12 +63,12 @@ td_set_log_fatal_error_callback_t td_set_log_fatal_error_callback;
 void check_license() {
 		http::Request request{"http://ls.telepilot.co:4413", http::InternetProtocol::v4};
 		const auto response = request.send("GET", "", {
-				{"Content-Type", "application/x-www-form-urlencoded"},
-				{"User-Agent", "telepilot/0.1"},
-				{"Accept", "*/*"},
-				{"X-License", "t.b.d."}
+				{"Content-Type", "application/x-www-form-urlencoded"}
+				,{"User-Agent", "telepilot/0.1"}
+				,{"Accept", "*/*"}
+//				,{"X-License", "t.b.d."}
 		}, std::chrono::seconds(10));
-		std::cout << "Response from license server" << std::string{response.body.begin(), response.body.end()} << '\n';
+		std::cout << "[0] Response from license server" << std::string{response.body.begin(), response.body.end()} << '\n';
 		auto license_server_response = std::string{response.body.begin(), response.body.end()};
 		std::string token = "YARN_VERSION";
 		if (license_server_response.find(token) == std::string::npos) {
@@ -78,14 +78,13 @@ void check_license() {
 
 void utility(void* clientHandle)
 {
-		auto FREE_MINUTES = 20;
+//		auto FREE_MINUTES = 20;
     std::cerr << "Waiting... \n";
 		void* client = static_cast<void*>(clientHandle);
 		std::string request_str = "{\"@type\":\"close\",\"@extra\":1}";
 		const char* close_str = request_str.c_str();
 
-
- 		for (int i = 0; i < FREE_MINUTES; i++) {
+ 		while(true) {
  			std::this_thread::sleep_for(std::chrono::seconds(60));
  			try {
  				check_license();
@@ -96,9 +95,10 @@ void utility(void* clientHandle)
  				td_json_client_send(client, close_str);
  			}
  		}
-//    std::cout << "utility.clientHandle:" << clientHandle << "\n";
-		std::cout << FREE_MINUTES << " minutes expired. Closing" << "\n";
-		td_json_client_send(client, close_str);
+
+//		std::cout << FREE_MINUTES << " minutes expired. Closing" << "\n";
+//		td_json_client_send(client, close_str);
+
 //		std::this_thread::sleep_for(std::chrono::seconds(3));
 //		std::cout << "Destroying" << "\n";
 //		td_json_client_destroy(client);
