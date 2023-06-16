@@ -48,10 +48,9 @@ build-bridge:
 	cp build/Release/bridge.node prebuilds/bridge/`uname -s | tr '[:upper:]' '[:lower:]'`-`uname -m`.node
 
 build-bridge-musl:
-	cp Dockerfile.bridge-build Dockerfile
-	sudo docker -t build-bridge build .
-	docker create --name dummy build-bridge
-	sudo docker cp -L build-bridge:/bridge/prebuilds/bridge/linux-x86_64.node linux-x86_64.node
+	sudo docker build -t build_bridge .
+	sudo docker create --name dummy build_bridge
+	sudo docker cp -L dummy:/bridge/prebuilds/bridge/linux-x86_64.node linux-x86_64.node
 	cp linux-x86_64.node prebuilds-musl/bridge/
 	cp linux-x86_64.node /var/data/n8n/nodes/node_modules/n8n-nodes-telepilot/prebuilds/bridge/linux-x86_64.node
 	cp linux-x86_64.node ../tdl/linux-x86_64.node
