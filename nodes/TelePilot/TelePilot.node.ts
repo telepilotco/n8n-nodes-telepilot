@@ -5,7 +5,6 @@ import { INodeExecutionData, INodeType, INodeTypeDescription } from 'n8n-workflo
 
 const debug = require('debug')('telepilot-node');
 
-
 import { Container } from 'typedi';
 import { TelePilotNodeConnectionManager } from './TelePilotNodeConnectionManager';
 
@@ -241,6 +240,11 @@ export class TelePilot implements INodeType {
 						action: 'Get chats',
 					},
 					{
+						name: 'Mark Chat as Unread',
+						value: 'toggleChatIsMarkedAsUnread',
+						action: 'Mark chat as unread',
+					},
+					{
 						name: 'Search Public Chat (by Username)',
 						value: 'searchPublicChat',
 						action: 'Search public chat by username',
@@ -271,31 +275,26 @@ export class TelePilot implements INodeType {
 						value: 'deleteMessages',
 						action: 'Delete messages',
 					},
-					// {
-					// 	name: 'Edit Message Text',
-					// 	value: 'editMessageText',
-					// 	action: 'Edit message text',
-					// },
+					{
+						name: 'Edit Message Text',
+						value: 'editMessageText',
+						action: 'Edit message text',
+					},
+					{
+						name: 'Forward Messages',
+						value: 'forwardMessages',
+						action: 'Forward messages',
+					},
+					{
+						name: 'Get Messages',
+						value: 'getMessage',
+						action: 'Get message',
+					},
 					{
 						name: 'Send Message',
 						value: 'sendMessage',
 						action: 'Send message',
 					},
-					// {
-					// 	name: 'Send Message Album',
-					// 	value: 'sendMessageAlbum',
-					// 	action: 'Send message album',
-					// },
-					// {
-					// 	name: 'Set Message Reaction',
-					// 	value: 'setMessageReaction',
-					// 	action: 'Set message reaction',
-					// },
-					{
-						name: 'Forward Messages',
-						value: 'forwardMessages',
-						action: 'Forward messages'
-					}
 				],
 				default: 'sendMessage',
 				noDataExpression: true,
@@ -367,7 +366,16 @@ export class TelePilot implements INodeType {
 				required: true,
 				displayOptions: {
 					show: {
-						operation: ['getChat', 'getChatHistory', 'sendMessage', 'deleteMessages', 'forwardMessages'],
+						operation: [
+							'getChat',
+							'getChatHistory',
+							'sendMessage',
+							'deleteMessages',
+							'forwardMessages',
+							'toggleChatIsMarkedAsUnread',
+							'getMessage',
+							'editMessageText',
+						],
 						resource: ['chat', 'message'],
 					},
 				},
@@ -389,6 +397,22 @@ export class TelePilot implements INodeType {
 				default: '',
 				placeholder: '122323',
 				description: 'ID of chat from which to forward messages',
+			},
+			//Chat
+			{
+				displayName: 'Mark as Unread?',
+				name: 'is_marked_as_unread',
+				type: 'boolean',
+				required: true,
+				displayOptions: {
+					show: {
+						operation: ['toggleChatIsMarkedAsUnread'],
+						resource: ['chat'],
+					},
+				},
+				default: true,
+				placeholder: 'true',
+				description: 'Whether Chat should be marked as Unread',
 			},
 			{
 				displayName: 'From Message ID',
@@ -417,9 +441,39 @@ export class TelePilot implements INodeType {
 						resource: ['message'],
 					},
 				},
-				default: '0',
+				default: '',
 				placeholder: '123,234,345',
-				description: 'Comma-separated identifiers of the messages to be deleted',
+				description: 'Comma-separated identifiers of the messages to be deleted or forwarded',
+			},
+			{
+				displayName: 'Message ID',
+				name: 'message_id',
+				type: 'string',
+				required: true,
+				displayOptions: {
+					show: {
+						operation: ['getMessage', 'editMessageText'],
+						resource: ['message'],
+					},
+				},
+				default: '',
+				placeholder: '12345678',
+				description: 'Identifier of the messages',
+			},
+			{
+				displayName: 'Message Text',
+				name: 'messageText',
+				type: 'string',
+				required: true,
+				displayOptions: {
+					show: {
+						operation: ['editMessageText'],
+						resource: ['message'],
+					},
+				},
+				default: '',
+				placeholder: 'Sample message text',
+				description: 'Text of the messages',
 			},
 			{
 				displayName: 'Delete for All Users?',
@@ -652,6 +706,15 @@ export class TelePilot implements INodeType {
 				debug(query);
 				debug(result);
 				returnData.push(result);
+			} else if (operation === 'toggleChatIsMarkedAsUnread') {
+				const chat_id = this.getNodeParameter('chat_id', 0) as string;
+				const is_marked_as_unread = this.getNodeParameter('is_marked_as_unread', 0) as boolean;
+				const result = await client.invoke({
+					_: 'toggleChatIsMarkedAsUnread',
+					chat_id,
+					is_marked_as_unread,
+				});
+				returnData.push(result);
 			}
 		} else if (resource === 'file') {
 			if (operation === 'getRemoteFile') {
@@ -672,7 +735,16 @@ export class TelePilot implements INodeType {
 				returnData.push(result);
 			}
 		} else if (resource === 'message') {
-			if (operation === 'sendMessage') {
+			if (operation === 'getMessage') {
+				const chat_id = this.getNodeParameter('chat_id', 0) as string;
+				const message_id = this.getNodeParameter('message_id', 0) as string;
+				const result = await client.invoke({
+					_: 'getMessage',
+					chat_id,
+					message_id,
+				});
+				returnData.push(result);
+			} else if (operation === 'sendMessage') {
 				const chat_id = this.getNodeParameter('chat_id', 0) as string;
 				const messageText = this.getNodeParameter('messageText', 0) as string;
 				const result = await client.invoke({
@@ -682,9 +754,26 @@ export class TelePilot implements INodeType {
 						_: 'inputMessageText',
 						text: {
 							_: 'formattedText',
-							text: messageText
-						}
-					}
+							text: messageText,
+						},
+					},
+				});
+				returnData.push(result);
+			} else if (operation === 'editMessageText') {
+				const chat_id = this.getNodeParameter('chat_id', 0) as string;
+				const message_id = this.getNodeParameter('message_id', 0) as string;
+				const messageText = this.getNodeParameter('messageText', 0) as string;
+				const result = await client.invoke({
+					_: 'editMessageText',
+					chat_id,
+					message_id,
+					input_message_content: {
+						_: 'inputMessageText',
+						text: {
+							_: 'formattedText',
+							text: messageText,
+						},
+					},
 				});
 				returnData.push(result);
 			} else if (operation === 'deleteMessages') {
@@ -692,12 +781,15 @@ export class TelePilot implements INodeType {
 				const message_ids = this.getNodeParameter('message_ids', 0) as string;
 				const revoke = this.getNodeParameter('revoke', 0) as boolean;
 
-				const idsArray = message_ids.toString().split(',').map(s => s.toString().trim());
+				const idsArray = message_ids
+					.toString()
+					.split(',')
+					.map((s) => s.toString().trim());
 				const result = await client.invoke({
 					_: 'deleteMessages',
 					chat_id,
 					message_ids: idsArray,
-					revoke
+					revoke,
 				});
 				returnData.push(result);
 			} else if (operation === 'forwardMessages') {
@@ -705,15 +797,19 @@ export class TelePilot implements INodeType {
 				const from_chat_id = this.getNodeParameter('from_chat_id', 0) as string;
 
 				const message_ids: string = this.getNodeParameter('message_ids', 0) as string;
-				debug(message_ids)
-				const idsArray = message_ids.toString().split(',').map(s => s.toString().trim()).filter(s => s.length > 0);
-				debug(idsArray)
+				debug(message_ids);
+				const idsArray = message_ids
+					.toString()
+					.split(',')
+					.map((s) => s.toString().trim())
+					.filter((s) => s.length > 0);
+				debug(idsArray);
 
 				const result = await client.invoke({
 					_: 'forwardMessages',
 					chat_id,
 					from_chat_id,
-					message_ids: idsArray
+					message_ids: idsArray,
 				});
 				returnData.push(result);
 			}
