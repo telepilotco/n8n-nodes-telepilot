@@ -1,6 +1,6 @@
 {
   "name": "n8n-nodes-telepilot",
-  "version": "0.0.1712-beta",
+  "version": "0.0.1714-beta",
   "description": "Your personal Telegram CoPilot",
   "keywords": [
     "telepilot.co",
@@ -29,13 +29,13 @@
     "lint": "eslint nodes credentials",
     "lintfix": "eslint nodes credentials package.json --fix",
     "prepublishOnly": "npm run build && npm run lint -c .eslintrc.prepublish.js nodes credentials",
-    "preinstall": "node preinstall.js run"
+    "postinstall": "node postinstall.js install"
   },
   "files": [
     "dist",
     "prebuilds/bridge/*",
     "prebuilds/lib/*",
-    "preinstall.js"
+    "postinstall.js"
   ],
   "bridgeBinary": {
     "name": "bridge",
