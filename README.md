@@ -48,6 +48,7 @@ For a hassle-free experience, take one of these templates for self-hosting:
 
  - [n8n on Cloudron](https://www.cloudron.io/store/io.n8n.cloudronapp.html)
  - [YunoHost](https://yunohost.org/en/app_n8n) / [YunoHost n8n app on github](https://github.com/YunoHost-Apps/n8n_ynh)
+ - https://timeweb.cloud/ ?
 
 ## Features
 

@@ -258,3 +258,48 @@ No such file or directory
 
 ## 2023-06-16
 	* Removing 20-minutes limitation for demo users from bridge module
+	* released 0.0.16-beta
+	* Added actions:
+	 - getMessage
+		- toggleChatIsMarkedAsUnread
+		- editMessateText
+	* Trigger Words workflow: created draft with Pinned list logic
+	* Trigger Words workflow: created draft with Delete Message processor
+	* Fixing bug in bridge: license checker should stop looping when session is closed
+
+
+## 2023-06-17
+	* TODO: https://telepilot.co/documentation/saving-variables-in-n8n-with-kv-storage-node
+	* TODO: https://telepilot.co/nodes/kv-storage
+	* TODO: https://github.com/telepilotco/n8n-nodes-kv-storage.git
+
+## 2023-06-18:
+	* worked on kv-storage
+
+## 2023-06-19:
+	* published kv-storage and communicated it to n8n and n8n-telegram-ru comunities
+	* chatted with beta-tester Ivan: Trigger node is not working for him (docker linux x64)
+	* investigating how to distribute n8n-notes-telepilot package: I would not like to put all binary dependencies
+		into one package because it will be too big
+	* apparently, it is not possible to modify `dependencies` on the fly, because n8n is using `npm install <package>
+	command, and newly installed plugin is being treated as dependency, hence it and all it's sub-dependencies are being 
+	downloaded first:
+		** https://gist.github.com/dcleao/c1bec5e288cd3c2c05be31c00446ca55#npm-install-dependency
+		** https://stackoverflow.com/a/56297257/996192
+	* TODO: put all binaries for all OSes and all architectures into one package. 
+	Alternatively, build multiple n8n-node-telepilot plugins (depending on OS and arch), but this complicates the setup additionally
+
+## 2023-06-20
+	* List of numbers that can be checked:
+		https://pl.telepilot.co/telepilot.co
+		https://github.com/telepilotco/n8n-nodes-kv-storage/stargazers
+		
+		https://t.me/telepilotco
+		https://discord.com/channels/832547762716278804
+		
+		sudo docker logs 09876ea487f3 | grep host | jq ".host.ip" | sort | uniq | wc -l
+		ctlp && cd ../logs && cat access.log | grep json | jq "[.request.uri, .common_log]" | less
+		scp -i ~/.ssh/id_rsa-LE-Z11666 ubuntu@d2-2-de1.sergcloud.online:/home/ubuntu/sergcloud-pi4/services/svc.telepilotco/site/logs/access.log /tmp/access.log
+		
+		
+		
