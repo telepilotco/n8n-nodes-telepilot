@@ -3,7 +3,7 @@ import { Service } from 'typedi';
 import {IDataObject} from "n8n-workflow";
 const { Client } = require('tdl');
 const { BridgeLib } = require('../../bridge');
-const { family, GLIBC, MUSL } = require('detect-libc');
+const childProcess = require('child_process');
 
 const debug = require('debug')('telepilot-cm')
 var QRCode = require('qrcode-terminal');
@@ -126,40 +126,47 @@ export class TelePilotNodeConnectionManager {
 			debug('new TelePilot Client:' + apiId)
 			// if (this.client === undefined) {
 
-			let libraryFile = "";
-			switch (await family()) {
-				case GLIBC: debug("GLIBC detected!");
-				case MUSL: debug("MUSL detected!");
-				case null: debug("LIBC not detected!")
-			}
+			let libFile = "";
+			let bridgeFile = "";
 			if (process.arch === "x64") {
 				switch(process.platform) {
 					case "win32":
-						//libraryFile = __dirname + "/../../../../prebuilt-tdlib/prebuilds/tdlib-windows-x64/tdjson.dll";
+						//libFile = __dirname + "/../../../../prebuilt-tdlib/prebuilds/tdlib-windows-x64/tdjson.dll";
 						throw new Error("non-supported architecture. x64 win32")
 						break;
 					case 'darwin':
-						//libraryFile = __dirname + "/../../../../prebuilt-tdlib/prebuilds/tdlib-macos-x64/libtdjson.dylib";
+						//libFile = __dirname + "/../../../../prebuilt-tdlib/prebuilds/tdlib-macos-x64/libtdjson.dylib";
 						throw new Error("non-supported architecture. x64 darwin")
 						break;
 					default:
-						// libraryFile = __dirname + "/../../../../prebuilt-tdlib/prebuilds/tdlib-linux-x64/libtdjson.so";
-						libraryFile = __dirname + "/../../../prebuilds/lib/" + _prefix + ".so"
+						// libFile = __dirname + "/../../../../prebuilt-tdlib/prebuilds/tdlib-linux-x64/libtdjson.so";
+						const output = childProcess.execSync("getconf GNU_LIBC_VERSION 2>&1 || true; ldd --version 2>&1 || true", { encoding: 'utf8' });
+						if (output.includes("glibc")) {
+							debug("glibc detected");
+							libFile = __dirname + "/../../../prebuilds/lib/" + _prefix + "-glibc.so"
+							bridgeFile = __dirname + "/../../../prebuilds/bridge/" + _prefix + "-glibc.node";
+						} else if (output.includes("musl")) {
+							debug("musl detected");
+							libFile = __dirname + "/../../../prebuilds/lib/" + _prefix + "-musl.so"
+							bridgeFile = __dirname + "/../../../prebuilds/bridge/" + _prefix + "-musl.node";
+						}
+						// libFile = __dirname + "/../../../prebuilds/lib/" + _prefix + ".so"
 				}
 			} else if (process.arch == "arm64") {
 				if (process.platform == "darwin") {
-					libraryFile = __dirname + "/../../../prebuilds/lib/" + _prefix + ".dylib" // process.env.LIBRARY_FILE,
+					libFile = __dirname + "/../../../prebuilds/lib/" + _prefix + ".dylib" // process.env.LIBRARY_FILE,
 				} else if (process.platform == "linux") {
-					// libraryFile = __dirname + "/../../../prebuilds/lib/" + _prefix + ".so" // process.env.LIBRARY_FILE,
+					// libFile = __dirname + "/../../../prebuilds/lib/" + _prefix + ".so" // process.env.LIBRARY_FILE,
 					throw new Error("non-supported architecture. arm64 !darwin !linux")
 				} else {
 					throw new Error("non-supported architecture. arm64 !darwin !linux")
 				}
 			}
 
+			// let bridgeFile = __dirname + "/../../../prebuilds/bridge/" + _prefix + ".node";
 			let client = new Client(new BridgeLib(
-				libraryFile,
-				__dirname + "/../../../prebuilds/bridge/" + _prefix + ".node"// process.env.ADDON_PATH
+				libFile,
+				bridgeFile
 			), {
 				apiId,//: 1371420, // Your api_id
 				apiHash,//: '10c6868cae8a1ce09f7d87f27d691bbd',
