@@ -1,8 +1,6 @@
 #!/usr/bin/env node
 
 "use strict";
-// Thanks to author of https://github.com/sanathkr/go-npm, we were able to modify his code to work with private packages
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 var path = require('path'),
 	mkdirp = require('mkdirp'),
@@ -20,51 +18,7 @@ var ARCH_MAPPING = {
 var PLATFORM_MAPPING = {
 	"darwin": "darwin",
 	"linux": "linux",
-	"win32": "windows",
-	"freebsd": "freebsd"
 };
-
-async function getInstallationPath() {
-
-	// `npm bin` will output the path where binary files should be installed
-
-	const value = await execShellCommand("npm bin -g");
-
-
-	var dir = null;
-	if (!value || value.length === 0) {
-
-		// We couldn't infer path from `npm bin`. Let's try to get it from
-		// Environment variables set by NPM when it runs.
-		// npm_config_prefix points to NPM's installation directory where `bin` folder is available
-		// Ex: /Users/foo/.nvm/versions/node/v4.3.0
-		var env = process.env;
-		if (env && env.npm_config_prefix) {
-			dir = path.join(env.npm_config_prefix, "bin");
-		}
-	} else {
-		dir = value.trim();
-	}
-
-	await mkdirp(dir);
-	return dir;
-}
-
-async function verifyAndPlaceBinary(binName, binPath, callback) {
-	if (!fs.existsSync(path.join(binPath, binName))) return callback('Downloaded binary does not contain the binary specified in configuration - ' + binName);
-
-	// Get installation path for executables under node
-	const installationPath=  await getInstallationPath();
-	// Copy the executable to the path
-	fs.rename(path.join(binPath, binName), path.join(installationPath, binName),(err)=>{
-		if(!err){
-			console.info("Installed cli successfully");
-			callback(null);
-		}else{
-			callback(err);
-		}
-	});
-}
 
 function validateConfiguration(packageJson) {
 
@@ -144,7 +98,16 @@ function parsePackageJson() {
 
 async function installDependency() {
 
-	const value = await execShellCommand("npm install prebuilt-tdlib");
+	//telepilot-binaries-linux-x64 (glibc/musl)
+	//	glibc
+	//	musl
+	//telepilot-binaries-linux-arm64 (glibc/musl)
+	//	glibc
+	//	musl
+
+	//telepilot-binaries-macos-arm64
+	//telepilot-binaries-macos-arm64
+	const value = await execShellCommand("cd .. ; npm install prebuilt-tdlib");
 
 	console.log(value);
 }
@@ -160,8 +123,8 @@ async function installDependency() {
 var INVALID_INPUT = "Invalid inputs";
 async function install(callback) {
 
-	var opts = parsePackageJson();
-	if (!opts) return callback(INVALID_INPUT);
+	// var opts = parsePackageJson();
+	// if (!opts) return callback(INVALID_INPUT);
 
 	await installDependency()
 	//
