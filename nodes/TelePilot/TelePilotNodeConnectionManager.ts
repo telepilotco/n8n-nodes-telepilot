@@ -3,6 +3,7 @@ import { Service } from 'typedi';
 import {IDataObject} from "n8n-workflow";
 const { Client } = require('tdl');
 const { BridgeLib } = require('../../bridge');
+const { family, GLIBC, MUSL } = require('detect-libc');
 
 const debug = require('debug')('telepilot-cm')
 var QRCode = require('qrcode-terminal');
@@ -126,6 +127,11 @@ export class TelePilotNodeConnectionManager {
 			// if (this.client === undefined) {
 
 			let libraryFile = "";
+			switch (await family()) {
+				case GLIBC: debug("GLIBC detected!");
+				case MUSL: debug("MUSL detected!");
+				case null: debug("LIBC not detected!")
+			}
 			if (process.arch === "x64") {
 				switch(process.platform) {
 					case "win32":
