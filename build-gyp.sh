@@ -15,6 +15,8 @@ npm install -g pnpm
 npm install --save-dev babel-cli
 pnpm install
 
+sudo apt install libssl-dev zlib1g-dev
+
 ### musl
 
 sudo apt install docker.io

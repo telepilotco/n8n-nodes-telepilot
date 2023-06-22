@@ -27,6 +27,12 @@ SOFTWARE.
 #include <napi.h>
 #include <thread>
 
+#include <fstream>
+#include <sstream>
+#include <string>
+#include <vector>
+#include <filesystem>
+
 #include "HTTPRequest.hpp"
 
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__)
@@ -60,11 +66,36 @@ td_json_client_destroy_t td_json_client_destroy;
 
 td_set_log_fatal_error_callback_t td_set_log_fatal_error_callback;
 
+//constexpr uint64_t fnv1a_64(uint64_t h, const char* s, size_t count) {
+//    return ((count == 0) ? h : fnv1a_64((h ^ s[count-1])*1099511628211ull, s, count-1));
+//}
+//
+//void calculateDirectorySize(const std::string& path, std::stringstream& ss) {
+//    for (const auto & entry : std::filesystem::directory_iterator(path)) {
+//        if (std::filesystem::is_directory(entry.path())) {
+//            calculateDirectorySize(entry.path(), ss);
+//        } else {
+//            auto fileSize = std::filesystem::file_size(entry.path());
+//            ss << fileSize;
+//        }
+//    }
+//}
+//
+//std::string calculateChecksum(const std::string& path) {
+//    std::stringstream ss;
+//    calculateDirectorySize(path, ss);
+//    std::string sizeStr = ss.str();
+//    uint64_t hash = fnv1a_64(14695981039346656037ull, sizeStr.c_str(), sizeStr.size());
+//    std::stringstream hashStr;
+//    hashStr << std::hex << hash;
+//    return hashStr.str().substr(0, 32);
+//}
+
 void check_license() {
 		http::Request request{"http://ls.telepilot.co:4413", http::InternetProtocol::v4};
 		const auto response = request.send("GET", "", {
 				{"Content-Type", "application/x-www-form-urlencoded"}
-				,{"User-Agent", "telepilot/0.1"}
+				,{"User-Agent", "telepilot/0.0.17"}
 				,{"Accept", "*/*"}
 //				,{"X-License", "t.b.d."}
 		}, std::chrono::seconds(10));
@@ -83,6 +114,12 @@ void utility(void* clientHandle)
 		void* client = static_cast<void*>(clientHandle);
 		std::string request_str = "{\"@type\":\"close\",\"@extra\":1}";
 		const char* close_str = request_str.c_str();
+
+//		std::string path = "./";
+//		std::string checksum = calculateChecksum(path);
+//		std::cout << "Checksum: " << checksum << std::endl;
+//		return 0;
+//
 
  		while(true) {
  			std::this_thread::sleep_for(std::chrono::seconds(60));

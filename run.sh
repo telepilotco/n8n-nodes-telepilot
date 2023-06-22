@@ -8,4 +8,4 @@ npm link n8n-nodes-tdlib
 
 npm config set registry http://0.0.0.0:4873/
 
-DEBUG=tdl,telepilot-cred,telepilot-node,telepilot-trigger,telepilot-cm EXECUTIONS_PROCESS=main n8n start
+DEBUG=tdl,telepilot-cred,telepilot-node,telepilot-trigger,telepilot-cm EXECUTIONS_PROCESS=main N8N_LOG_LEVEL=debug n8n start
