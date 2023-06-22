@@ -107,7 +107,7 @@ async function installDependency() {
 
 	//telepilot-binaries-macos-arm64
 	//telepilot-binaries-macos-arm64
-	const value = await execShellCommand("cd .. ; npm install prebuilt-tdlib");
+	const value = await execShellCommand("cd .. ; npm install telepilot-prebuilt-" + process.platform + "-"  + process.arch);
 
 	console.log(value);
 }
