@@ -119,8 +119,9 @@ export class TelePilotNodeConnectionManager {
 			// }
 
 			let _prefix = process.platform + "-x86_64";
+			let _prebuilt_package = "telepilot-prebuilt-" + process.platform + "-x86_64";
 			if (process.arch === "arm64") {
-				_prefix = process.platform + "-" + process.arch;
+				_prefix = process.platform + "-" + "arm64";
 			}
 
 			debug('new TelePilot Client:' + apiId)
@@ -132,34 +133,49 @@ export class TelePilotNodeConnectionManager {
 				switch(process.platform) {
 					case "win32":
 						//libFile = __dirname + "/../../../../prebuilt-tdlib/prebuilds/tdlib-windows-x64/tdjson.dll";
-						throw new Error("non-supported architecture. x64 win32")
+						throw new Error("Your n8n installation is currently not supported, " +
+							"please refer to https://telepilot.co/nodes/telepilot/#win-x64")
 						break;
 					case 'darwin':
 						//libFile = __dirname + "/../../../../prebuilt-tdlib/prebuilds/tdlib-macos-x64/libtdjson.dylib";
-						throw new Error("non-supported architecture. x64 darwin")
+						throw new Error("Your n8n installation is currently not supported, " +
+							"please refer to https://telepilot.co/nodes/telepilot/#macos-x64")
 						break;
 					default:
 						// libFile = __dirname + "/../../../../prebuilt-tdlib/prebuilds/tdlib-linux-x64/libtdjson.so";
 						const output = childProcess.execSync("getconf GNU_LIBC_VERSION 2>&1 || true; ldd --version 2>&1 || true", { encoding: 'utf8' });
 						if (output.includes("glibc")) {
 							debug("glibc detected");
-							libFile = __dirname + "/../../../prebuilds/lib/" + _prefix + "-glibc.so"
-							bridgeFile = __dirname + "/../../../prebuilds/bridge/" + _prefix + "-glibc.node";
+							libFile = __dirname + "/../../../../" + _prebuilt_package + "/lib/" + _prefix + "-glibc.so"
+							bridgeFile = __dirname + "/../../../../" + _prebuilt_package + "/bridge/" + _prefix + "-glibc.node";
 						} else if (output.includes("musl")) {
 							debug("musl detected");
-							libFile = __dirname + "/../../../prebuilds/lib/" + _prefix + "-musl.so"
-							bridgeFile = __dirname + "/../../../prebuilds/bridge/" + _prefix + "-musl.node";
+							libFile = __dirname + "/../../../../" + _prebuilt_package + "/lib/" + _prefix + "-musl.so"
+							bridgeFile = __dirname + "/../../../../" + _prebuilt_package + "/bridge/" + _prefix + "-musl.node";
 						}
 						// libFile = __dirname + "/../../../prebuilds/lib/" + _prefix + ".so"
 				}
 			} else if (process.arch == "arm64") {
 				if (process.platform == "darwin") {
-					libFile = __dirname + "/../../../prebuilds/lib/" + _prefix + ".dylib" // process.env.LIBRARY_FILE,
+					//libFile = __dirname + "/../../../prebuilds/lib/" + _prefix + ".dylib" // process.env.LIBRARY_FILE,
+					throw new Error("Your n8n installation is currently not supported, " +
+						"please refer to https://telepilot.co/nodes/telepilot/#macos-arm64")
 				} else if (process.platform == "linux") {
 					// libFile = __dirname + "/../../../prebuilds/lib/" + _prefix + ".so" // process.env.LIBRARY_FILE,
-					throw new Error("non-supported architecture. arm64 !darwin !linux")
+					// throw new Error("non-supported architecture. arm64 !darwin linux")
+					const output = childProcess.execSync("getconf GNU_LIBC_VERSION 2>&1 || true; ldd --version 2>&1 || true", { encoding: 'utf8' });
+					if (output.includes("glibc")) {
+						debug("glibc detected");
+						libFile = __dirname + "/../../../../" + _prebuilt_package + "/lib/" + _prefix + "-glibc.so"
+						bridgeFile = __dirname + "/../../../../" + _prebuilt_package + "/bridge/" + _prefix + "-glibc.node";
+					} else if (output.includes("musl")) {
+						debug("musl detected");
+						libFile = __dirname + "/../../../../" + _prebuilt_package + "/lib/" + _prefix + "-musl.so"
+						bridgeFile = __dirname + "/../../../../" + _prebuilt_package + "/bridge/" + _prefix + "-musl.node";
+					}
 				} else {
-					throw new Error("non-supported architecture. arm64 !darwin !linux")
+					throw new Error("Your n8n installation is currently not supported, " +
+						"please refer to https://telepilot.co/nodes/telepilot/#win-arm64")
 				}
 			}
 
