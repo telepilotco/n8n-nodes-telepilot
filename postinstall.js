@@ -3,7 +3,7 @@
 "use strict";
 
 var path = require('path'),
-	mkdirp = require('mkdirp'),
+	// mkdirp = require('mkdirp'),
 	fs = require('fs');
 
 // Mapping from Node's `process.arch` to Golang's `$GOARCH`
@@ -107,7 +107,10 @@ async function installDependency() {
 
 	//telepilot-binaries-macos-arm64
 	//telepilot-binaries-macos-arm64
-	const value = await execShellCommand("cd .. ; npm install telepilot-prebuilt-" + process.platform + "-"  + process.arch);
+	console.log("HEEEEY")
+	cmd = "cd .. ; npm install @telepilotco/telepilot-prebuilt-" + process.platform + "-"  + process.arch
+	console.log(cmd);
+	const value = await execShellCommand(cmd);
 
 	console.log(value);
 }
@@ -138,6 +141,7 @@ async function install(callback) {
 }
 
 async function uninstall(callback) {
+	//t.b.d.
 	// var opts = parsePackageJson();
 	// try {
 	// 	const installationPath = await getInstallationPath();

@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { Service } from 'typedi';
 import {IDataObject} from "n8n-workflow";
-const { Client } = require('tdl');
+const { Client } = require('../../tdl');
 const { BridgeLib } = require('../../bridge');
 const childProcess = require('child_process');
 
@@ -119,9 +119,10 @@ export class TelePilotNodeConnectionManager {
 			// }
 
 			let _prefix = process.platform + "-x86_64";
-			let _prebuilt_package = "telepilot-prebuilt-" + process.platform + "-x86_64";
+			let _prebuilt_package = "@telepilotco/telepilot-prebuilt-" + process.platform + "-x86_64";
 			if (process.arch === "arm64") {
 				_prefix = process.platform + "-" + "arm64";
+				_prebuilt_package = "@telepilotco/telepilot-prebuilt-" + process.platform + "-arm64";
 			}
 
 			debug('new TelePilot Client:' + apiId)
@@ -158,8 +159,10 @@ export class TelePilotNodeConnectionManager {
 			} else if (process.arch == "arm64") {
 				if (process.platform == "darwin") {
 					//libFile = __dirname + "/../../../prebuilds/lib/" + _prefix + ".dylib" // process.env.LIBRARY_FILE,
-					throw new Error("Your n8n installation is currently not supported, " +
-						"please refer to https://telepilot.co/nodes/telepilot/#macos-arm64")
+					// throw new Error("Your n8n installation is currently not supported, " +
+					// 	"please refer to https://telepilot.co/nodes/telepilot/#macos-arm64")
+					libFile = __dirname + "/../../../../" + _prebuilt_package + "/lib/" + _prefix + ".dylib"
+					bridgeFile = __dirname + "/../../../../" + _prebuilt_package + "/bridge/" + _prefix + ".node";
 				} else if (process.platform == "linux") {
 					// libFile = __dirname + "/../../../prebuilds/lib/" + _prefix + ".so" // process.env.LIBRARY_FILE,
 					// throw new Error("non-supported architecture. arm64 !darwin linux")
