@@ -50,10 +50,10 @@ build-bridge:
 build-bridge-musl:
 	sudo docker build -t build_bridge .
 	sudo docker create --name dummy build_bridge
-	sudo docker cp -L dummy:/bridge/prebuilds/bridge/linux-x86_64.node linux-x86_64.node
-	cp linux-x86_64.node prebuilds-musl/bridge/
-	cp linux-x86_64.node /var/data/n8n/nodes/node_modules/n8n-nodes-telepilot/prebuilds/bridge/linux-x86_64.node
-	cp linux-x86_64.node ../tdl/linux-x86_64.node
+	sudo docker cp -L dummy:/bridge/prebuilds/bridge/linux-x64.node linux-x64.node
+	cp linux-x64.node prebuilds-musl/bridge/
+	cp linux-x64.node /var/data/n8n/nodes/node_modules/n8n-nodes-telepilot/prebuilds/bridge/linux-x64.node
+	cp linux-x64.node ../tdl/linux-x64.node
 
 test:
 	cd td
