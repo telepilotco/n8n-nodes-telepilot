@@ -118,8 +118,8 @@ export class TelePilotNodeConnectionManager {
 		if (!clients_keys.includes(apiId.toString()) || this.clients[apiId] === undefined) {
 			// }
 
-			let _prefix = process.platform + "-x86_64";
-			let _prebuilt_package = "@telepilotco/telepilot-prebuilt-" + process.platform + "-x86_64";
+			let _prefix = process.platform + "-x64";
+			let _prebuilt_package = "@telepilotco/telepilot-prebuilt-" + process.platform + "-x64";
 			if (process.arch === "arm64") {
 				_prefix = process.platform + "-" + "arm64";
 				_prebuilt_package = "@telepilotco/telepilot-prebuilt-" + process.platform + "-arm64";
