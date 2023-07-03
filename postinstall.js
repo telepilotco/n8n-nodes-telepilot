@@ -108,11 +108,13 @@ async function installDependency() {
 	//telepilot-binaries-macos-arm64
 	//telepilot-binaries-macos-arm64
 	console.log("HEEEEY")
-	cmd = "cd .. ; npm install @telepilotco/telepilot-prebuilt-" + process.platform + "-"  + process.arch
+	cmd = "cd .. && npm install --no-save @telepilotco/telepilot-prebuilt-" + process.platform + "-"  + process.arch
+	// cmd = "cp ../package-lock.json /tmp/ && sleep 10 && npm list > /tmp/2"
 	console.log(cmd);
-	const value = await execShellCommand(cmd);
-
-	console.log(value);
+	const value1 = await execShellCommand(cmd);
+	console.log(value1);
+	// const value2 = await execShellCommand("cd .. && npm install");
+	// console.log(value2);
 }
 
 /**

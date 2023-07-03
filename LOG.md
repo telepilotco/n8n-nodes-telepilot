@@ -300,6 +300,34 @@ No such file or directory
 		sudo docker logs 09876ea487f3 | grep host | jq ".host.ip" | sort | uniq | wc -l
 		ctlp && cd ../logs && cat access.log | grep json | jq "[.request.uri, .common_log]" | less
 		scp -i ~/.ssh/id_rsa-LE-Z11666 ubuntu@d2-2-de1.sergcloud.online:/home/ubuntu/sergcloud-pi4/services/svc.telepilotco/site/logs/access.log /tmp/access.log
+
+## 2023-06-22
+	* Created `telepilot-prebuilt` repository to support prebuilds for multiple architectures and environments
 		
-		
-		
+## 2023-06-23
+	* Working on multi-architecture builds
+	* Added Github Action to automatically update website on push
+
+## 2023-06-26
+	* testing on:
+		** linux-arm64-musl
+		** linux-arm64-glibc
+		** linux-x64-musl
+		** linux-x64-glibc
+
+## 2023-06-27
+	* Searching for freelancer for following topics:
+		** report based on caddy logs
+		** improve /blog/ and /documentation/ pages
+		** node addon development (cpp+node.js)
+	* node.js development article: https://blog.risingstack.com/using-buffers-node-js-c-plus-plus/
+	* published @telepilotco/telepilot-prebuilt-linux-x64@0.0.1
+	* published @telepilotco/telepilot-prebuilt-linux-arm64@0.0.1
+	
+	* TODO: remove all prebuilt things from n8n-nodes-telepilot module
+
+## 2023-07-01
+	* auto-generating logs at https://stat.telepilot.co
+		** crontab script:
+			sudo crontab -e
+			* * * * * /home/ubuntu/sergcloud-pi4/services/svc.telepilotco/goaccess-report.sh

@@ -1,6 +1,6 @@
 {
   "name": "n8n-nodes-telepilot",
-  "version": "0.0.1720-beta",
+  "version": "0.0.1732-beta",
   "description": "Your personal Telegram CoPilot",
   "keywords": [
     "telepilot.co",
@@ -23,19 +23,17 @@
   },
   "main": "index.js",
   "scripts": {
-    "build": "pnpm exec babel src/ -d dist/ && tsc && gulp build:icons",
+    "build": "pnpm exec babel src/ -d dist/ && pnpm exec tsc && pnpm exec gulp build:icons",
     "dev": "tsc --watch",
     "format": "prettier nodes credentials --write",
+    "install": "node-pre-gyp install --fallback-to-build",
     "lint": "eslint nodes credentials",
     "lintfix": "eslint nodes credentials package.json --fix",
     "prepublishOnly": "npm run build && npm run lint -c .eslintrc.prepublish.js nodes credentials",
-    "postinstall": "node postinstall.js install",
-    "postuninstall": "node postinstall.js uninstall"
+    "postinstall": "node postinstall.js install"
   },
   "files": [
     "dist",
-    "prebuilds/bridge/*",
-    "prebuilds/lib/*",
     "postinstall.js"
   ],
   "n8n": {
@@ -47,6 +45,11 @@
       "dist/nodes/TelePilot/TelePilot.node.js",
       "dist/nodes/TelePilot/TelePilotTrigger.node.js"
     ]
+  },
+  "binary": {
+    "module_name": "telepilot-prebuilt",
+    "module_path": "./prebuilds/",
+    "host": "https://telepilot-prebuilt.s3-us-west-1.amazonaws.com"
   },
   "devDependencies": {
     "@babel/cli": "^7.12.1",
@@ -60,6 +63,7 @@
     "@types/node": "^14.14.6",
     "@types/request-promise-native": "~1.0.15",
     "@typescript-eslint/parser": "~5.45",
+    "aws-sdk": "2.x",
     "eslint-plugin-n8n-nodes-base": "^1.11.0",
     "gulp": "^4.0.2",
     "n8n-core": "^0.161.0",
@@ -70,12 +74,12 @@
     "typescript": "~4.8.4"
   },
   "dependencies": {
+    "@mapbox/node-pre-gyp": "1.x",
     "@types/qrcode-terminal": "^0.12.0",
     "debug": "^4.3.4",
     "detect-libc": "*",
     "eventemitter3": "^4.0.7",
     "qrcode-terminal": "^0.12.0",
-    "tdl-shared": "^0.10.0",
     "typedi": "^0.10.0"
   }
 }
