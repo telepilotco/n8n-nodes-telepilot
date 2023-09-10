@@ -371,3 +371,7 @@ No such file or directory
 	* 8 hours to:
 		* upgrade to tdl@7.3.1
   * 4 hours to integrate telepilot with updated module
+
+## 2023-09-10
+	* works on n8n=1.4.0
+	* works with perbuilt "addons" and "binaries" packages on localhost arm64 darwin
