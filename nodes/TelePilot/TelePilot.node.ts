@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { IExecuteFunctions } from 'n8n-core';
 
-import { INodeExecutionData, INodeType, INodeTypeDescription } from 'n8n-workflow';
+import {INodeExecutionData, INodeType, INodeTypeDescription, NodeOperationError} from 'n8n-workflow';
 
 const debug = require('debug')('telepilot-node');
 
@@ -618,200 +618,212 @@ export class TelePilot implements INodeType {
 		}
 
 		// For each item, make an API call to create a contact
-		if (resource === 'user') {
-			if (operation === 'getMe') {
-				const result = await client.invoke({
-					_: 'getMe',
-				});
-				returnData.push(result);
-			} else if (operation === 'getUser') {
-				const user_id = this.getNodeParameter('user_id', 0) as string;
-				result = await client.invoke({
-					_: 'getUser',
-					user_id,
-				});
-				returnData.push(result);
-			} else if (operation === 'getUserFullInfo') {
-				const user_id = this.getNodeParameter('user_id', 0) as string;
-				result = await client.invoke({
-					_: 'getUserFullInfo',
-					user_id,
-				});
-				returnData.push(result);
-			} else if (operation === 'createPrivateChat') {
-				const user_id = this.getNodeParameter('user_id', 0) as string;
-				const force = this.getNodeParameter('force', 0) as string;
-				result = await client.invoke({
-					_: 'createPrivateChat',
-					user_id,
-					force,
-				});
-				returnData.push(result);
-			} else if (operation === 'createNewSecretChat') {
-				const user_id = this.getNodeParameter('user_id', 0) as string;
-				result = await client.invoke({
-					_: 'createNewSecretChat',
-					user_id,
-				});
-				returnData.push(result);
-			}
-		} else if (resource === 'contact') {
-			if (operation === 'getContacts') {
-				result = await client.invoke({
-					_: 'getContacts',
-				});
-				returnData.push(result);
-			}
-		} else if (resource === 'chat') {
-			if (operation === 'getChatHistory') {
-				const chat_id = this.getNodeParameter('chat_id', 0) as string;
-				const from_message_id = this.getNodeParameter('from_message_id', 0) as string;
-				result = await client.invoke({
-					_: 'getChatHistory',
-					chat_id,
-					from_message_id,
-					offset: 0,
-					limit: 1,
-					only_local: false,
-				});
-				returnData.push(result);
-			} else if (operation === 'getChats') {
-				const result = await client.invoke({
-					_: 'getChats',
-					limit: 9999,
-				});
-				returnData.push(result);
-			} else if (operation === 'getChat') {
-				const chat_id = this.getNodeParameter('chat_id', 0) as string;
-				const result = await client.invoke({
-					_: 'getChat',
-					chat_id,
-				});
-				returnData.push(result);
-			} else if (operation === 'searchPublicChat') {
-				const username = this.getNodeParameter('username', 0) as string;
-				const result = await client.invoke({
-					_: 'searchPublicChat',
-					username,
-				});
-				debug(username);
-				debug(result);
-				returnData.push(result);
-			} else if (operation === 'searchPublicChats') {
-				const query = this.getNodeParameter('query', 0) as string;
-				const result = await client.invoke({
-					_: 'searchPublicChats',
-					query,
-				});
-				debug(query);
-				debug(result);
-				returnData.push(result);
-			} else if (operation === 'toggleChatIsMarkedAsUnread') {
-				const chat_id = this.getNodeParameter('chat_id', 0) as string;
-				const is_marked_as_unread = this.getNodeParameter('is_marked_as_unread', 0) as boolean;
-				const result = await client.invoke({
-					_: 'toggleChatIsMarkedAsUnread',
-					chat_id,
-					is_marked_as_unread,
-				});
-				returnData.push(result);
-			}
-		} else if (resource === 'file') {
-			if (operation === 'getRemoteFile') {
-				const remote_file_id = this.getNodeParameter('remote_file_id', 0) as string;
-				const result = await client.invoke({
-					_: 'getRemoteFile',
-					remote_file_id,
-				});
-				returnData.push(result);
-			} else if (operation === 'downloadFile') {
-				const file_id = this.getNodeParameter('file_id', 0) as string;
-				const result = await client.invoke({
-					_: 'downloadFile',
-					file_id,
-					priority: 16,
-					synchronous: true,
-				});
-				returnData.push(result);
-			}
-		} else if (resource === 'message') {
-			if (operation === 'getMessage') {
-				const chat_id = this.getNodeParameter('chat_id', 0) as string;
-				const message_id = this.getNodeParameter('message_id', 0) as string;
-				const result = await client.invoke({
-					_: 'getMessage',
-					chat_id,
-					message_id,
-				});
-				returnData.push(result);
-			} else if (operation === 'sendMessage') {
-				const chat_id = this.getNodeParameter('chat_id', 0) as string;
-				const messageText = this.getNodeParameter('messageText', 0) as string;
-				const result = await client.invoke({
-					_: 'sendMessage',
-					chat_id,
-					input_message_content: {
-						_: 'inputMessageText',
-						text: {
-							_: 'formattedText',
-							text: messageText,
+		try {
+			if (resource === 'user') {
+				if (operation === 'getMe') {
+					const result = await client.invoke({
+						_: 'getMe',
+					});
+					returnData.push(result);
+				} else if (operation === 'getUser') {
+					const user_id = this.getNodeParameter('user_id', 0) as string;
+					result = await client.invoke({
+						_: 'getUser',
+						user_id,
+					});
+					returnData.push(result);
+				} else if (operation === 'getUserFullInfo') {
+					const user_id = this.getNodeParameter('user_id', 0) as string;
+					result = await client.invoke({
+						_: 'getUserFullInfo',
+						user_id,
+					});
+					returnData.push(result);
+				} else if (operation === 'createPrivateChat') {
+					const user_id = this.getNodeParameter('user_id', 0) as string;
+					const force = this.getNodeParameter('force', 0) as string;
+					result = await client.invoke({
+						_: 'createPrivateChat',
+						user_id,
+						force,
+					});
+					returnData.push(result);
+				} else if (operation === 'createNewSecretChat') {
+					const user_id = this.getNodeParameter('user_id', 0) as string;
+					result = await client.invoke({
+						_: 'createNewSecretChat',
+						user_id,
+					});
+					returnData.push(result);
+				}
+			} else if (resource === 'contact') {
+				if (operation === 'getContacts') {
+					result = await client.invoke({
+						_: 'getContacts',
+					});
+					returnData.push(result);
+				}
+			} else if (resource === 'chat') {
+				if (operation === 'getChatHistory') {
+					const chat_id = this.getNodeParameter('chat_id', 0) as string;
+					const from_message_id = this.getNodeParameter('from_message_id', 0) as string;
+					result = await client.invoke({
+						_: 'getChatHistory',
+						chat_id,
+						from_message_id,
+						offset: 0,
+						limit: 1,
+						only_local: false,
+					});
+					returnData.push(result);
+				} else if (operation === 'getChats') {
+						const result = await client.invoke({
+							_: 'getChats',
+							limit: 9999,
+						});
+						returnData.push(result);
+				} else if (operation === 'getChat') {
+					const chat_id = this.getNodeParameter('chat_id', 0) as string;
+					const result = await client.invoke({
+						_: 'getChat',
+						chat_id,
+					});
+					returnData.push(result);
+				} else if (operation === 'searchPublicChat') {
+					const username = this.getNodeParameter('username', 0) as string;
+					const result = await client.invoke({
+						_: 'searchPublicChat',
+						username,
+					});
+					debug(username);
+					debug(result);
+					returnData.push(result);
+				} else if (operation === 'searchPublicChats') {
+					const query = this.getNodeParameter('query', 0) as string;
+					const result = await client.invoke({
+						_: 'searchPublicChats',
+						query,
+					});
+					debug(query);
+					debug(result);
+					returnData.push(result);
+				} else if (operation === 'toggleChatIsMarkedAsUnread') {
+					const chat_id = this.getNodeParameter('chat_id', 0) as string;
+					const is_marked_as_unread = this.getNodeParameter('is_marked_as_unread', 0) as boolean;
+					const result = await client.invoke({
+						_: 'toggleChatIsMarkedAsUnread',
+						chat_id,
+						is_marked_as_unread,
+					});
+					returnData.push(result);
+				}
+			} else if (resource === 'file') {
+				if (operation === 'getRemoteFile') {
+					const remote_file_id = this.getNodeParameter('remote_file_id', 0) as string;
+					const result = await client.invoke({
+						_: 'getRemoteFile',
+						remote_file_id,
+					});
+					returnData.push(result);
+				} else if (operation === 'downloadFile') {
+					const file_id = this.getNodeParameter('file_id', 0) as string;
+					const result = await client.invoke({
+						_: 'downloadFile',
+						file_id,
+						priority: 16,
+						synchronous: true,
+					});
+					returnData.push(result);
+				}
+			} else if (resource === 'message') {
+				if (operation === 'getMessage') {
+					const chat_id = this.getNodeParameter('chat_id', 0) as string;
+					const message_id = this.getNodeParameter('message_id', 0) as string;
+					const result = await client.invoke({
+						_: 'getMessage',
+						chat_id,
+						message_id,
+					});
+					returnData.push(result);
+				} else if (operation === 'sendMessage') {
+					const chat_id = this.getNodeParameter('chat_id', 0) as string;
+					const messageText = this.getNodeParameter('messageText', 0) as string;
+					const result = await client.invoke({
+						_: 'sendMessage',
+						chat_id,
+						input_message_content: {
+							_: 'inputMessageText',
+							text: {
+								_: 'formattedText',
+								text: messageText,
+							},
 						},
-					},
-				});
-				returnData.push(result);
-			} else if (operation === 'editMessageText') {
-				const chat_id = this.getNodeParameter('chat_id', 0) as string;
-				const message_id = this.getNodeParameter('message_id', 0) as string;
-				const messageText = this.getNodeParameter('messageText', 0) as string;
-				const result = await client.invoke({
-					_: 'editMessageText',
-					chat_id,
-					message_id,
-					input_message_content: {
-						_: 'inputMessageText',
-						text: {
-							_: 'formattedText',
-							text: messageText,
+					});
+					returnData.push(result);
+				} else if (operation === 'editMessageText') {
+					const chat_id = this.getNodeParameter('chat_id', 0) as string;
+					const message_id = this.getNodeParameter('message_id', 0) as string;
+					const messageText = this.getNodeParameter('messageText', 0) as string;
+					const result = await client.invoke({
+						_: 'editMessageText',
+						chat_id,
+						message_id,
+						input_message_content: {
+							_: 'inputMessageText',
+							text: {
+								_: 'formattedText',
+								text: messageText,
+							},
 						},
-					},
-				});
-				returnData.push(result);
-			} else if (operation === 'deleteMessages') {
-				const chat_id = this.getNodeParameter('chat_id', 0) as string;
-				const message_ids = this.getNodeParameter('message_ids', 0) as string;
-				const revoke = this.getNodeParameter('revoke', 0) as boolean;
+					});
+					returnData.push(result);
+				} else if (operation === 'deleteMessages') {
+					const chat_id = this.getNodeParameter('chat_id', 0) as string;
+					const message_ids = this.getNodeParameter('message_ids', 0) as string;
+					const revoke = this.getNodeParameter('revoke', 0) as boolean;
 
-				const idsArray = message_ids
-					.toString()
-					.split(',')
-					.map((s) => s.toString().trim());
-				const result = await client.invoke({
-					_: 'deleteMessages',
-					chat_id,
-					message_ids: idsArray,
-					revoke,
-				});
-				returnData.push(result);
-			} else if (operation === 'forwardMessages') {
-				const chat_id = this.getNodeParameter('chat_id', 0) as string;
-				const from_chat_id = this.getNodeParameter('from_chat_id', 0) as string;
+					const idsArray = message_ids
+						.toString()
+						.split(',')
+						.map((s) => s.toString().trim());
+					const result = await client.invoke({
+						_: 'deleteMessages',
+						chat_id,
+						message_ids: idsArray,
+						revoke,
+					});
+					returnData.push(result);
+				} else if (operation === 'forwardMessages') {
+					const chat_id = this.getNodeParameter('chat_id', 0) as string;
+					const from_chat_id = this.getNodeParameter('from_chat_id', 0) as string;
 
-				const message_ids: string = this.getNodeParameter('message_ids', 0) as string;
-				debug(message_ids);
-				const idsArray = message_ids
-					.toString()
-					.split(',')
-					.map((s) => s.toString().trim())
-					.filter((s) => s.length > 0);
-				debug(idsArray);
+					const message_ids: string = this.getNodeParameter('message_ids', 0) as string;
+					debug(message_ids);
+					const idsArray = message_ids
+						.toString()
+						.split(',')
+						.map((s) => s.toString().trim())
+						.filter((s) => s.length > 0);
+					debug(idsArray);
 
-				const result = await client.invoke({
-					_: 'forwardMessages',
-					chat_id,
-					from_chat_id,
-					message_ids: idsArray,
-				});
-				returnData.push(result);
+					const result = await client.invoke({
+						_: 'forwardMessages',
+						chat_id,
+						from_chat_id,
+						message_ids: idsArray,
+					});
+					returnData.push(result);
+				}
+			}
+		} catch (e) {
+			if (e.message === "A closed client cannot be reused, create a new Client") {
+				cM.markClientAsClosed(credentials?.apiId as number);
+				throw new Error("Session was closed or terminated. Please login again: https://telepilot.co/documentation/logging-in-telegram-with-telepilot/") as NodeOperationError
+			} else 	if (e.message === "Unauthorized") {
+				cM.markClientAsClosed(credentials?.apiId as number);
+				throw new Error("Please login: https://telepilot.co/documentation/logging-in-telegram-with-telepilot/") as NodeOperationError
+			} else {
+				throw(e as NodeOperationError);
 			}
 		}
 		// debug('finished execution, length=' + JSON.stringify(result).length)
