@@ -235,8 +235,8 @@ export class TelePilotNodeConnectionManager {
 		let _bridge_prebuilt_package = "@telepilotco/tdlib-addon-prebuilt-" + process.platform + "-x64";
 		if (process.arch === "arm64") {
 			_prefix = "libdtjson";
-			_lib_prebuilt_package = "@telepilotco/tdlib-binaries-prebuilt/prebuilds/";
-			_bridge_prebuilt_package = "@telepilotco/tdlib-addon-prebuilt/prebuilds/";
+			_lib_prebuilt_package = "tdlib-binaries-prebuilt/prebuilds/";
+			_bridge_prebuilt_package = "tdlib-addon-prebuilt/prebuilds/";
 		}
 		// if (this.client === undefined) {
 
