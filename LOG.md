@@ -331,3 +331,43 @@ No such file or directory
 		** crontab script:
 			sudo crontab -e
 			* * * * * /home/ubuntu/sergcloud-pi4/services/svc.telepilotco/goaccess-report.sh
+
+## 2023-07-03
+	* tried using `node-pre-gyp` to distribute prebuilt native node modules, but it fails due to https://github.com/aws/aws-sdk-js/issues/158
+	* posted SO question: https://stackoverflow.com/questions/76605446/not-able-to-dynamically-install-prebuilt-native-addon-as-npm-dependency-based-on
+
+## 2023-07-05
+	* all elegant solutions for distributing will not work, SO question is unansweres
+	* I'm going to publish many n8n-nodes-tdlib packages for each architecture
+	* I'm going to opensource the source code of the project under my name
+
+## 2023-07-06
+	* did React tic-tac-toe tutorial
+	* did Next tutorial (not everything)
+	* doing Vue tutorial
+
+## 2023-07-07
+	* TODO: node-pre-gyp can download from arbitrary website:
+		https://github.com/grpc/grpc-node/blob/48a6e1cdec33616f1f4c175872a4c342f2e70a8c/packages/grpc-native-core/package.json#L53-L59
+
+## 2023-07-17
+	* IN PROGRESS: making telepilot work with `tdlib-binaries-prebuilt`
+		* some compatibility values:
+			* node.process.platform:
+				* win32
+				* darwin
+				* linux
+			* node.process.arch / `uname -m`
+				* x64							/	x86_64
+				* arm64
+				* 
+	* implemented `tdlib-binaries-prebuilt` builds in Makefile
+	* adjusted Github Actions pipelines to use Makefile targets
+	* TODO: rewrite TelepilotNodeConnectionManager to correctly load binaries
+	* TODO: design tests for all environments/n8n setups
+
+## 2023-07-18
+	* extracted `tdlib-addon-prebuilt`
+	* 8 hours to:
+		* upgrade to tdl@7.3.1
+  * 4 hours to integrate telepilot with updated module
