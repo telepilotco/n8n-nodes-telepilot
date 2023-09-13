@@ -231,7 +231,6 @@ export class TelePilotNodeConnectionManager {
 	}
 
 	private locateBinaryModules() {
-		let _prefix = "libdtjson";
 		let _lib_prebuilt_package = "tdlib-binaries-prebuilt/prebuilds/";
 		let _bridge_prebuilt_package = "tdlib-addon-prebuilt/prebuilds/";
 
@@ -252,8 +251,8 @@ export class TelePilotNodeConnectionManager {
 						"please refer to https://telepilot.co/nodes/telepilot/#macos-x64")
 					break;
 				case 'linux':
-						libFile = libFolder + _prefix + ".so"
-						bridgeFile = bridgeFolder + _prefix + ".node";
+						libFile = libFolder + "libtdjson" + ".so"
+						bridgeFile = bridgeFolder + "addon" + ".node";
 					break;
 				default:
 					throw new Error("Not implemented for " + process.platform);
@@ -264,8 +263,8 @@ export class TelePilotNodeConnectionManager {
 				libFile = libFolder + "libtdjson" + ".dylib"
 				bridgeFile = bridgeFolder + "addon" + ".node";
 			} else if (process.platform == "linux") {
-					libFile = libFolder + _prefix + ".so"
-					bridgeFile = bridgeFolder + _prefix + ".node";
+					libFile = libFolder + "libtdjson" + ".so"
+					bridgeFile = bridgeFolder + "addon" + ".node";
 			} else {
 				throw new Error("Your n8n installation is currently not supported, " +
 					"please refer to https://telepilot.co/nodes/telepilot/#win-arm64")
