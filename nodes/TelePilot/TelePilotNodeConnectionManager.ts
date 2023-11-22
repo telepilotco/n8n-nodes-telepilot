@@ -11,6 +11,14 @@ var QRCode = require('qrcode-terminal');
 
 const fs = require('fs/promises');
 
+var pjson = require('../../package.json');
+const nodeVersion = pjson.version;
+
+const binaryVersion = pjson.dependencies["@telepilotco/tdlib-binaries-prebuilt"].replace("^", "");
+const addonVersion = pjson.dependencies["@telepilotco/tdlib-addon-prebuilt"].replace("^", "");
+
+
+
 function sleep(ms: number) {
 	return new Promise( resolve => setTimeout(resolve, ms) );
 }
@@ -20,8 +28,8 @@ export class TelePilotNodeConnectionManager {
 
 	private clients: Record<number, typeof Client> = {};
 
-	private TD_DATABASE_PATH_PREFIX = "/tmp"
-	private TD_FILES_PATH_PREFIX = "/tmp"
+	private TD_DATABASE_PATH_PREFIX = process.env.HOME + "/.n8n/nodes/node_modules/@telepilotco/n8n-nodes-telepilot/db"
+	private TD_FILES_PATH_PREFIX = process.env.HOME + "/.n8n/nodes/node_modules/@telepilotco/n8n-nodes-telepilot/db"
 
 
 	constructor() {
@@ -153,6 +161,9 @@ export class TelePilotNodeConnectionManager {
 		let clients_keys = Object.keys(this.clients);
 		let {libFile, bridgeFile} = this.locateBinaryModules();
 		let client: typeof Client = undefined;
+		debug("nodeVersion:", nodeVersion);
+		debug("binaryVersion:", binaryVersion);
+		debug("addonVersion:", addonVersion);
 		if (!clients_keys.includes(apiId.toString()) || this.clients[apiId] === undefined) {
 			client = new Client(new BridgeLib(
 				libFile,
@@ -161,7 +172,10 @@ export class TelePilotNodeConnectionManager {
 				apiId,//: 1371420, // Your api_id
 				apiHash,//: '10c6868cae8a1ce09f7d87f27d691bbd',
 				databaseDirectory: this.getTdDatabasePathForClient(apiId),
-				filesDirectory: this.getTdFilesPathForClient(apiId)
+				filesDirectory: this.getTdFilesPathForClient(apiId),
+				nodeVersion,
+				binaryVersion,
+				addonVersion
 				// useTestDc: true
 			});
 		} else {
