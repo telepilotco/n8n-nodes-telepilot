@@ -374,4 +374,55 @@ No such file or directory
 
 ## 2023-09-10
 	* works on n8n=1.4.0
-	* works with perbuilt "addons" and "binaries" packages on localhost arm64 darwin
+	* works with prebuilt "addons" and "binaries" packages on localhost arm64 darwin
+
+## ...
+	* tried launching Cloudron on AWS with Namecheap DNS but it somehow did not work with Namecheap API
+
+## 2023-11-15 / 20
+	* restarted Oracle server and license echo server
+	* reconfigured Github Actions TARGET_UPLOAD_FOLDER - it is now showing to telepiot.co "public" website folder
+	* Test plan for v1.8.14/v0.0.1-0 (n8n version=???):
+		* + linux-arm64-glibc:			Oracle Server, ubuntu without docker	
+		* + linux-arm64-musl:				Oracle Server, alpine docker image
+		* + linux-x64-glibc:				AWS server, ubuntu without docker
+		* + linux-x64-musl:					AWS server, alpine docker image
+		* + (works?) test installation inside of alpine Dockerfile
+			** How to install n8n custom node in Dockerfile?:
+			*** 1. mkdir -p ~/.n8n/nodes && cd ~/.n8n/nodes && npm i @telepilotco/n8n-nodes-telepilot
+ 			*** 2. do the same in folder that is mount ("-v") to your docker container as "/home/node/.n8n/"
+    *	+ darwin-arm64-unknown:		on my MacBook
+		* + test on Railway? (sergk8 github, enable TCP Proxy to "5678" in Project Settings)
+			* + install in UI
+			* + install with Dockerfile
+		* ? test on Coolify (skipping this, since it is actually orchestrating workloads on my own server)
+		* +- test in n8n queue mode - works with workaround
+			* Trigger node is execute on `main` node, while Actions are executed on `worker` nodes.
+			* Therefore, workflows that need to receive and send messages are NOT WORKING.
+			* Workflows, that are sending mesages are also NOT WORKING.
+			* WORKAROUND: Create workflow that will log in `worker` node using QR Code from Logs:
+				* Trigger Node (onMessage) -> Login with QR Code
+
+
+## 2023-11-20
+	* + Move tdlib DB and FILES folder to another location
+		* Need to find a way to retrieve n8n's '~/.n8n' folder valye somehow:
+			/Users/skopchalyuk/projects/2023-n8n-tdlib-node/n8n-nodes-tdlib/~/.n8n/nodes/node_modules/@telepilotco/n8n-nodes-telepilot/db/26459258/_td_database/db.sqlite-shm
+	
+## 2023-11-21
+	* `User-Agent` in addon must contain following values:
+		* + version of `@telepilotco/n8n-nodes-telepilot` that is used
+
+## 2023-11-22
+	* `User-Agent` in addon must contain following values:
+		* + version of `@telepilotco/tdlib-addon-prebuilt` that is used
+		* + version of `@telepilotco/tdlib-binaries-prebuilt` that is used
+
+
+## 2023-11-XX
+	* Release Plugins:
+		* - `@telepilotco/tdlib-addon-prebuilt` is released
+		* - `@telepilotco/tdlib-binaries-prebuilt` is released
+		* - `@telepilotco/n8n-nodes-telepilot` is released
+
+	* rename "addon" to "loader"
