@@ -22,3 +22,7 @@ run:
 
 publish:
 	npm publish
+
+clean:
+	rm -rf dist/
+	rm -rf node_modules/
