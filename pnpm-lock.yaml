@@ -2,10 +2,10 @@ lockfileVersion: '6.0'
 
 dependencies:
   '@telepilotco/tdlib-addon-prebuilt':
-    specifier: '*'
-    version: 0.0.1-0
+    specifier: ^0.0.1-16
+    version: 0.0.1-16
   '@telepilotco/tdlib-binaries-prebuilt':
-    specifier: '*'
+    specifier: ^1.8.14
     version: 1.8.14
   '@types/qrcode-terminal':
     specifier: ^0.12.0
@@ -13,9 +13,6 @@ dependencies:
   debug:
     specifier: ^4.3.4
     version: 4.3.4
-  detect-libc:
-    specifier: '*'
-    version: 0.0.1
   qrcode-terminal:
     specifier: ^0.12.0
     version: 0.12.0
@@ -163,8 +160,8 @@ packages:
     resolution: {integrity: sha512-sBSO19KzdrJCM3gdx6eIxV8M9Gxfgg6iDQmH5TIAGaUu+X9VDdsINXJOnoiZ1Kx3TrHdH4bt5UVglkjsEGBcvw==}
     dev: true
 
-  /@telepilotco/tdlib-addon-prebuilt@0.0.1-0:
-    resolution: {integrity: sha512-ECOF1Jssz/gwQnb9s/s6HfUHQEQH6h/zjAw8e4VQFimEPtZOdYnRHAeYJryN5+6JvRjHtmEG5TA6Rrd/TOv3jg==}
+  /@telepilotco/tdlib-addon-prebuilt@0.0.1-16:
+    resolution: {integrity: sha512-RV3hXdQvTvrxgy/dt6Op4Ok59zXMq5RV7KIQ1z7XhxUyAWONkRBJqtB+tr/AhbWKAWa5q4JTMlwrWTaChCbWFA==}
     requiresBuild: true
     dependencies:
       '@mapbox/node-pre-gyp': 1.0.11
@@ -175,7 +172,7 @@ packages:
     dev: false
 
   /@telepilotco/tdlib-binaries-prebuilt@1.8.14:
-    resolution: {integrity: sha512-iFrdKzoBN7Pi5xivhxhep45DF6w0kJ4E13soB2JPrrrtBbWztq7lLLNthMYDkklOEkiTZ+WwUlYs/USmm9ByyQ==}
+    resolution: {integrity: sha512-6MEN9qdZWcvc/rQ/3LJ2J/VXCr8W8ljj/PK9tdZ4gDxX//RVM6pIjjRFN6783xYAwoOQLEy9Ax8+7SV8jYv1oA==}
     requiresBuild: true
     dependencies:
       '@mapbox/node-pre-gyp': 1.0.11
@@ -1151,12 +1148,6 @@ packages:
     resolution: {integrity: sha512-DtCOLG98P007x7wiiOmfI0fi3eIKyWiLTGJ2MDnVi/E04lWGbf+JzrRHMm0rgIIZJGtHpKpbVgLWHrv8xXpc3Q==}
     engines: {node: '>=0.10.0'}
     dev: true
-
-  /detect-libc@0.0.1:
-    resolution: {integrity: sha512-VCXRHamGxLxRQiCqb6G6kBnmKr6h2GzKIxP0yTyjGSwgX493EazxKgaLKQfnIO2kLIazlHphSfuvfSHROuC0iQ==}
-    engines: {node: '>=4'}
-    hasBin: true
-    dev: false
 
   /detect-libc@2.0.1:
     resolution: {integrity: sha512-463v3ZeIrcWtdgIg6vI6XUncguvr2TnGl4SzDXinkt9mSLpBJKXT3mW6xT3VQdDN11+WVs29pgvivTc4Lp8v+w==}
