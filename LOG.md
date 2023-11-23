@@ -425,4 +425,9 @@ No such file or directory
 		* - `@telepilotco/tdlib-binaries-prebuilt` is released
 		* - `@telepilotco/n8n-nodes-telepilot` is released
 
+
+	* publish binaries for MacOS-x64
+
+
+
 	* rename "addon" to "loader"
