@@ -300,6 +300,78 @@ No such file or directory
 		sudo docker logs 09876ea487f3 | grep host | jq ".host.ip" | sort | uniq | wc -l
 		ctlp && cd ../logs && cat access.log | grep json | jq "[.request.uri, .common_log]" | less
 		scp -i ~/.ssh/id_rsa-LE-Z11666 ubuntu@d2-2-de1.sergcloud.online:/home/ubuntu/sergcloud-pi4/services/svc.telepilotco/site/logs/access.log /tmp/access.log
+
+## 2023-06-22
+	* Created `telepilot-prebuilt` repository to support prebuilds for multiple architectures and environments
 		
-		
-		
+## 2023-06-23
+	* Working on multi-architecture builds
+	* Added Github Action to automatically update website on push
+
+## 2023-06-26
+	* testing on:
+		** linux-arm64-musl
+		** linux-arm64-glibc
+		** linux-x64-musl
+		** linux-x64-glibc
+
+## 2023-06-27
+	* Searching for freelancer for following topics:
+		** report based on caddy logs
+		** improve /blog/ and /documentation/ pages
+		** node addon development (cpp+node.js)
+	* node.js development article: https://blog.risingstack.com/using-buffers-node-js-c-plus-plus/
+	* published @telepilotco/telepilot-prebuilt-linux-x64@0.0.1
+	* published @telepilotco/telepilot-prebuilt-linux-arm64@0.0.1
+	
+	* TODO: remove all prebuilt things from n8n-nodes-telepilot module
+
+## 2023-07-01
+	* auto-generating logs at https://stat.telepilot.co
+		** crontab script:
+			sudo crontab -e
+			* * * * * /home/ubuntu/sergcloud-pi4/services/svc.telepilotco/goaccess-report.sh
+
+## 2023-07-03
+	* tried using `node-pre-gyp` to distribute prebuilt native node modules, but it fails due to https://github.com/aws/aws-sdk-js/issues/158
+	* posted SO question: https://stackoverflow.com/questions/76605446/not-able-to-dynamically-install-prebuilt-native-addon-as-npm-dependency-based-on
+
+## 2023-07-05
+	* all elegant solutions for distributing will not work, SO question is unansweres
+	* I'm going to publish many n8n-nodes-tdlib packages for each architecture
+	* I'm going to opensource the source code of the project under my name
+
+## 2023-07-06
+	* did React tic-tac-toe tutorial
+	* did Next tutorial (not everything)
+	* doing Vue tutorial
+
+## 2023-07-07
+	* TODO: node-pre-gyp can download from arbitrary website:
+		https://github.com/grpc/grpc-node/blob/48a6e1cdec33616f1f4c175872a4c342f2e70a8c/packages/grpc-native-core/package.json#L53-L59
+
+## 2023-07-17
+	* IN PROGRESS: making telepilot work with `tdlib-binaries-prebuilt`
+		* some compatibility values:
+			* node.process.platform:
+				* win32
+				* darwin
+				* linux
+			* node.process.arch / `uname -m`
+				* x64							/	x86_64
+				* arm64
+				* 
+	* implemented `tdlib-binaries-prebuilt` builds in Makefile
+	* adjusted Github Actions pipelines to use Makefile targets
+	* TODO: rewrite TelepilotNodeConnectionManager to correctly load binaries
+	* TODO: design tests for all environments/n8n setups
+
+## 2023-07-18
+	* extracted `tdlib-addon-prebuilt`
+	* 8 hours to:
+		* upgrade to tdl@7.3.1
+  * 4 hours to integrate telepilot with updated module
+
+## 2023-09-10
+	* works on n8n=1.4.0
+	* works with perbuilt "addons" and "binaries" packages on localhost arm64 darwin
