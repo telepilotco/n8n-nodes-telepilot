@@ -1,6 +1,6 @@
 {
   "name": "@telepilotco/n8n-nodes-telepilot",
-  "version": "0.0.1766-beta",
+  "version": "0.0.1781-beta",
   "description": "Your personal Telegram CoPilot",
   "keywords": [
     "telepilot.co",
@@ -53,8 +53,8 @@
     "typescript": "~4.8.4"
   },
   "dependencies": {
-    "@telepilotco/tdlib-binaries-prebuilt": "*",
-    "@telepilotco/tdlib-addon-prebuilt": "*",
+    "@telepilotco/tdlib-binaries-prebuilt": "^1.8.14",
+    "@telepilotco/tdlib-addon-prebuilt": "^0.0.1-16",
     "@types/qrcode-terminal": "^0.12.0",
     "debug": "^4.3.4",
     "qrcode-terminal": "^0.12.0",
