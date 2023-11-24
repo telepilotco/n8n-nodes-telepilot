@@ -1,6 +1,4 @@
 # x64
-
-
 sudo apt-get install make python3 gcc g++ -y
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
 source ~/.bashrc
@@ -21,7 +19,7 @@ echo \
   sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
 sudo apt-get update
-sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose docker-compose-plugin -y
 sudo service docker start
 sudo docker run hello-world
 
@@ -29,11 +27,12 @@ git clone https://github.com/n8n-io/n8n
 cd n8n/docker/images/n8n/
 #vim Dockerfile && screen
 ## add "RUN npm config set registry http://0.0.0.0:4873/" to Dockerfile
-#screen
+#screen -S verdaccio -dm bash -c "sudo docker run -it --rm --name verdaccio -v /tmp/storage:/verdaccio/storage -p 4873:4873 verdaccio/verdaccio"
 #sudo docker build -f Dockerfile -t n8n-alpine --build-arg="N8N_VERSION=1.4.0" .
-sudo        docker run -it --rm --name verdaccio -p 4873:4873 verdaccio/verdaccio
+sudo  docker run -it --rm --name verdaccio -p 4873:4873 verdaccio/verdaccio
 Ctrl+a d
 
+npm config set registry http://npm.telepilot.co:4873/
 npm config set registry http://0.0.0.0:4873/
 npm login
 

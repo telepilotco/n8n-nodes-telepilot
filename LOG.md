@@ -419,9 +419,17 @@ No such file or directory
 		* + version of `@telepilotco/tdlib-binaries-prebuilt` that is used
 
 
-## 2023-11-XX
+## 2023-11-23
 	* Release Plugins:
-		* - `@telepilotco/tdlib-addon-prebuilt` is released
+		* + `@telepilotco/tdlib-addon-prebuilt` is released
+
+## 2023-11-24
+	* Tested private npm repository npm.telepilot.co:4873
+	* proposed to "cruptobaastie" to test telepilot=0.1.0 from my private repo
+	* added docker-compose testing instructions to separate folder
+
+## 2023-11-XX:
+	* Release Plugins:
 		* - `@telepilotco/tdlib-binaries-prebuilt` is released
 		* - `@telepilotco/n8n-nodes-telepilot` is released
 
