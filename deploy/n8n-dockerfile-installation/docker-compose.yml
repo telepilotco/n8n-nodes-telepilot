@@ -1,0 +1,23 @@
+version: "3.7"
+
+services:
+  n8n:
+    #    image: docker.n8n.io/n8nio/n8n
+    build : .
+    restart: always
+    ports:
+      - "5678:5678"
+    environment:
+      - N8N_HOST=localhost
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=https
+      - NODE_ENV=production
+      - GENERIC_TIMEZONE=${GENERIC_TIMEZONE}
+      - DEBUG=tdl,telepilot-cred,telepilot-node,telepilot-trigger,telepilot-cm
+      - N8N_LOG_LEVEL=debug
+    volumes:
+      - n8n_data:/home/node/.n8n
+
+volumes:
+  n8n_data:
+    external: true
