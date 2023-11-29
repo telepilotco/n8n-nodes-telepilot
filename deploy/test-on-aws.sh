@@ -27,7 +27,9 @@ git clone https://github.com/n8n-io/n8n
 cd n8n/docker/images/n8n/
 #vim Dockerfile && screen
 ## add "RUN npm config set registry http://0.0.0.0:4873/" to Dockerfile
-#screen -S verdaccio -dm bash -c "sudo docker run -it --rm --name verdaccio -v /tmp/storage:/verdaccio/storage -p 4873:4873 verdaccio/verdaccio"
+
+#screen -S verdaccio -dm bash -c "sudo docker run -it --rm --name verdaccio -v /tmp/storage:/verdaccio/storage -v ./verdaccio/config.yaml:/verdaccio/conf/config.yaml -p 4873:4873 verdaccio/verdaccio"
+
 #sudo docker build -f Dockerfile -t n8n-alpine --build-arg="N8N_VERSION=1.4.0" .
 sudo  docker run -it --rm --name verdaccio -p 4873:4873 verdaccio/verdaccio
 Ctrl+a d
