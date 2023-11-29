@@ -428,14 +428,28 @@ No such file or directory
 	* proposed to "cruptobaastie" to test telepilot=0.1.0 from my private repo
 	* added docker-compose testing instructions to separate folder
 
+## 2023-11-28:
+	* + publish binaries for MacOS-x64
+		* + tested v0.1.0 in n8n - works
+
 ## 2023-11-XX:
 	* Release Plugins:
 		* - `@telepilotco/tdlib-binaries-prebuilt` is released
 		* - `@telepilotco/n8n-nodes-telepilot` is released
-
-
-	* publish binaries for MacOS-x64
-
-
-
+			* Wait what Cryptobaastie will answer
+	* Create verdaccio users for private repository
+	* migrate to new server:
+		* Website
+			* caddy docker
+		* Plausible
+			* plausible docker
+		* prebuilt binaries
+		* + private npm repo
+			* verdaccio docker - see deploy/verdaccio folder
+				* +disable anonimous READ
+				* +disable user registration
+				* +register users
+		* Logs analytics - ???
+	* Create Telegram Channel Message
+	* Update Site
 	* rename "addon" to "loader"
