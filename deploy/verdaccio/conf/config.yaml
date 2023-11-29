@@ -58,11 +58,11 @@ auth:
     file: /verdaccio/storage/htpasswd
     # Maximum amount of users allowed to register, defaults to "+infinity".
     # You can set this to -1 to disable registration.
-    # max_users: 1000
+    max_users: -1
     # Hash algorithm, possible options are: "bcrypt", "md5", "sha1", "crypt".
-    # algorithm: bcrypt # by default is crypt, but is recommended use bcrypt for new installations
+    algorithm: bcrypt # by default is crypt, but is recommended use bcrypt for new installations
     # Rounds number for "bcrypt", will be ignored for other algorithms.
-    # rounds: 10
+    rounds: 10
 
 # https://verdaccio.org/docs/configuration#uplinks
 # a list of other known repositories we can talk to
@@ -76,7 +76,7 @@ uplinks:
 packages:
   '@*/*':
     # scoped packages
-    access: $all
+    access: $authenticated
     publish: $authenticated
     unpublish: $authenticated
     proxy: npmjs
@@ -87,7 +87,7 @@ packages:
     #
     # you can specify usernames/groupnames (depending on your auth plugin)
     # and three keywords: "$all", "$anonymous", "$authenticated"
-    access: $all
+    access: $authenticated
 
     # allow all known users to publish/publish packages
     # (anyone can register by default, remember?)
