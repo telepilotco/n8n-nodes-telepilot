@@ -27,11 +27,11 @@ If you are interested in following our updates and news, check out:
 
 ## Overview
 
-`n8n-nodes-telepilot` is a module for the n8n automation engine that provides the ability to configure your personal Telegram assistant. 
+`@telepilotco/n8n-nodes-telepilot` is a node for the n8n automation engine that provides the ability to configure your personal Telegram assistant. 
 It works alongside your main client, allowing you to interact with Telegram servers and see all the messages you can see, 
 while also enabling your assistant to react to those messages.
 
-With `n8n-nodes-telepilot`, you can enhance your Telegram user experience by automating various actions and responses. 
+With `@telepilotco/n8n-nodes-telepilot`, you can enhance your Telegram user experience by automating various actions and responses. 
 Your personal Telegram CoPilot acts as real-time assistant, providing additional functionalities and making your Telegram usage more efficient.
 
 At [TelePilot](https://telepilot.co), we prioritize your privacy. We do not have access to your Telegram messages because you have full control over your personal instance of TelePilot, 
@@ -80,7 +80,7 @@ To use this package in your n8n project, follow these steps:
 
 ### Manual installation
 
-To get started install the package in your n8n root directory:
+To get started install the package in your `~/.n8n/nodes` directory:
 
 `npm install @telepilotco/n8n-nodes-telepilot`
 
