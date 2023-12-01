@@ -74,24 +74,24 @@ To use this package in your n8n project, follow these steps:
 
 1. Go to Settings -> Community modules of your self-hosted n8n instance
 2. Select "Install Community node"
-3. Specify the name `n8n-nodes-telepilot`, click checkbox that you understand the risks and click "Install"
+3. Specify the name `@telepilotco/n8n-nodes-telepilot`, click checkbox that you understand the risks and click "Install"
 
-![Install Telepilot as n8n Community Node](https://telepilot.co/assets/images/install-community-node-1.png)
+![Install Telepilot as n8n Community Node](https://telepilot.co/documentation-images/install-community-node-1.png)
 
 ### Manual installation
 
 To get started install the package in your n8n root directory:
 
-`npm install n8n-nodes-telepilot`
+`npm install @telepilotco/n8n-nodes-telepilot`
 
 For Docker-based deployments, add the following line before the font installation command in your [n8n Dockerfile](https://github.com/n8n-io/n8n/blob/master/docker/images/n8n/Dockerfile):
 
-`RUN cd /usr/local/lib/node_modules/n8n && npm install n8n-nodes-telepilot`
+`RUN cd ~/.n8n/ && mkdir nodes && cd nodes && npm install @telepilotco/n8n-nodes-telepilot`
 
 ## TelePilot setup
 
 ### Connect TelePilot with your Telegram Account
-![Connect Telepilot with your Telegram Account](https://telepilot.co/assets/images/telegram-api-1.png)
+![Connect Telepilot with your Telegram Account](https://telepilot.co/documentation-images/telegram-api-1.png)
 
 - Log in to your Telegram core: https://my.telegram.org with your phone number that you wish to use TelePilot with
 - Go to [API development tools](https://my.telegram.org/apps) and fill out the form:
@@ -103,7 +103,7 @@ For Docker-based deployments, add the following line before the font installatio
 
 Access the credentials UI by opening the left menu and selecting **Credentials**.
 
-![Configure TelePilot Credentials](https://telepilot.co/assets/images/credentials-0.png)
+![Configure TelePilot Credentials](https://telepilot.co/documentation-images/credentials-0.png)
 
 Click on "Add Credential" button and browse for "Personal Telegram CoPilot API".
 
@@ -111,11 +111,11 @@ To initiate connection with Telegram servers, you need to provide following:
 - `api_id`: copy-paste it from https://my.telegram.org/apps page
 - `api_hash`: copy-paste it from https://my.telegram.org/apps page
 
-![Configure TelePilot Credentials](https://telepilot.co/assets/images/credentials-1.png)
+![Configure TelePilot Credentials](https://telepilot.co/documentation-images/credentials-1.png)
 
 After you have filled out all fields, click on "Save" and make sure that you see "Connection tested successfully" message.
 
-![Configure TelePilot Credentials](https://telepilot.co/assets/images/credentials-2.png)
+![Configure TelePilot Credentials](https://telepilot.co/documentation-images/credentials-2.png)
 
 ## Login
 
