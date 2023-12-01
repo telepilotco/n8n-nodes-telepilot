@@ -433,16 +433,21 @@ No such file or directory
 		* + tested v0.1.0 in n8n - works
 
 ## 2023-12-01
-  * Update Site
-	* Release Plugins:
-		* - `@telepilotco/tdlib-binaries-prebuilt` is released
-		* - `@telepilotco/n8n-nodes-telepilot` is released
+  * + Update Site
+	* + Release Plugins:
+		* +`@telepilotco/tdlib-binaries-prebuilt` is released
+		* +`@telepilotco/n8n-nodes-telepilot` is released
 			* + Wait what Cryptobaastie will answer: he did not answer
-	* Publish to registry.npmjs.org
-	* Create Telegram Channel Message
+	* + Publish to registry.npmjs.org
+	* + Create Telegram Channel Message
 		* refer to this http://localhost:1313/documentation/install-and-configure-telepilot-as-n8n-plugin/#-install-as-n8n-community-node
+  * + Informed Ibrahim
+  + joinChat implemented
 
 ## 2023-11-XX:
+	* 1) JoinGroup method
+	* 2) Multiaccount login
+	* 3) Proxy
 	* Publish from Github Action
 	* Create verdaccio users for private repository
 	* migrate to new server:
