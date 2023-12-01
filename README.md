@@ -11,11 +11,11 @@ Here is environment compatibility overview:
 |     OS | architecture | supported? |
 |--------|--------------|------|
 | docker | x64 | YES  |
-| docker | arm64 | NO   |
-| linux | x64 | NO     |
-| linux | arm64 | NO   |
-| macos | x64 | NO     |
-| macos | arm64 | NO  |
+| docker | arm64 | YES   |
+| linux | x64 | YES     |
+| linux | arm64 | YES   |
+| macos | x64 | YES     |
+| macos | arm64 | YES  |
 | windows | x64 | NO  |
 | windows | arm64 | NO  |
 
