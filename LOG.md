@@ -432,11 +432,18 @@ No such file or directory
 	* + publish binaries for MacOS-x64
 		* + tested v0.1.0 in n8n - works
 
-## 2023-11-XX:
+## 2023-12-01
+  * Update Site
 	* Release Plugins:
 		* - `@telepilotco/tdlib-binaries-prebuilt` is released
 		* - `@telepilotco/n8n-nodes-telepilot` is released
-			* Wait what Cryptobaastie will answer
+			* + Wait what Cryptobaastie will answer: he did not answer
+	* Publish to registry.npmjs.org
+	* Create Telegram Channel Message
+		* refer to this http://localhost:1313/documentation/install-and-configure-telepilot-as-n8n-plugin/#-install-as-n8n-community-node
+
+## 2023-11-XX:
+	* Publish from Github Action
 	* Create verdaccio users for private repository
 	* migrate to new server:
 		* Website
@@ -446,10 +453,9 @@ No such file or directory
 		* prebuilt binaries
 		* + private npm repo
 			* verdaccio docker - see deploy/verdaccio folder
-				* +disable anonimous READ
+				* +disable anonymous READ
 				* +disable user registration
 				* +register users
 		* Logs analytics - ???
-	* Create Telegram Channel Message
-	* Update Site
+		* ?? VPN ??
 	* rename "addon" to "loader"

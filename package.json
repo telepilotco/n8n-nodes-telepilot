@@ -11,6 +11,9 @@
     "node-addon",
     "n8n-community-node-package"
   ],
+  "files": [
+    "dist"
+  ],
   "license": "MIT",
   "homepage": "https://telepilot.co/",
   "author": {
