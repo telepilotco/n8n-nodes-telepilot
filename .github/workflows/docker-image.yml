@@ -35,5 +35,5 @@ jobs:
         # Log out from the Docker registry at the end of a job
         #logout: # optional, default is true
     - name: Docker Push
-      run: docker push telepilot/n8n-with-telepilot:${{ env.GITHUB_ENV }}
+      run: docker push telepilot/n8n-with-telepilot:${{ env.IMAGE_TAG }}
           
