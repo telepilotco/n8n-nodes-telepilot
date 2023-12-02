@@ -16,7 +16,7 @@ jobs:
     - uses: actions/checkout@v3
     - name: Set variables
       run:  |
-        echo "IMAGE_TAG=$(date +%s)" >> $GITHUB_ENV
+        echo "IMAGE_TAG=`date +%s`" >> $GITHUB_ENV
     - name: Build the Docker image
       run: cd deploy/n8n-dockerfile-installation && docker build . --file Dockerfile --tag telepilot/n8n-with-telepilot:${{ env.GITHUB_ENV }}
     - name: Docker Login
