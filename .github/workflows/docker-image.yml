@@ -14,8 +14,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    - name: Set variables
+      run:  |
+        echo "IMAGE_TAG=$(date +%s)" >> $GITHUB_ENV
     - name: Build the Docker image
-      run: cd deploy/n8n-dockerfile-installation && docker build . --file Dockerfile --tag telepilot/n8n-with-telepilot:$(date +%s)
+      run: cd deploy/n8n-dockerfile-installation && docker build . --file Dockerfile --tag telepilot/n8n-with-telepilot:${{ env.GITHUB_ENV }}
     - name: Docker Login
         # You may pin to the exact commit or the version.
       # uses: docker/login-action@343f7c4344506bcbf9b4de18042ae17996df046d
@@ -32,5 +35,5 @@ jobs:
         # Log out from the Docker registry at the end of a job
         #logout: # optional, default is true
     - name: Docker Push
-      run: docker push telepilot/n8n-with-telepilot:$(date +%s)
+      run: docker push telepilot/n8n-with-telepilot:${{ env.GITHUB_ENV }}
           
