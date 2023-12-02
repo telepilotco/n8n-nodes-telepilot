@@ -3,11 +3,19 @@
 
 name: Publish to NPM registry and Dockerhub
 
+# on:
+#   push:
+#     branches: [ "master" ]
+#   pull_request:
+#     branches: [ "master" ]
+
 on:
-  push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+  workflow_dispatch:
+    inputs:
+      ADDON_VERSION:
+        description: 'version of "tdlib-addon-prebuilt" from package.json'
+        type: string
+        required: true
 
 jobs:
   build:
