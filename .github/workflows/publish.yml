@@ -30,4 +30,14 @@ jobs:
     - run: npm ci
     - run: npm run build --if-present
 #    - run: npm test
+    - name: Use NPM Token
+      # You may pin to the exact commit or the version.
+      # uses: dkershner6/use-npm-token-action@99c5b17c84a15e44fdcef6712b34b76f8f0493b0
+      uses: dkershner6/use-npm-token-action@v1
+      with:
+        # An NPM token with whatever access is needed for your GitHub Action workflow 
+        token: ${{ secrets.REGISTRY_TOKEN }}
+        # The location of your Node workspace (needs to be a sibling of package.json)
+  #      workspace: # optional, default is ./
+          
     - run: npm publish
