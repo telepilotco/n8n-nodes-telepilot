@@ -1,4 +1,4 @@
-FROM n8nio/n8n:latest
+FROM n8nio/n8n:1.19.3
 # USER root
 # RUN apk add --update python3 py3-pip make npm
 RUN ls -la /home/

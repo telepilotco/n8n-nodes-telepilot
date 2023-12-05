@@ -225,6 +225,11 @@ export class TelePilot implements INodeType {
 				},
 				options: [
 					{
+						name: 'Close Chat',
+						value: 'closeChat',
+						action: 'Close chat',
+					},
+					{
 						name: 'Get Chat',
 						value: 'getChat',
 						action: 'Get chat',
@@ -248,6 +253,11 @@ export class TelePilot implements INodeType {
 						name: 'Mark Chat as Unread',
 						value: 'toggleChatIsMarkedAsUnread',
 						action: 'Mark chat as unread',
+					},
+					{
+						name: 'Open Chat',
+						value: 'openChat',
+						action: 'Open chat',
 					},
 					{
 						name: 'Search Public Chat (by Username)',
@@ -380,7 +390,9 @@ export class TelePilot implements INodeType {
 							'toggleChatIsMarkedAsUnread',
 							'getMessage',
 							'editMessageText',
-							'joinChat'
+							'joinChat',
+							'openChat',
+							'closeChat'
 						],
 						resource: ['chat', 'message'],
 					},
@@ -722,7 +734,25 @@ export class TelePilot implements INodeType {
 					debug(chat_id);
 					debug(result);
 					returnData.push(result);
-				}else if (operation === 'toggleChatIsMarkedAsUnread') {
+				} else if (operation === 'openChat') {
+					const chat_id = this.getNodeParameter('chat_id', 0) as string;
+					const result = await client.invoke({
+						_: 'openChat',
+						chat_id,
+					});
+					debug(chat_id);
+					debug(result);
+					returnData.push(result);
+				} else if (operation === 'closeChat') {
+					const chat_id = this.getNodeParameter('chat_id', 0) as string;
+					const result = await client.invoke({
+						_: 'closeChat',
+						chat_id,
+					});
+					debug(chat_id);
+					debug(result);
+					returnData.push(result);
+				} else if (operation === 'toggleChatIsMarkedAsUnread') {
 					const chat_id = this.getNodeParameter('chat_id', 0) as string;
 					const is_marked_as_unread = this.getNodeParameter('is_marked_as_unread', 0) as boolean;
 					const result = await client.invoke({

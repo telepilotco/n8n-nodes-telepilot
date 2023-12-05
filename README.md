@@ -1,6 +1,6 @@
 # n8n-nodes-telepilot
 
-[![npm version](https://badge.fury.io/js/n8n-nodes-telepilot.svg)](https://www.npmjs.com/package/n8n-nodes-telepilot)
+[![npm version](https://badge.fury.io/js/@telepilotco/n8n-nodes-telepilot.svg)](https://www.npmjs.com/package/@telepilotco/n8n-nodes-telepilot)
 
 ## Beta testing
 
