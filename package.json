@@ -12,7 +12,8 @@
     "n8n-community-node-package"
   ],
   "files": [
-    "dist"
+    "dist",
+    "deploy/n8n-imports"
   ],
   "license": "MIT",
   "homepage": "https://telepilot.co/",

@@ -82,7 +82,7 @@ jobs:
           ARG KEY
 
           RUN mkdir -p /home/node/.n8n/nodes && cd /home/node/.n8n/nodes
-          COPY telepilotco-n8n-nodes-telepilot-0.2.0.tgz ./telepilotco-n8n-nodes-telepilot-0.2.0.tgz
+          COPY ./telepilotco-n8n-nodes-telepilot-0.2.0.tgz ./telepilotco-n8n-nodes-telepilot-0.2.0.tgz
           RUN npm config set registry http://npm.telepilot.co:4873/
           COPY .npmrc /home/node/.npmrc
 
@@ -93,8 +93,8 @@ jobs:
 
           RUN npm install telepilotco-n8n-nodes-telepilot-0.2.0-22.tgz
 
-          RUN N8N_ENCRYPTION_KEY=$KEY n8n import:credentials -i /home/node/credential-41.json
-          RUN n8n import:workflow -i /home/node/Telepilot_getMe.json
+          RUN N8N_ENCRYPTION_KEY=$KEY n8n import:credentials -i /home/node/.n8n/nodes/node_modules/@telepilotco/n8n-nodes-telepilot/deploy/n8n-imports/credentials/credential-41.json
+          RUN n8n import:workflow -i /home/node/.n8n/nodes/node_modules/@telepilotco/n8n-nodes-telepilot/deploy/n8n-imports/workflows/Telepilot_getMe.json
           RUN cat /home/node/.n8n/config
 
           ENTRYPOINT ["tini", "--", "/docker-entrypoint.sh"]
