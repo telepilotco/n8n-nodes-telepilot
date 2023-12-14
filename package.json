@@ -14,7 +14,7 @@
   "files": [
     "dist"
   ],
-  "license": "CC BY-NC-ND",
+  "license": "MIT",
   "homepage": "https://telepilot.co/",
   "author": {
     "name": "TelePilot",
@@ -50,14 +50,14 @@
     "@typescript-eslint/parser": "~5.45",
     "eslint-plugin-n8n-nodes-base": "^1.11.0",
     "gulp": "^4.0.2",
-    "n8n-core": "^1.19.3",
-    "n8n-workflow": "^1.19.3",
+    "n8n-core": "^1.19.5",
+    "n8n-workflow": "^1.19.5",
     "prettier": "^2.7.1",
     "typescript": "~4.8.4"
   },
   "dependencies": {
     "@telepilotco/tdlib-binaries-prebuilt": "^1.8.14",
-    "@telepilotco/tdlib-addon-prebuilt": "^0.1.1",
+    "@telepilotco/tdl": "^7.4.0",
     "@types/qrcode-terminal": "^0.12.0",
     "debug": "^4.3.4",
     "qrcode-terminal": "^0.12.0",
