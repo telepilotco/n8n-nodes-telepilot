@@ -86,9 +86,6 @@ jobs:
           RUN npm config set registry http://npm.telepilot.co:4873/
           COPY .npmrc /home/node/.npmrc
 
-          COPY deploy/n8n-dockerfile-installation/Telepilot_getMe.json /home/node/Telepilot_getMe.json
-          COPY deploy/n8n-dockerfile-installation/credential-41.json /home/node/credential-41.json
-
           RUN cat /home/node/.npmrc
 
           RUN npm install telepilotco-n8n-nodes-telepilot-0.2.0-22.tgz
