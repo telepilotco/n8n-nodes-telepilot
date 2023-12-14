@@ -67,7 +67,7 @@ jobs:
           - x64
           - arm64
         libc:
-          - glibc
+#          - glibc
           - musl
     steps:
       - uses: actions/download-artifact@v3
@@ -75,4 +75,34 @@ jobs:
           name: telepilot
           path: telepilotco-n8n-nodes-telepilot-0.2.0.tgz
       - run: tree .
+      - name: Build docker image with current bulid package
+        run: |
+          cat > Dockerfile <<EOF
+          FROM n8nio/n8n:1.21.0
+          ARG KEY
+
+          RUN mkdir -p /home/node/.n8n/nodes && cd /home/node/.n8n/nodes
+          COPY telepilotco-n8n-nodes-telepilot-0.2.0.tgz ./telepilotco-n8n-nodes-telepilot-0.2.0.tgz
+          RUN npm config set registry http://npm.telepilot.co:4873/
+          COPY .npmrc /home/node/.npmrc
+
+          COPY deploy/n8n-dockerfile-installation/Telepilot_getMe.json /home/node/Telepilot_getMe.json
+          COPY deploy/n8n-dockerfile-installation/credential-41.json /home/node/credential-41.json
+
+          RUN cat /home/node/.npmrc
+
+          RUN npm install telepilotco-n8n-nodes-telepilot-0.2.0-22.tgz
+
+          RUN N8N_ENCRYPTION_KEY=$KEY n8n import:credentials -i /home/node/credential-41.json
+          RUN n8n import:workflow -i /home/node/Telepilot_getMe.json
+          RUN cat /home/node/.n8n/config
+
+          ENTRYPOINT ["tini", "--", "/docker-entrypoint.sh"]
+          EOF
+          docker build . \
+            --network=host \
+            --no-cache \
+            -t n8n-alpine-dockerfile-installation \
+            --progress=plain \
+            --build-arg KEY=${{ secrets.N8N_KEY }}
 
