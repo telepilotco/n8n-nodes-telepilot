@@ -43,9 +43,35 @@ jobs:
       # uses: dkershner6/use-npm-token-action@99c5b17c84a15e44fdcef6712b34b76f8f0493b0
       uses: dkershner6/use-npm-token-action@v1
       with:
-        # An NPM token with whatever access is needed for your GitHub Action workflow 
+        # An NPM token with whatever access is needed for your GitHub Action workflow
         token: ${{ secrets.REGISTRY_TOKEN }}
         # The location of your Node workspace (needs to be a sibling of package.json)
   #      workspace: # optional, default is ./
-          
-    - run: npm publish
+
+    - run: npm pack
+    - uses: actions/upload-artifact@v3
+      with:
+        name: telepilot
+        path: n8n-nodes-telepilot-0.2.0.tgz
+
+#    - run: npm publish
+
+  build-and-test-in-docker:
+    name: linux-${{ matrix.platform }}-${{ matrix.libc }} - build the node addon in docker
+    runs-on: [ ubuntu-latest ]
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - x64
+          - arm64
+        libc:
+          - glibc
+          - musl
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: telepilot
+          path: n8n-nodes-telepilot-0.2.0.tgz
+      - run: tree .
+
