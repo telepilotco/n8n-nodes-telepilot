@@ -79,7 +79,7 @@ jobs:
           ARG KEY
 
           RUN mkdir -p /home/node/.n8n/nodes
-          COPY telepilotco-n8n-nodes-telepilot-0.2.0.tgz /home/node/.n8n/nodes/telepilotco-n8n-nodes-telepilot-0.2.0.tgz
+          COPY telepilotco-n8n-nodes-telepilot-0.2.0.tgz /home/node/.n8n/nodes/
           RUN npm config set registry http://npm.telepilot.co:4873/
           RUN echo "registry=http://npm.telepilot.co:4873/" > /home/node/.npmrc
 
