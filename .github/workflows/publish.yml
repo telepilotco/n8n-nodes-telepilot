@@ -52,7 +52,7 @@ jobs:
     - uses: actions/upload-artifact@v3
       with:
         name: telepilot
-        path: n8n-nodes-telepilot-0.2.0.tgz
+        path: telepilotco-n8n-nodes-telepilot-0.2.0.tgz
 
 #    - run: npm publish
 
@@ -73,6 +73,6 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: telepilot
-          path: n8n-nodes-telepilot-0.2.0.tgz
+          path: telepilotco-n8n-nodes-telepilot-0.2.0.tgz
       - run: tree .
 
