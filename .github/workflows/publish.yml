@@ -62,7 +62,7 @@ jobs:
           - x64
           - arm64
         libc:
-#          - glibc
+          - glibc
           - musl
     steps:
       - uses: actions/download-artifact@v3
@@ -72,7 +72,8 @@ jobs:
       - run: tree .
       - run: docker run --privileged --rm tonistiigi/binfmt --install arm64
         if: matrix.platform == 'arm64'
-      - name: Build docker image with current bulid package
+      - name: Build musl docker image with current build package
+        if: matrix.libc == 'musl'
         run: |
           cat > Dockerfile <<EOF
           FROM n8nio/n8n:1.21.0
@@ -81,7 +82,6 @@ jobs:
           RUN mkdir -p /home/node/.n8n/nodes
           COPY telepilotco-n8n-nodes-telepilot-0.2.0.tgz /home/node/.n8n/nodes/
           RUN npm config set registry http://npm.telepilot.co:4873/
-          RUN echo "registry=http://npm.telepilot.co:4873/" > /home/node/.npmrc
 
           RUN cat /home/node/.npmrc
 
@@ -99,4 +99,29 @@ jobs:
             -t n8n-alpine-dockerfile-installation \
             --progress=plain \
             --build-arg KEY=${{ secrets.N8N_KEY }}
+      - name: Run n8n in docker image
+        if: matrix.libc == 'musl'
+        run: |
+          docker run ${{ matrix.platform == 'arm64' && '--platform linux/arm64' || '' }} \
+            -it --rm \
+            --name n8n-alpine-dockerfile-installation \
+            -p 5678:5678 \
+            -e DEBUG=tdl,telepilot-cred,telepilot-node,telepilot-trigger,telepilot-cm \
+            -e EXECUTIONS_PROCESS=main \
+            -e N8N_LOG_LEVEL=debug \
+            n8n-alpine-dockerfile-installation execute --id r2a0u5tez9fg1WW6
+      - name: Install Telepilot in Ubuntu n8n
+        if: matrix.libc == 'glibc'
+        run: |
+          mkdir -p ~/.n8n/nodes && cp telepilotco-n8n-nodes-telepilot-0.2.0.tgz ~/.n8n/nodes && cd ~/.n8n/nodes
+          npm config set registry http://npm.telepilot.co:4873/
+          npm install telepilotco-n8n-nodes-telepilot-0.2.0.tgz
+      - name: Run n8n in Ubuntu n8n
+        run: |
+          N8N_HOST=0.0.0.0 N8N_PORT=5678 N8N_ENCRYPTION_KEY=${{ secrets.N8N_KEY }} npx n8n \
+            import:credentials -i ~/.n8n/nodes/node_modules/@telepilotco/n8n-nodes-telepilot/deploy/n8n-imports/credentials/credential-41.json
+          npx n8n \
+            import:workflow -i /home/node/.n8n/nodes/node_modules/@telepilotco/n8n-nodes-telepilot/deploy/n8n-imports/workflows/Telepilot_getMe.json
+          npx n8n \
+            execute --id r2a0u5tez9fg1WW6
 
