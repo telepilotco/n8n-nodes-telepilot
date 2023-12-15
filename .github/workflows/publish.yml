@@ -68,7 +68,7 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: telepilot
-          path: telepilotco-n8n-nodes-telepilot-0.2.0.tgz
+          path: package
       - run: tree .
       - run: docker run --privileged --rm tonistiigi/binfmt --install arm64
         if: matrix.platform == 'arm64'
