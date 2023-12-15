@@ -112,7 +112,7 @@ jobs:
             -e DEBUG=tdl,telepilot-cred,telepilot-node,telepilot-trigger,telepilot-cm \
             -e EXECUTIONS_PROCESS=main \
             -e N8N_LOG_LEVEL=debug \
-            docker.io/library/n8n-alpine-dockerfile-installation execute --id r2a0u5tez9fg1WW6
+            docker.io/library/n8n-alpine-dockerfile-installation execute --id r2a0u5tez9fg1WW6 > execute-result.log 2>&1
       - name: Install Telepilot in Ubuntu n8n
         if: matrix.libc == 'glibc'
         run: |
