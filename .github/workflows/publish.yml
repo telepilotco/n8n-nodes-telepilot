@@ -133,5 +133,4 @@ jobs:
         run: |
           cat execute-result.log
           cat execute-result.log | grep "Please login" || exit 1
-          cat execute-result.log | grep "authorizationStateWaitTdlibParameters" || exit 2
-          cat execute-result.log | grep "authorizationStateClosed" || exit 3
+          cat execute-result.log | grep "Close Td in state 1" || exit 2
