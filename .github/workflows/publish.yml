@@ -109,7 +109,7 @@ jobs:
             -e DEBUG=tdl,telepilot-cred,telepilot-node,telepilot-trigger,telepilot-cm \
             -e EXECUTIONS_PROCESS=main \
             -e N8N_LOG_LEVEL=debug \
-            n8n-alpine-dockerfile-installation execute --id r2a0u5tez9fg1WW6
+            docker.io/library/n8n-alpine-dockerfile-installation execute --id r2a0u5tez9fg1WW6
       - name: Install Telepilot in Ubuntu n8n
         if: matrix.libc == 'glibc'
         run: |
@@ -121,7 +121,7 @@ jobs:
           N8N_HOST=0.0.0.0 N8N_PORT=5678 N8N_ENCRYPTION_KEY=${{ secrets.N8N_KEY }} npx --yes n8n@1.21.0 \
             import:credentials -i ~/.n8n/nodes/node_modules/@telepilotco/n8n-nodes-telepilot/deploy/n8n-imports/credentials/credential-41.json
           npx n8n@1.21.0 \
-            import:workflow -i /home/node/.n8n/nodes/node_modules/@telepilotco/n8n-nodes-telepilot/deploy/n8n-imports/workflows/Telepilot_getMe.json
+            import:workflow -i ~/.n8n/nodes/node_modules/@telepilotco/n8n-nodes-telepilot/deploy/n8n-imports/workflows/Telepilot_getMe.json
           npx n8n@1.21.0 \
             execute --id r2a0u5tez9fg1WW6
 

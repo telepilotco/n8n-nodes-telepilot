@@ -269,7 +269,7 @@ export class TelePilotNodeConnectionManager {
 					break;
 				case 'linux':
 						// libFile = libFolder + "libtdjson" + ".so"
-						libFile = "liibtdjson" + ".so"
+						libFile = "libtdjson" + ".so"
 						bridgeFile = bridgeFolder + "addon" + ".node";
 					break;
 				default:
