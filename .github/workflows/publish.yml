@@ -132,7 +132,6 @@ jobs:
       - name: Test Telepilot GetMe execution result
         run: |
           cat execute-result.log
-          cat execute-result.log | grep "authorizationStateWaitTdlibParameters" || exit -1
-          cat execute-result.log | grep "authorizationStateClosed" || exit -1
-          cat execute-result.log | grep "Please login" || exit -1
-
+          cat execute-result.log | grep "Please login" || exit 1
+          cat execute-result.log | grep "authorizationStateWaitTdlibParameters" || exit 2
+          cat execute-result.log | grep "authorizationStateClosed" || exit 3
