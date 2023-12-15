@@ -62,7 +62,7 @@ jobs:
           - x64
           - arm64
         libc:
-#          - glibc
+          - glibc
           - musl
     steps:
       - uses: actions/download-artifact@v3
@@ -114,7 +114,6 @@ jobs:
             -e N8N_LOG_LEVEL=debug \
             docker.io/library/n8n-alpine-dockerfile-installation execute --id r2a0u5tez9fg1WW6 > execute-result.log 2>&1 \
             || exit 0
-          cat execute-result.log
       - name: Install Telepilot in Ubuntu n8n
         if: matrix.libc == 'glibc'
         run: |
@@ -129,10 +128,10 @@ jobs:
           npx n8n@1.21.0 \
             import:workflow -i ~/.n8n/nodes/node_modules/@telepilotco/n8n-nodes-telepilot/deploy/n8n-imports/workflows/Telepilot_getMe.json
           npx n8n@1.21.0 execute --id r2a0u5tez9fg1WW6 > execute-result.log 2>&1 || exit 0
-          cat execute-result.log
       - name: Test Telepilot GetMe execution result
         run: |
-          cat execute-result.log | grep "1authorizationStateWaitTdlibParameters" || exit -1
-          cat execute-result.log | grep "1authorizationStateClosed" || exit -1
-          cat execute-result.log | grep "1Please login" || exit -1
+          cat execute-result.log
+          cat execute-result.log | grep "authorizationStateWaitTdlibParameters" || exit -1
+          cat execute-result.log | grep "authorizationStateClosed" || exit -1
+          cat execute-result.log | grep "Please login" || exit -1
 
