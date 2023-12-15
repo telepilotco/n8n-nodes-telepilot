@@ -103,7 +103,7 @@ jobs:
         if: matrix.libc == 'musl'
         run: |
           docker run ${{ matrix.platform == 'arm64' && '--platform linux/arm64' || '' }} \
-            -it --rm \
+            --rm \
             --name n8n-alpine-dockerfile-installation \
             -p 5678:5678 \
             -e DEBUG=tdl,telepilot-cred,telepilot-node,telepilot-trigger,telepilot-cm \
@@ -118,7 +118,7 @@ jobs:
           npm install telepilotco-n8n-nodes-telepilot-0.2.0.tgz
       - name: Run n8n in Ubuntu n8n
         run: |
-          N8N_HOST=0.0.0.0 N8N_PORT=5678 N8N_ENCRYPTION_KEY=${{ secrets.N8N_KEY }} npx n8n \
+          N8N_HOST=0.0.0.0 N8N_PORT=5678 N8N_ENCRYPTION_KEY=${{ secrets.N8N_KEY }} npx --yes n8n@1.21.0 \
             import:credentials -i ~/.n8n/nodes/node_modules/@telepilotco/n8n-nodes-telepilot/deploy/n8n-imports/credentials/credential-41.json
           npx n8n \
             import:workflow -i /home/node/.n8n/nodes/node_modules/@telepilotco/n8n-nodes-telepilot/deploy/n8n-imports/workflows/Telepilot_getMe.json
