@@ -47,7 +47,7 @@ jobs:
     - uses: actions/upload-artifact@v3
       with:
         name: telepilot
-        path: telepilotco-n8n-nodes-telepilot-0.2.0.tgz
+        path: package
 
 #    - run: npm publish
 
@@ -80,7 +80,7 @@ jobs:
           ARG KEY
 
           RUN mkdir -p /home/node/.n8n/nodes
-          COPY telepilotco-n8n-nodes-telepilot-0.2.0.tgz /home/node/.n8n/nodes/
+          COPY package/telepilotco-n8n-nodes-telepilot-0.2.0.tgz /home/node/.n8n/nodes/
           RUN npm config set registry http://npm.telepilot.co:4873/
 
           RUN cat /home/node/.npmrc
@@ -113,7 +113,7 @@ jobs:
       - name: Install Telepilot in Ubuntu n8n
         if: matrix.libc == 'glibc'
         run: |
-          mkdir -p ~/.n8n/nodes && cp telepilotco-n8n-nodes-telepilot-0.2.0.tgz ~/.n8n/nodes && cd ~/.n8n/nodes
+          mkdir -p ~/.n8n/nodes && cp package/telepilotco-n8n-nodes-telepilot-0.2.0.tgz ~/.n8n/nodes && cd ~/.n8n/nodes
           npm config set registry http://npm.telepilot.co:4873/
           npm install telepilotco-n8n-nodes-telepilot-0.2.0.tgz
       - name: Run n8n in Ubuntu n8n
