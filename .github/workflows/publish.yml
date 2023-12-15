@@ -62,7 +62,7 @@ jobs:
           - x64
           - arm64
         libc:
-          - glibc
+#          - glibc
           - musl
     steps:
       - uses: actions/download-artifact@v3
@@ -101,7 +101,7 @@ jobs:
           push: false
           no-cache: true
           tags: n8n-alpine-dockerfile-installation
-          
+
       - name: Run n8n in docker image
         if: matrix.libc == 'musl'
         run: |
