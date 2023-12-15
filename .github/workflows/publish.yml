@@ -93,12 +93,15 @@ jobs:
 
           ENTRYPOINT ["tini", "--", "/docker-entrypoint.sh"]
           EOF
-          docker build . \
-            --network=host \
-            --no-cache \
-            -t n8n-alpine-dockerfile-installation \
-            --progress=plain \
-            --build-arg KEY=${{ secrets.N8N_KEY }}
+      - name: Build n8n-alpine-dockerfile-installation
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          platforms: linux/${{ matrix.platform == 'arm64' && 'arm64' || 'amd64' }}
+          push: false
+          no-cache: true
+          tags: n8n-alpine-dockerfile-installation
+          
       - name: Run n8n in docker image
         if: matrix.libc == 'musl'
         run: |
