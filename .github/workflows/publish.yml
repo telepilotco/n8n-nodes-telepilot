@@ -71,8 +71,8 @@ jobs:
           path: telepilotco-n8n-nodes-telepilot-0.2.0.tgz
       - run: tree .
       - run: docker run --privileged --rm tonistiigi/binfmt --install arm64
-        if: matrix.platform == 'arm64'
-      - name: Build musl docker image with current build package
+        if: matrix.platform == 'arm64' && matrix.libc == 'musl'
+      - name: Create Dockerfile to build musl docker image
         if: matrix.libc == 'musl'
         run: |
           cat > Dockerfile <<EOF
@@ -94,6 +94,7 @@ jobs:
           ENTRYPOINT ["tini", "--", "/docker-entrypoint.sh"]
           EOF
       - name: Build n8n-alpine-dockerfile-installation
+        if: matrix.libc == 'musl'
         uses: docker/build-push-action@v2
         with:
           context: .
