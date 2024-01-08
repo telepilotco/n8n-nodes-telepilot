@@ -10,7 +10,11 @@ name: Publish to NPM registry and Dockerhub
 #     branches: [ "master" ]
 
 on:
-  workflow_dispatch
+  workflow_dispatch:
+    inputs:
+      npm_registry:
+        description: 'Custom NPM_REGISTRY'
+        required: false
 
 jobs:
   build:
@@ -29,6 +33,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+        registry-url: '$NPM_REGISTRY'
     - run: npm install -g pnpm
     - run: npm ci
     - run: npm run build --if-present
@@ -47,7 +52,7 @@ jobs:
     - uses: actions/upload-artifact@v3
       with:
         name: telepilot
-        path: telepilotco-n8n-nodes-telepilot-0.2.0.tgz
+        path: telepilotco-n8n-nodes-telepilot-*.tgz
 
 #    - run: npm publish
 
@@ -68,7 +73,7 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: telepilot
-          path: telepilotco-n8n-nodes-telepilot-0.2.0.tgz
+          path: .
       - run: tree .
       - run: docker run --privileged --rm tonistiigi/binfmt --install arm64
         if: matrix.platform == 'arm64' && matrix.libc == 'musl'
@@ -77,15 +82,14 @@ jobs:
         run: |
           cat > Dockerfile <<EOF
           FROM n8nio/n8n:1.21.0
-          ARG KEY
 
           RUN mkdir -p /home/node/.n8n/nodes
-          COPY telepilotco-n8n-nodes-telepilot-0.2.0.tgz/telepilotco-n8n-nodes-telepilot-0.2.0.tgz /home/node/.n8n/nodes/
+          COPY telepilotco-n8n-nodes-telepilot-*.tgz /home/node/.n8n/nodes/
           RUN npm config set registry http://npm.telepilot.co:4873/
 
           RUN cat /home/node/.npmrc
 
-          RUN cd /home/node/.n8n/nodes && ls -laR && npm install telepilotco-n8n-nodes-telepilot-0.2.0.tgz
+          RUN cd /home/node/.n8n/nodes && ls -laR && npm install telepilotco-n8n-nodes-telepilot-*.tgz
 
           RUN N8N_ENCRYPTION_KEY=${{ secrets.N8N_KEY }} n8n import:credentials -i /home/node/.n8n/nodes/node_modules/@telepilotco/n8n-nodes-telepilot/deploy/n8n-imports/credentials/credential-41.json
           RUN n8n import:workflow -i /home/node/.n8n/nodes/node_modules/@telepilotco/n8n-nodes-telepilot/deploy/n8n-imports/workflows/Telepilot_getMe.json
@@ -118,9 +122,9 @@ jobs:
       - name: Install Telepilot in Ubuntu n8n
         if: matrix.libc == 'glibc'
         run: |
-          mkdir -p ~/.n8n/nodes && cp telepilotco-n8n-nodes-telepilot-0.2.0.tgz/telepilotco-n8n-nodes-telepilot-0.2.0.tgz ~/.n8n/nodes && cd ~/.n8n/nodes
+          mkdir -p ~/.n8n/nodes && cp telepilotco-n8n-nodes-telepilot-*.tgz ~/.n8n/nodes && cd ~/.n8n/nodes
           npm config set registry http://npm.telepilot.co:4873/
-          npm install telepilotco-n8n-nodes-telepilot-0.2.0.tgz
+          npm install telepilotco-n8n-nodes-telepilot-*.tgz
       - name: Run n8n in Ubuntu n8n
         if: matrix.libc == 'glibc'
         run: |
@@ -134,3 +138,24 @@ jobs:
           cat execute-result.log
           cat execute-result.log | grep "Please login" || exit 1
           cat execute-result.log | grep "Close Td in state 1" || exit 2
+
+
+  publish:
+    name: 'Publish to npm'
+    needs: [build, build-and-test-in-docker]
+    runs-on: ubuntu-latest
+    env:
+      NPM_REGISTRY: ${{ github.event.inputs.npm_registry || 'https://registry.npmjs.org' }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: lts/*
+          cache: npm
+          # registry-url is mandatory here
+          registry-url: '$NPM_REGISTRY'
+      - name: Publish
+        if: "${{ inputs.npm-tag != '' }}"
+        run: npm publish telepilotco-n8n-nodes-telepilot-*.tgz
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.REGISTRY_TOKEN }}
