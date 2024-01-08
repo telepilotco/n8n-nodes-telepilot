@@ -31,7 +31,7 @@ jobs:
     - uses: actions/checkout@v3
     - name: Set npm configuration
       run: |
-        if [ -n "NPM_REGISTRY" ]; then
+        if [ -n "$NPM_REGISTRY" ]; then
           npm config set strict-ssl false
         fi
     - name: Use Node.js ${{ matrix.node-version }}
