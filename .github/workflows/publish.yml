@@ -29,17 +29,17 @@ jobs:
       NPM_REGISTRY: ${{ github.event.inputs.npm_registry || 'https://registry.npmjs.org' }}
     steps:
     - uses: actions/checkout@v3
-    - name: Set npm configuration
-      run: |
-        if [ -n "$NPM_REGISTRY" ]; then
-          npm config set strict-ssl false
-        fi
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
         registry-url: '$NPM_REGISTRY'
+    - name: Set npm configuration
+      run: |
+        if [ -n "$NPM_REGISTRY" ]; then
+          npm config set strict-ssl false
+        fi
     - run: npm install -g pnpm
     - run: npm ci
     - run: npm run build --if-present
