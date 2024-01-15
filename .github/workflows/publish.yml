@@ -20,7 +20,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     outputs:
-      var1: ${{ steps.set_var.outputs.PACKAGE_VERSION }}
+      PACKAGE_VERSION: ${{ steps.set_var.outputs.PACKAGE_VERSION }}
     strategy:
       matrix:
         node-version: [18.16.1]
