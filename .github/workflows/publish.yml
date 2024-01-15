@@ -172,6 +172,11 @@ jobs:
           echo $CUSTOM_REGISTRY_AUTH >> ~/.npmrc
           npm config set strict-ssl false
           fi
+      - uses: actions/download-artifact@v3
+        with:
+          name: telepilot
+          path: .
+      - run: tree .
       - name: Publish
         run: npm publish telepilotco-n8n-nodes-telepilot-${{ needs.build.outputs.PACKAGE_VERSION }}.tgz
         env:
