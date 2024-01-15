@@ -158,6 +158,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       NPM_REGISTRY: ${{ github.event.inputs.npm_registry || 'https://registry.npmjs.org' }}
+      CUSTOM_REGISTRY_AUTH: ${{ secrets.CUSTOM_REGISTRY_AUTH }}
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
