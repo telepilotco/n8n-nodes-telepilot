@@ -61,7 +61,7 @@ jobs:
     - uses: actions/upload-artifact@v3
       with:
         name: telepilot
-        path: telepilotco-n8n-nodes-telepilot-$PACKAGE_VERSION.tgz
+        path: telepilotco-n8n-nodes-telepilot-${{ env.PACKAGE_VERSION }}.tgz
 
 #    - run: npm publish
 
