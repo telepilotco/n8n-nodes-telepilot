@@ -18,9 +18,9 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
+    outputs:
+      var1: ${{ steps.set_var.outputs.PACKAGE_VERSION }}
     strategy:
       matrix:
         node-version: [18.16.1]
@@ -35,7 +35,10 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - name: save $PACKAGE_VERSION
-      run: echo "PACKAGE_VERSION=`jq -r .version package.json`" >> $GITHUB_ENV
+      id: set_var
+      run: |
+        echo "PACKAGE_VERSION=`jq -r .version package.json`" >> $GITHUB_ENV
+        echo "PACKAGE_VERSION=`jq -r .version package.json`" >> $GITHUB_OUTPUT
     - name: Set npm configuration
       run: |
         if [ -n "$NPM_REGISTRY" ]; then
@@ -131,9 +134,9 @@ jobs:
       - name: Install Telepilot in Ubuntu n8n
         if: matrix.libc == 'glibc'
         run: |
-          mkdir -p ~/.n8n/nodes && cp telepilotco-n8n-nodes-telepilot-${{ env.PACKAGE_VERSION }}.tgz ~/.n8n/nodes && cd ~/.n8n/nodes
+          mkdir -p ~/.n8n/nodes && cp telepilotco-n8n-nodes-telepilot-${{ needs.build.outputs.PACKAGE_VERSION }}.tgz ~/.n8n/nodes && cd ~/.n8n/nodes
           npm config set registry http://npm.telepilot.co:4873/
-          npm install telepilotco-n8n-nodes-telepilot-${{ env.PACKAGE_VERSION }}.tgz
+          npm install telepilotco-n8n-nodes-telepilot-${{ needs.build.outputs.PACKAGE_VERSION }}.tgz
       - name: Run n8n in Ubuntu n8n
         if: matrix.libc == 'glibc'
         run: |
@@ -170,6 +173,6 @@ jobs:
           npm config set strict-ssl false
           fi
       - name: Publish
-        run: npm publish telepilotco-n8n-nodes-telepilot-${{ env.PACKAGE_VERSION }}.tgz
+        run: npm publish telepilotco-n8n-nodes-telepilot-${{ needs.build.outputs.PACKAGE_VERSION }}.tgz
         env:
           NODE_AUTH_TOKEN: ${{ secrets.REGISTRY_TOKEN }}
