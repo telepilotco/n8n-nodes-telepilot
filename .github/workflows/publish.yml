@@ -168,7 +168,6 @@ jobs:
           npm config set strict-ssl false
           fi
       - name: Publish
-        if: "${{ inputs.npm-tag != '' }}"
         run: npm publish telepilotco-n8n-nodes-telepilot-*.tgz
         env:
           NODE_AUTH_TOKEN: ${{ secrets.REGISTRY_TOKEN }}
