@@ -13,7 +13,7 @@
   ],
   "files": [
     "dist",
-    "deploy/n8n-imports"
+    "deploy/test-n8n-imports"
   ],
   "license": "MIT",
   "homepage": "https://telepilot.co/",
