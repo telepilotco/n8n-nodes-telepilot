@@ -10,3 +10,4 @@ yarn.lock
 /.idea/
 /prebuilds/
 /n8n-nodes-tdlib.iml
+/deploy/verdaccio/storage/data/

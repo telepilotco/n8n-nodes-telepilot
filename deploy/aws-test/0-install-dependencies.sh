@@ -1,3 +1,4 @@
+##install node via nvm
 sudo apt-get install make python3 gcc g++ -y
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
 source ~/.bashrc
@@ -5,7 +6,7 @@ nvm install 18.16.1
 nvm use 18.16.1
 npm install -g pnpm
 
-
+##install docker
 sudo apt-get install ca-certificates curl gnupg
 sudo install -m 0755 -d /etc/apt/keyrings
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg

@@ -138,4 +138,4 @@ May you have any questions, reach out to per email (contact@telepilot.co) or in 
 
 ## License
 
-This project is licensed under the CC BY-NC-ND license, see LICENSE.md file.
+This project is licensed under the MIT license.

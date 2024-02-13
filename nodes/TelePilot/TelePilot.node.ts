@@ -7,6 +7,29 @@ const debug = require('debug')('telepilot-node');
 import { Container } from 'typedi';
 import { TelePilotNodeConnectionManager } from './TelePilotNodeConnectionManager';
 
+import {
+	operationChat,
+	operationContact,
+	operationFile,
+	operationGroup,
+	operationLogin,
+	operationMessage,
+	operationUser,
+	optionResources,
+	variable_chat_id, variable_file_id,
+	variable_force,
+	variable_from_chat_id,
+	variable_from_message_id,
+	variable_is_marked_as_unread,
+	variable_message_id,
+	variable_message_ids,
+	variable_messageText,
+	variable_query, variable_remote_file_id,
+	variable_revoke,
+	variable_user_id,
+	variable_username
+} from './common.descriptions'
+
 export class TelePilot implements INodeType {
 	description: INodeTypeDescription = {
 		// Basic node details will go here
@@ -28,561 +51,36 @@ export class TelePilot implements INodeType {
 		inputs: ['main'],
 		outputs: ['main'],
 		properties: [
-			{
-				displayName: 'Resource',
-				name: 'resource',
-				type: 'options',
-				options: [
-					{
-						name: 'Chat',
-						value: 'chat',
-					},
-					{
-						name: 'Contact',
-						value: 'contact',
-					},
-					{
-						name: 'File',
-						value: 'file',
-					},
-					{
-						name: 'Group',
-						value: 'group',
-					},
-					{
-						name: 'Login',
-						value: 'login',
-					},
-					{
-						name: 'Media',
-						value: 'media',
-					},
-					{
-						name: 'Message',
-						value: 'message',
-					},
-					{
-						name: 'User',
-						value: 'user',
-					},
-				],
-				default: 'chat',
-				noDataExpression: true,
-				required: true,
-				description: 'Get Chat History',
-			},
-
-			//Operations login
-			{
-				displayName: 'Operation',
-				name: 'operation',
-				type: 'options',
-				displayOptions: {
-					show: {
-						resource: ['login'],
-					},
-				},
-				options: [
-					{
-						name: 'Login with QR Code',
-						value: 'login',
-						action: 'Login with qr code',
-					},
-					// {
-					// 	name: 'Logout',
-					// 	value: 'logout',
-					// 	description: 'Logout',
-					// 	action: 'Logout',
-					// },
-					{
-						name: 'Close Session',
-						value: 'closeSession',
-						action: 'Close session',
-					},
-					{
-						name: 'Remove Td_database',
-						value: 'removeTdDatabase',
-						action: 'Remove td database',
-					},
-				],
-				default: 'login',
-				noDataExpression: true,
-			},
-
-			//Operations user
-			{
-				displayName: 'Operation',
-				name: 'operation',
-				type: 'options',
-				displayOptions: {
-					show: {
-						resource: ['user'],
-					},
-				},
-				options: [
-					{
-						name: 'Create New Secret Chat',
-						value: 'createNewSecretChat',
-						action: 'Create new secret chat',
-					},
-					{
-						name: 'Create Private Chat',
-						value: 'createPrivateChat',
-						action: 'Create private chat',
-					},
-					{
-						name: 'Get Me',
-						value: 'getMe',
-						action: 'Get me',
-					},
-					{
-						name: 'Get User',
-						value: 'getUser',
-						action: 'Get user',
-					},
-					{
-						name: 'Get User Full Info',
-						value: 'getUserFullInfo',
-						action: 'Get user full info',
-					},
-					// {
-					// 	name: 'Search User by Phone Number',
-					// 	value: 'searchUserByPhoneNumber',
-					// 	action: 'Search user by phone number',
-					// },
-					// {
-					// 	name: 'Set Bio',
-					// 	value: 'setBio',
-					// 	action: 'Set bio',
-					// },
-					// {
-					// 	name: 'Set Name',
-					// 	value: 'setName',
-					// 	action: 'Set name',
-					// },
-					// {
-					// 	name: 'Set Username',
-					// 	value: 'setUsername',
-					// 	action: 'Set username',
-					// },
-				],
-				default: 'getMe',
-				noDataExpression: true,
-			},
-
-			//Operations contact
-			{
-				displayName: 'Operation',
-				name: 'operation',
-				type: 'options',
-				displayOptions: {
-					show: {
-						resource: ['contact'],
-					},
-				},
-				options: [
-					{
-						name: 'Get Contacts',
-						value: 'getContacts',
-						action: 'Get all user contacts',
-					},
-				],
-				default: 'getContacts',
-				noDataExpression: true,
-			},
-
-			//Operations group
-			{
-				displayName: 'Operation',
-				name: 'operation',
-				type: 'options',
-				displayOptions: {
-					show: {
-						resource: ['group'],
-					},
-				},
-				options: [
-					{
-						name: 'Get Supergroup Members',
-						value: 'getSupergroupMembers',
-						action: 'Get supergroup members',
-					},
-				],
-				default: 'getSupergroupMembers',
-				noDataExpression: true,
-			},
-
-			//Operations chat
-			{
-				displayName: 'Operation',
-				name: 'operation',
-				type: 'options',
-				displayOptions: {
-					show: {
-						resource: ['chat'],
-					},
-				},
-				options: [
-					{
-						name: 'Close Chat',
-						value: 'closeChat',
-						action: 'Close chat',
-					},
-					{
-						name: 'Get Chat',
-						value: 'getChat',
-						action: 'Get chat',
-					},
-					{
-						name: 'Get Chat History',
-						value: 'getChatHistory',
-						action: 'Get chat history',
-					},
-					{
-						name: 'Get Chats',
-						value: 'getChats',
-						action: 'Get chats',
-					},
-					{
-						name: 'Join Chat',
-						value: 'joinChat',
-						action: 'Join chat',
-					},
-					{
-						name: 'Mark Chat as Unread',
-						value: 'toggleChatIsMarkedAsUnread',
-						action: 'Mark chat as unread',
-					},
-					{
-						name: 'Open Chat',
-						value: 'openChat',
-						action: 'Open chat',
-					},
-					{
-						name: 'Search Public Chat (by Username)',
-						value: 'searchPublicChat',
-						action: 'Search public chat by username',
-					},
-					{
-						name: 'Search Public Chats (Search in Username, Title)',
-						value: 'searchPublicChats',
-						action: 'Search public chats',
-					},
-				],
-				default: 'getChatHistory',
-				noDataExpression: true,
-			},
-
-			//Operations message
-			{
-				displayName: 'Operation',
-				name: 'operation',
-				type: 'options',
-				displayOptions: {
-					show: {
-						resource: ['message'],
-					},
-				},
-				options: [
-					{
-						name: 'Delete Messages',
-						value: 'deleteMessages',
-						action: 'Delete messages',
-					},
-					{
-						name: 'Edit Message Text',
-						value: 'editMessageText',
-						action: 'Edit message text',
-					},
-					{
-						name: 'Forward Messages',
-						value: 'forwardMessages',
-						action: 'Forward messages',
-					},
-					{
-						name: 'Get Messages',
-						value: 'getMessage',
-						action: 'Get message',
-					},
-					{
-						name: 'Send Message',
-						value: 'sendMessage',
-						action: 'Send message',
-					},
-				],
-				default: 'sendMessage',
-				noDataExpression: true,
-			},
-
-			//Operations file
-			{
-				displayName: 'Operation',
-				name: 'operation',
-				type: 'options',
-				displayOptions: {
-					show: {
-						resource: ['file'],
-					},
-				},
-				options: [
-					{
-						name: 'Get Remote File',
-						value: 'getRemoteFile',
-						action: 'Get remote file',
-					},
-					{
-						name: 'Download File',
-						value: 'downloadFile',
-						action: 'Download file',
-					},
-				],
-				default: 'downloadFile',
-				noDataExpression: true,
-			},
+			optionResources,
+			operationLogin,
+			operationUser,
+			operationContact,
+			operationGroup,
+			operationChat,
+			operationMessage,
+			operationFile,
 
 			//Variables
 			//User
-			{
-				displayName: 'User ID',
-				name: 'user_id',
-				type: 'string',
-				required: true,
-				displayOptions: {
-					show: {
-						operation: ['getUser', 'getUserFullInfo', 'createPrivateChat', 'createNewSecretChat'],
-						resource: ['user'],
-					},
-				},
-				default: '',
-				placeholder: '122323',
-				description: 'ID of chat',
-			},
-			{
-				displayName: 'Force',
-				name: 'force',
-				type: 'boolean',
-				required: true,
-				displayOptions: {
-					show: {
-						operation: ['createPrivateChat'],
-						resource: ['user'],
-					},
-				},
-				default: false,
-				placeholder: '122323',
-				description: 'Whether creation of private chat should be forced',
-			},
+			variable_user_id,
+			variable_force,
+
 			//Chat
-			{
-				displayName: 'Chat ID',
-				name: 'chat_id',
-				type: 'string',
-				required: true,
-				displayOptions: {
-					show: {
-						operation: [
-							'getChat',
-							'getChatHistory',
-							'sendMessage',
-							'deleteMessages',
-							'forwardMessages',
-							'toggleChatIsMarkedAsUnread',
-							'getMessage',
-							'editMessageText',
-							'joinChat',
-							'openChat',
-							'closeChat'
-						],
-						resource: ['chat', 'message'],
-					},
-				},
-				default: '',
-				placeholder: '122323',
-				description: 'ID of chat',
-			},
-			{
-				displayName: 'From Chat ID',
-				name: 'from_chat_id',
-				type: 'string',
-				required: true,
-				displayOptions: {
-					show: {
-						operation: ['forwardMessages'],
-						resource: ['message'],
-					},
-				},
-				default: '',
-				placeholder: '122323',
-				description: 'ID of chat from which to forward messages',
-			},
+			variable_chat_id,
+			variable_from_chat_id,
 			//Chat
-			{
-				displayName: 'Mark as Unread?',
-				name: 'is_marked_as_unread',
-				type: 'boolean',
-				required: true,
-				displayOptions: {
-					show: {
-						operation: ['toggleChatIsMarkedAsUnread'],
-						resource: ['chat'],
-					},
-				},
-				default: true,
-				placeholder: 'true',
-				description: 'Whether Chat should be marked as Unread',
-			},
-			{
-				displayName: 'From Message ID',
-				name: 'from_message_id',
-				type: 'string',
-				required: true,
-				displayOptions: {
-					show: {
-						operation: ['getChatHistory'],
-						resource: ['chat'],
-					},
-				},
-				default: '0',
-				placeholder: '133222323',
-				description:
-					'Identifier of the message starting from which history must be fetched; use 0 to get results from the last message',
-			},
-			{
-				displayName: 'Message IDs',
-				name: 'message_ids',
-				type: 'string',
-				required: true,
-				displayOptions: {
-					show: {
-						operation: ['deleteMessages', 'forwardMessages'],
-						resource: ['message'],
-					},
-				},
-				default: '',
-				placeholder: '123,234,345',
-				description: 'Comma-separated identifiers of the messages to be deleted or forwarded',
-			},
-			{
-				displayName: 'Message ID',
-				name: 'message_id',
-				type: 'string',
-				required: true,
-				displayOptions: {
-					show: {
-						operation: ['getMessage', 'editMessageText'],
-						resource: ['message'],
-					},
-				},
-				default: '',
-				placeholder: '12345678',
-				description: 'Identifier of the messages',
-			},
-			{
-				displayName: 'Message Text',
-				name: 'messageText',
-				type: 'string',
-				required: true,
-				displayOptions: {
-					show: {
-						operation: ['editMessageText'],
-						resource: ['message'],
-					},
-				},
-				default: '',
-				placeholder: 'Sample message text',
-				description: 'Text of the messages',
-			},
-			{
-				displayName: 'Delete for All Users?',
-				name: 'revoke',
-				type: 'boolean',
-				required: true,
-				displayOptions: {
-					show: {
-						operation: ['deleteMessages'],
-						resource: ['message'],
-					},
-				},
-				default: true,
-				description: 'Whether given messages should be deleted for all users',
-			},
-			{
-				displayName: 'Chat Username',
-				name: 'username',
-				type: 'string',
-				required: true,
-				displayOptions: {
-					show: {
-						operation: ['searchPublicChat'],
-						resource: ['chat'],
-					},
-				},
-				default: '',
-				placeholder: 'Text',
-				description: 'Username to use in searchPublicChat',
-			},
-			{
-				displayName: 'Query',
-				name: 'query',
-				type: 'string',
-				required: true,
-				displayOptions: {
-					show: {
-						operation: ['searchPublicChats'],
-						resource: ['chat'],
-					},
-				},
-				default: '',
-				placeholder: 'Text',
-				description: 'Query used to search public chats by looking in their username and title',
-			},
+			variable_is_marked_as_unread,
+			variable_from_message_id,
+			variable_message_ids,
+			variable_message_id,
+			variable_messageText,
+			variable_revoke,
+			variable_username,
+			variable_query,
 
 			//Variables Files
-			{
-				displayName: 'File ID',
-				name: 'file_id',
-				type: 'string',
-				required: true,
-				displayOptions: {
-					show: {
-						operation: ['downloadFile'],
-						resource: ['file'],
-					},
-				},
-				default: '',
-				placeholder: 'Text',
-				description: 'Identifier of the file to download',
-			},
-			{
-				displayName: 'File ID',
-				name: 'remote_file_id',
-				type: 'string',
-				required: true,
-				displayOptions: {
-					show: {
-						operation: ['getRemoteFile'],
-						resource: ['file'],
-					},
-				},
-				default: '',
-				placeholder: 'Text',
-				description: 'Identifier of the Remote file to download',
-			},
-			{
-				displayName: 'Message Text',
-				name: 'messageText',
-				type: 'string',
-				required: true,
-				displayOptions: {
-					show: {
-						operation: ['sendMessage'],
-						resource: ['message'],
-					},
-				},
-				default: '',
-				placeholder: 'Text',
-				description: 'Text of message to be send to Telegram user or chat',
-			},
+			variable_file_id,
+			variable_remote_file_id,
 		],
 	};
 	// The execute method will go here
@@ -792,9 +290,11 @@ export class TelePilot implements INodeType {
 				} else if (operation === 'sendMessage') {
 					const chat_id = this.getNodeParameter('chat_id', 0) as string;
 					const messageText = this.getNodeParameter('messageText', 0) as string;
+					const reply_to_msg_id = this.getNodeParameter('reply_to_msg_id', 0) as string;
 					const result = await client.invoke({
 						_: 'sendMessage',
 						chat_id,
+						reply_to_msg_id,
 						input_message_content: {
 							_: 'inputMessageText',
 							text: {
