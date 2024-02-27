@@ -1,6 +1,6 @@
 # n8n-nodes-telepilot
 
-[![npm version](https://badge.fury.io/js/n8n-nodes-telepilot.svg)](https://www.npmjs.com/package/n8n-nodes-telepilot)
+[![npm version](https://badge.fury.io/js/@telepilotco/n8n-nodes-telepilot.svg)](https://www.npmjs.com/package/@telepilotco/n8n-nodes-telepilot)
 
 ## Beta testing
 
@@ -138,4 +138,4 @@ May you have any questions, reach out to per email (contact@telepilot.co) or in 
 
 ## License
 
-This project is licensed under the CC BY-NC-ND license, see LICENSE.md file.
+This project is licensed under the CC BY-NC-ND license.

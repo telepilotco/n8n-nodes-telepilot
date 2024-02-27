@@ -1,0 +1,68 @@
+[
+	{
+  "name": "Telepilot getMe",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "6e65c321-a2c7-45a3-a2fd-7177535c994f",
+      "name": "When clicking \"Execute Workflow\"",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        1200,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "user"
+      },
+      "id": "de0be3ef-35c3-45af-8fc1-c97c74b1f26e",
+      "name": "Telegram CoPilot",
+      "type": "@telepilotco/n8n-nodes-telepilot.telePilot",
+      "typeVersion": 1,
+      "position": [
+        1420,
+        480
+      ],
+      "credentials": {
+        "telePilotApi": {
+          "id": "5FLFyAUup96AgsvX",
+          "name": "Personal Telegram Co-Pilot account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking \"Execute Workflow\"": {
+      "main": [
+        [
+          {
+            "node": "Telegram CoPilot",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "96075904-f723-44ec-8b65-534cfe8839e0",
+  "id": "r2a0u5tez9fg1WW6",
+  "meta": {
+    "instanceId": "32a20ec023f2a976b4c2e7889abb5f086bbad4d306c491eaa0e6c36e60d7c363"
+  },
+  "tags": [
+    {
+      "createdAt": "2023-12-14T14:06:36.935Z",
+      "updatedAt": "2023-12-14T14:06:36.935Z",
+      "id": "fb6fD8yKePc2f6bo",
+      "name": "telepilot.co"
+    }
+  ]
+}
+]
