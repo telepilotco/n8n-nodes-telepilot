@@ -548,7 +548,6 @@ export const variable_reply_to_msg_id: INodeProperties = {
 	displayName: 'Reply to messageId',
 	name: 'reply_to_msg_id',
 	type: 'string',
-	required: true,
 	displayOptions: {
 		show: {
 			operation: ['sendMessage'],

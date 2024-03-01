@@ -24,7 +24,9 @@ import {
 	variable_message_id,
 	variable_message_ids,
 	variable_messageText,
-	variable_query, variable_remote_file_id,
+	variable_query,
+	variable_remote_file_id,
+	variable_reply_to_msg_id,
 	variable_revoke,
 	variable_user_id,
 	variable_username
@@ -81,6 +83,7 @@ export class TelePilot implements INodeType {
 			//Variables Files
 			variable_file_id,
 			variable_remote_file_id,
+			variable_reply_to_msg_id
 		],
 	};
 	// The execute method will go here
