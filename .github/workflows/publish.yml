@@ -179,7 +179,7 @@ jobs:
           path: .
       - run: tree .
       - name: Publish
-        if: false
+        if: true
         run: npm publish telepilotco-n8n-nodes-telepilot-${{ needs.build.outputs.PACKAGE_VERSION }}.tgz
         env:
           NODE_AUTH_TOKEN: ${{ secrets.REGISTRY_TOKEN }}
