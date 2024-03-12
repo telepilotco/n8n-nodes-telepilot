@@ -93,7 +93,7 @@ jobs:
         if: matrix.libc == 'musl'
         run: |
           cat > Dockerfile <<EOF
-          FROM n8nio/n8n:1.21.0
+          FROM n8nio/n8n:1.29.1
 
           RUN mkdir -p /home/node/.n8n/nodes
           COPY telepilotco-n8n-nodes-telepilot-*.tgz /home/node/.n8n/nodes/
