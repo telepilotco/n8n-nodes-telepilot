@@ -16,7 +16,8 @@ import {
 	operationMessage,
 	operationUser,
 	optionResources,
-	variable_chat_id, variable_file_id,
+	variable_chat_id,
+	variable_file_id,
 	variable_force,
 	variable_from_chat_id,
 	variable_from_message_id,
@@ -29,7 +30,8 @@ import {
 	variable_reply_to_msg_id,
 	variable_revoke,
 	variable_user_id,
-	variable_username
+	variable_username,
+	variable_supergroup_id
 } from './common.descriptions'
 
 export class TelePilot implements INodeType {
@@ -83,7 +85,10 @@ export class TelePilot implements INodeType {
 			//Variables Files
 			variable_file_id,
 			variable_remote_file_id,
-			variable_reply_to_msg_id
+			variable_reply_to_msg_id,
+
+			//Variables Group
+			variable_supergroup_id
 		],
 	};
 	// The execute method will go here
@@ -358,6 +363,22 @@ export class TelePilot implements INodeType {
 						chat_id,
 						from_chat_id,
 						message_ids: idsArray,
+					});
+					returnData.push(result);
+				}
+			} else if (resource === 'group') {
+				if (operation === 'getSupergroup') {
+					const supergroup_id = this.getNodeParameter('supergroup_id', 0);
+					result = await client.invoke({
+						_: 'getSupergroup',
+						supergroup_id,
+					});
+					returnData.push(result);
+				} else if (operation === 'getSupergroupFullInfo') {
+					const supergroup_id = this.getNodeParameter('supergroup_id', 0);
+					result = await client.invoke({
+						_: 'getSupergroupFullInfo',
+						supergroup_id,
 					});
 					returnData.push(result);
 				}

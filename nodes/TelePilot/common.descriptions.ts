@@ -181,8 +181,18 @@ export const operationGroup: INodeProperties = {
 			value: 'getSupergroupMembers',
 			action: 'Get supergroup members',
 		},
+		{
+			name: 'Get Supergroup Info',
+			value: 'getSupergroup',
+			action: 'Get supergroup information',
+		},
+		{
+			name: 'Get Supergroup Full Info',
+			value: 'getSupergroupFullInfo',
+			action: 'Get supergroup full information',
+		},
 	],
-default: 'getSupergroupMembers',
+default: 'getSupergroup',
 	noDataExpression: true,
 };
 
@@ -557,5 +567,20 @@ export const variable_reply_to_msg_id: INodeProperties = {
 	default: '',
 	placeholder: 'Text',
 	description: 'Identifier of the Remote file to download',
+};
+
+export const variable_supergroup_id: INodeProperties = {
+	displayName: 'Supergroup ID',
+	name: 'supergroup_id',
+	type: 'string',
+	displayOptions: {
+		show: {
+			operation: ['getSupergroup', 'getSupergroupFullInfo'],
+			resource: ['group'],
+		},
+	},
+	default: '',
+	placeholder: 'Text',
+	description: 'Identifier of the Supergroup',
 };
 
