@@ -166,6 +166,7 @@ jobs:
           node-version: lts/*
           cache: npm
           # registry-url is mandatory here
+          registry-url: 'https://registry.npmjs.org'
       - name: Set npm configuration
         run: |
           if [ -n "$NPM_REGISTRY" ]; then
