@@ -9,7 +9,6 @@ import {
 const debug = require('debug')('telepilot-trigger')
 
 import {TelePilotNodeConnectionManager} from "./TelePilotNodeConnectionManager";
-
 import { TDLibUpdateEvents } from './tdlib/updateEvents';
 
 
@@ -60,8 +59,6 @@ export class TelePilotTrigger implements INodeType {
 		const client = await cM.getActiveClient(credentials?.apiId as number, credentials?.apiHash as string);
 
 		const updateEventsArray = this.getNodeParameter('events', '') as string;
-		debug(updateEventsArray);
-		// const updateEventsArray = updateEvents.split(',');
 
 		const _emit = (data: IDataObject) => {
 			this.emit([this.helpers.returnJsonArray([data])]);

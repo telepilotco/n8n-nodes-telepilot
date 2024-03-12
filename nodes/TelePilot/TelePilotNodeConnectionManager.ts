@@ -14,8 +14,7 @@ var pjson = require('../../package.json');
 const nodeVersion = pjson.version;
 
 const binaryVersion = pjson.dependencies["@telepilotco/tdlib-binaries-prebuilt"].replace("^", "");
-// const addonVersion = pjson.dependencies["@telepilotco/tdlib-addon-prebuilt"].replace("^", "");
-const addonVersion = '"7.4.0';
+const addonVersion = pjson.dependencies["@telepilotco/tdl"].replace("^", "");
 
 
 function sleep(ms: number) {
