@@ -1,6 +1,6 @@
 # n8n-nodes-telepilot
 
-[![npm version](https://badge.fury.io/js/@telepilotco/n8n-nodes-telepilot.svg)](https://www.npmjs.com/package/@telepilotco/n8n-nodes-telepilot)
+[![npm version](https://badge.fury.io/js/@telepilotco%2Fn8n-nodes-telepilot.svg)](https://www.npmjs.com/package/@telepilotco/n8n-nodes-telepilot)
 
 ## Beta testing
 
@@ -128,6 +128,17 @@ For more detailed information, please refer to our login guide: https://telepilo
 ### Import workflows
 
 You can import predefined workflows that we have created for you, check out [this page](https://telepilot.co/workflows)
+
+
+## Troubleshooting
+
+You can enable DEBUG logs by running n8n with env variables, here is how you do it in cli:
+
+```shell
+DEBUG=tdl,tdl:client,telepilot-cred,telepilot-node,telepilot-trigger,telepilot-cm N8N_LOG_LEVEL=debug npx n8n
+```
+
+For dockerized setup, make sure you add these env variables to your docker container or docker compose
 
 
 ## Usage
