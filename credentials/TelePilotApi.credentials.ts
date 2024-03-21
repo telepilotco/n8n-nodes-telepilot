@@ -27,12 +27,12 @@ export class TelePilotApi implements ICredentialType {
 			required: true,
 		},
 		{
-			displayName: 'Use QR Code Authentication',
-			name: 'use_qr_code_auth',
-			type: 'boolean',
-			default: true,
-			description: 'QR Code Authentication',
-			required: false,
+			displayName: 'Phone Number',
+			name: 'phoneNumber',
+			type: 'string',
+			default: '00123456789',
+			description: 'Telegram Account Phone Number, used as Login',
+			required: true,
 		},
 	];
 

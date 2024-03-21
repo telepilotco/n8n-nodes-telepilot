@@ -58,9 +58,9 @@ export const operationLogin: INodeProperties = {
 },
 	options: [
 		{
-			name: 'Login with QR Code',
+			name: 'Login with Phone Number Using ChatTrigger',
 			value: 'login',
-			action: 'Login with qr code',
+			action: 'Login with phone number using n8n chat',
 		},
 		// {
 		// 	name: 'Logout',

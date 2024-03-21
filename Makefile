@@ -7,11 +7,13 @@ init:
 	npm install --save-dev babel-cli
 	pnpm install
 
-run:
-	bash run.sh
+run-local:	build unlink link
 
 publish:
 	npm publish
+
+build:
+	npm run build
 
 clean:
 	rm -rf dist/
@@ -19,3 +21,6 @@ clean:
 
 unlink:
 	cd ~/.n8n/nodes/ &&	npm unlink @telepilotco/n8n-nodes-telepilot
+link:
+	npm link
+	cd ~/.n8n/ && mkdir -p nodes && cd nodes && npm link @telepilotco/n8n-nodes-telepilot

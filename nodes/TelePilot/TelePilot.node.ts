@@ -1,11 +1,14 @@
 import 'reflect-metadata';
 
-import {IExecuteFunctions, INodeExecutionData, INodeType, INodeTypeDescription, NodeOperationError} from 'n8n-workflow';
-
-const debug = require('debug')('telepilot-node');
-
-import { Container } from 'typedi';
-import { TelePilotNodeConnectionManager } from './TelePilotNodeConnectionManager';
+import {
+	IExecuteFunctions,
+	INodeExecutionData,
+	INodeType,
+	INodeTypeDescription,
+	NodeOperationError
+} from 'n8n-workflow';
+import {Container} from 'typedi';
+import {sleep, TelePilotNodeConnectionManager, TelepiloyAuthState} from './TelePilotNodeConnectionManager';
 
 import {
 	operationChat,
@@ -29,10 +32,12 @@ import {
 	variable_remote_file_id,
 	variable_reply_to_msg_id,
 	variable_revoke,
+	variable_supergroup_id,
 	variable_user_id,
-	variable_username,
-	variable_supergroup_id
+	variable_username
 } from './common.descriptions'
+
+const debug = require('debug')('telepilot-node');
 
 export class TelePilot implements INodeType {
 	description: INodeTypeDescription = {
@@ -109,35 +114,163 @@ export class TelePilot implements INodeType {
 		let client;
 		if (resource === 'login') {
 			if (operation === 'login') {
-				result = await cM.clientLoginWithQRCode(
-					credentials?.apiId as number,
-					credentials?.apiHash as string,
-				);
-				result.split('\n').forEach((s) => {
-					returnData.push(s);
-				});
-				// } else if (operation === 'logout') {
-				// 	client = await cM.getActiveClient(credentials.apiId as number, credentials.apiHash as string);
-				// 	result = await client.invoke({
-				// 		_: 'logOut'
-				// 	});
-				// 	returnData.push(result);
+
+				const loginWithPhoneNumberHelpCommand = () => {
+					return "Here is list of supported commands:<br />" +
+						"/start - start login via phone number and code (MFA is supported)<br />" +
+						"/stop - terminates current ClientSession for this Credential<br />" +
+						"/clear - deletes local tdlib database, new login is required<br />" +
+						"/cred - shows with which Credential we are working (name + apiId, apiHash, phoneNumber)<br />" +
+						"/stat - show all open Telegram sessions"
+				}
+				debug('loginWithPhoneNumber')
+				const items = this.getInputData();
+				const message = items[0].json['chatInput'] as string;
+				debug("message received: " + message)
+				if (message === undefined) {
+					returnData.push({
+						compatibility: "QR-Code login is disabled starting from version 0.3.0",
+						doc: "Please connect ChatTrigger to this node and read instructions:",
+						url: "https://telepilot.co/login-howto"
+					});
+
+				} else if (message.startsWith("/")) {
+					switch(message) {
+						case "/start":
+							let authState = cM.getAuthStateForCredential(credentials?.apiId as number)
+							debug("loginWithPhoneNumber./start.authState: " + authState)
+							if (authState == TelepiloyAuthState.NO_CONNECTION) {
+								await cM.createClientSetAuthHandlerForPhoneNumberLogin(
+									credentials?.apiId as number,
+									credentials?.apiHash as string,
+									credentials?.phoneNumber as string,
+								)
+								authState = cM.getAuthStateForCredential(credentials?.apiId as number)
+								debug("loginWithPhoneNumber./start2.authState: " + authState)
+
+								if (authState == TelepiloyAuthState.WAIT_CODE) {
+									returnData.push("Please provide AuthCode:");
+								} else if (authState == TelepiloyAuthState.WAIT_PASSWORD) {
+									returnData.push("MFA Password:");
+								}
+							}
+							switch (authState) {
+								case TelepiloyAuthState.WAIT_PHONE_NUMBER:
+									await cM.clientLoginWithPhoneNumber(
+										credentials?.apiId as number,
+										credentials?.apiHash as string,
+										credentials?.phoneNumber as string
+									)
+									await sleep(1000);
+									authState = cM.getAuthStateForCredential(credentials?.apiId as number)
+									if (authState == TelepiloyAuthState.WAIT_CODE) {
+										returnData.push("Please provide AuthCode:");
+									} else if (authState == TelepiloyAuthState.WAIT_READY) {
+										returnData.push("You have succesfully logged in. You can close this chat and start using Telepilot.");
+									} else {
+										returnData.push("Unexpected authState: " + authState);
+									}
+									break;
+								case TelepiloyAuthState.WAIT_READY:
+									returnData.push("You are logged in with phoneNumber " + credentials?.phoneNumber);
+									break;
+								default:
+									debug("unexpected authState=" + authState)
+									returnData.push("unexpected authState=" + authState);
+									break;
+							}
+							break;
+						case "/stop":
+							cM.closeLocalSession(credentials?.apiId as number)
+							returnData.push("Telegram Account " + credentials?.phoneNumber + " disconnected.");
+							break;
+						case "/clear":
+							cM.deleteLocalInstance(credentials?.apiId as number)
+							returnData.push("Telegram Account disconnected, local session has been cleared. Please login again." +
+								"Please check our guide at https://telepilot.co/login-howto");
+							break;
+						case "/cred":
+							let credResult = credentials;
+							credResult.apiHash = "[DELETED]"
+							returnData.push(credResult)
+							break;
+						case "/help":
+							returnData.push(loginWithPhoneNumberHelpCommand());
+							break;
+						case "/stat":
+							returnData.push(cM.getAllClientSessions());
+							break;
+						default:
+							returnData.push("Command not supported." + loginWithPhoneNumberHelpCommand());
+							break;
+					}
+				} else {
+					let authState = cM.getAuthStateForCredential(credentials?.apiId as number)
+					debug("loginWithPhoneNumber.authState: " + authState)
+					switch (authState) {
+						case TelepiloyAuthState.NO_CONNECTION:
+							returnData.push("Unexpected command. Please refer to https://telepilot.co/login-howto." + loginWithPhoneNumberHelpCommand());
+							break;
+						case TelepiloyAuthState.WAIT_CODE:
+							const code = message;
+							await cM.clientLoginSendAuthenticationCode(
+								credentials?.apiId as number,
+								code
+							)
+							await sleep(1000);
+							authState = cM.getAuthStateForCredential(credentials?.apiId as number)
+							if (authState == TelepiloyAuthState.WAIT_PASSWORD) {
+								returnData.push("MFA Password:");
+							} else if (authState == TelepiloyAuthState.WAIT_READY) {
+								returnData.push("You have succesfully logged in. You can close this chat and start using Telepilot.");
+							} else {
+								returnData.push("Unexpected authState: " + authState);
+							}
+							break;
+						case TelepiloyAuthState.WAIT_PASSWORD:
+							const password = message;
+							await cM.clientLoginSendAuthenticationPassword(
+								credentials?.apiId as number,
+								password
+							)
+							await sleep(1000);
+							returnData.push("authState:" + cM.getAuthStateForCredential(credentials?.apiId as number));
+							break;
+						case TelepiloyAuthState.WAIT_READY:
+							returnData.push("You are logged in with phoneNumber " + credentials?.phoneNumber);
+							break;
+						default:
+							debug("unexpected authState=" + authState)
+							returnData.push("unexpected authState=" + authState);
+							break;
+					}
+				}
 			} else if (operation === 'closeSession') {
 				try {
-					result = await cM.closeLocalSession(credentials?.apiId as number);
+					cM.closeLocalSession(credentials?.apiId as number)
 				} catch (e) {
 					throw e;
 				}
-				returnData.push(result);
+				returnData.push("Telegram Account " + credentials?.phoneNumber + " disconnected.");
 			} else if (operation === 'removeTdDatabase') {
 				result = await cM.deleteLocalInstance(credentials?.apiId as number);
-				returnData.push(result);
+				returnData.push("Telegram Account disconnected, local session has been cleared. Please login again." +
+					"Please check our guide at https://telepilot.co/login-howto");
 			}
 		} else {
-			client = await cM.getActiveClient(
+			const clientSession = await cM.createClientSetAuthHandlerForPhoneNumberLogin(
 				credentials?.apiId as number,
 				credentials?.apiHash as string,
+				credentials?.phoneNumber as string,
 			);
+			if (clientSession.authState != TelepiloyAuthState.WAIT_READY) {
+				returnData.push("Telegram account not logged in. " +
+					"Please use ChatTrigger node together with loginWithPhoneNumber action. " +
+					"Please check our guide at https://telepilot.co/login-howto");
+				await cM.closeLocalSession(credentials?.apiId as number)
+			} else {
+				client = clientSession.client;
+			}
 		}
 
 		// For each item, make an API call to create a contact

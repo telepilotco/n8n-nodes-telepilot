@@ -8,8 +8,9 @@ import {
 
 const debug = require('debug')('telepilot-trigger')
 
-import {TelePilotNodeConnectionManager} from "./TelePilotNodeConnectionManager";
+import {TelePilotNodeConnectionManager, TelepiloyAuthState} from "./TelePilotNodeConnectionManager";
 import { TDLibUpdateEvents } from './tdlib/updateEvents';
+import {Client} from "@telepilotco/tdl";
 
 
 export class TelePilotTrigger implements INodeType {
@@ -56,7 +57,21 @@ export class TelePilotTrigger implements INodeType {
 
 		const cM = Container.get(TelePilotNodeConnectionManager)
 
-		const client = await cM.getActiveClient(credentials?.apiId as number, credentials?.apiHash as string);
+		let client: Client;
+		const clientSession = await cM.createClientSetAuthHandlerForPhoneNumberLogin(
+			credentials?.apiId as number,
+			credentials?.apiHash as string,
+			credentials?.phoneNumber as string,
+		);
+		debug("trigger.clientSession.authState: " + clientSession.authState)
+		if (clientSession.authState != TelepiloyAuthState.WAIT_READY) {
+			await cM.closeLocalSession(credentials?.apiId as number)
+			this.emit([this.helpers.returnJsonArray([{a: "Telegram account not logged in. " +
+				"Please use ChatTrigger node together with loginWithPhoneNumber action. " +
+				"Please check our guide at https://telepilot.co/login-howto"}])])
+		}
+
+		client = clientSession.client;
 
 		const updateEventsArray = this.getNodeParameter('events', '') as string;
 

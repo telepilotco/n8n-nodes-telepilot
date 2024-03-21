@@ -1,6 +1,6 @@
 {
   "name": "@telepilotco/n8n-nodes-telepilot",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Your personal Telegram CoPilot",
   "keywords": [
     "telepilot.co",
@@ -59,9 +59,7 @@
   "dependencies": {
     "@telepilotco/tdl": "^7.4.1",
     "@telepilotco/tdlib-binaries-prebuilt": "^1.8.14",
-    "@types/qrcode-terminal": "^0.12.0",
     "debug": "^4.3.4",
-    "qrcode-terminal": "^0.12.0",
     "typedi": "^0.10.0"
   }
 }

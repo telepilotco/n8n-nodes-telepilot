@@ -6,7 +6,6 @@ const tdl = require('@telepilotco/tdl');
 // const childProcess = require('child_process');
 
 const debug = require('debug')('telepilot-cm')
-var QRCode = require('qrcode-terminal');
 
 const fs = require('fs/promises');
 
@@ -16,15 +15,51 @@ const nodeVersion = pjson.version;
 const binaryVersion = pjson.dependencies["@telepilotco/tdlib-binaries-prebuilt"].replace("^", "");
 const addonVersion = pjson.dependencies["@telepilotco/tdl"].replace("^", "");
 
+export enum TelepiloyAuthState {
+	NO_CONNECTION = "NO_CONNECTION",
+	WAIT_TDLIB_PARAMS = "authorizationStateWaitTdlibParameters",
+	WAIT_ENCRYPTION_KEY = "authorizationStateWaitEncryptionKey",
+	WAIT_PHONE_NUMBER = "authorizationStateWaitPhoneNumber",
+	WAIT_CODE = "authorizationStateWaitCode",
+	WAIT_DEVICE_CONFIRMATION = "authorizationStateWaitOtherDeviceConfirmation",
+	WAIT_REGISTRATION = "authorizationStateWaitRegistration",
+	WAIT_PASSWORD = "authorizationStateWaitPassword",
+	WAIT_READY = "authorizationStateReady",
+	WAIT_LOGGING_OUT = "authorizationStateLoggingOut",
+	WAIT_CLOSING = "authorizationStateClosing",
+	WAIT_CLOSED = "authorizationStateClosed"
+}
 
-function sleep(ms: number) {
+function getEnumFromString(enumObj: any, str: string): any {
+	for (const key in enumObj) {
+		if (enumObj.hasOwnProperty(key) && enumObj[key] === str) {
+			return enumObj[key];
+		}
+	}
+	return undefined;
+}
+
+class ClientSession {
+	client: typeof Client;
+	authState: TelepiloyAuthState;
+	phoneNumber: string;
+
+	constructor(client: typeof Client, authState: TelepiloyAuthState, phoneNumber: string) {
+		this.client = client;
+		this.authState = authState;
+		this.phoneNumber = phoneNumber
+	}
+}
+
+export function sleep(ms: number) {
 	return new Promise( resolve => setTimeout(resolve, ms) );
 }
 
 @Service()
 export class TelePilotNodeConnectionManager {
 
-	private clients: Record<number, typeof Client> = {};
+	private clientSessions: Record<number, ClientSession> = {};
+	private tdlConfigured: boolean = false;
 
 	private TD_DATABASE_PATH_PREFIX = process.env.HOME + "/.n8n/nodes/node_modules/@telepilotco/n8n-nodes-telepilot/db"
 	private TD_FILES_PATH_PREFIX = process.env.HOME + "/.n8n/nodes/node_modules/@telepilotco/n8n-nodes-telepilot/db"
@@ -36,27 +71,28 @@ export class TelePilotNodeConnectionManager {
 
 	async closeLocalSession(apiId: number) {
 		debug("closeLocalSession apiId:" + apiId)
-		let clients_keys = Object.keys(this.clients);
-		if (!clients_keys.includes(apiId.toString()) || this.clients[apiId] === undefined) {
+		let clients_keys = Object.keys(this.clientSessions);
+		if (!clients_keys.includes(apiId.toString()) || this.clientSessions[apiId] === undefined) {
 			throw new Error ("You need to login first, please check our guide at https://telepilot.co/login-howto")
 		}
-		const client = this.clients[apiId];
-		let result = await client.invoke({
-			_: 'close'
-		})
-		delete this.clients[apiId];
-		debug(Object.keys(this.clients))
+		const clientSession = this.clientSessions[apiId];
+		// let result = await clientSession.client.invoke({
+		// 	_: 'close'
+		// })
+		let result = clientSession.client.close();
+		delete this.clientSessions[apiId];
+		debug(Object.keys(this.clientSessions))
 		return result;
 	}
 	async deleteLocalInstance(apiId: number): Promise<Record<string, string>> {
-		let clients_keys = Object.keys(this.clients);
-		if (!clients_keys.includes(apiId.toString()) || this.clients[apiId] === undefined) {
+		let clients_keys = Object.keys(this.clientSessions);
+		if (!clients_keys.includes(apiId.toString()) || this.clientSessions[apiId] === undefined) {
 			throw new Error ("You need to login first, please check our guide at https://telepilot.co/login-howto")
 		}
-		const client = this.clients[apiId];
+		const clientSession = this.clientSessions[apiId];
 
 		try {
-			await client.invoke({
+			await clientSession.client.invoke({
 				_: 'close'
 			})
 		} catch (e) {
@@ -76,7 +112,7 @@ export class TelePilotNodeConnectionManager {
 		await removeDir(db_files_path)
 		result["db_files"] = `Removed ${db_files_path}`
 
-		delete this.clients[apiId];
+		delete this.clientSessions[apiId];
 		return result;
 	}
 
@@ -88,81 +124,91 @@ export class TelePilotNodeConnectionManager {
 		return `${this.TD_FILES_PATH_PREFIX}/${apiId}/_td_files`
 	}
 
-	async getActiveClient(apiId: number, apiHash: string): Promise<typeof Client> {
-		let clients_keys = Object.keys(this.clients);
-		debug('getActiveClient.keys:' + clients_keys);
-		debug('getActiveClient.in keys:' + clients_keys.includes(apiId.toString()));
-		debug('getActiveClient.value:' + this.clients[apiId]);
-		if (!clients_keys.includes(apiId.toString()) || this.clients[apiId] === undefined) {
-			// throw new Error ("You need to login first, please check our guide at https://telepilot.co/login-howto")
-			debug("logging in from getActiveClient(..)")
-			let authenticated = 0;
-			let qrCode = "";
-			this.clients[apiId] = this.createClientSetAuthHandler(apiId, apiHash, qrCode, authenticated);
-			await sleep(1000);
+	async clientLoginWithPhoneNumber(apiId: number, apiHash: string, phone_number: string): Promise<string> {
+		debug("clientLoginWithPhoneNumber")
+		let clientSession = this.clientSessions[apiId];
+
+		debug("clientLoginWithPhoneNumber.authState:" + clientSession.authState)
+		if (clientSession.authState == TelepiloyAuthState.WAIT_PHONE_NUMBER) {
+			let result = await clientSession.client.invoke({
+				_: 'setAuthenticationPhoneNumber',
+				phone_number
+			});
+			return result;
 		}
-		return this.clients[apiId];
+		return "";
+
+		// result = await clientSession.client.invoke({
+		// 	_: 'checkAuthenticationCode',
+		// 	code: ""
+		// });
+		//
+		// result = await clientSession.client.invoke({
+		// 	_: 'checkAuthenticationPassword',
+		// 	password: ""
+		// });
+
+
 	}
 
-	async terminateSession(apiId: number, apiHash: string): Promise<typeof Client> {
-
+	async clientLoginSendAuthenticationCode(apiId: number, code: string): Promise<string> {
+		debug("clientLoginSendAuthenticationCode")
+		let clientSession = this.clientSessions[apiId];
+		let result = await clientSession.client.invoke({
+			_: 'checkAuthenticationCode',
+			code
+		});
+		return result;
 	}
 
-	async clientLoginWithQRCode(apiId: number, apiHash: string): Promise<string> {
-		let clients_keys = Object.keys(this.clients);
-		debug('clientLoginWithQRCode.keys:' + clients_keys);
-		debug('clientLoginWithQRCode.in keys:' + clients_keys.includes(apiId.toString()));
-		debug('clientLoginWithQRCode.value:' + this.clients[apiId]);
-		let qrCode = ""
-		// if (!clients_keys.includes(apiId.toString()) || this.clients[apiId] === undefined) {
-		if (true) {
-			debug('new TelePilot Client:' + apiId)
-			let authenticated = 0;
-			// if (!clients_keys.includes(apiId.toString())) {
-			let client = this.createClientSetAuthHandler(apiId, apiHash, qrCode, authenticated);
-			// }
-			this.clients[apiId] = client;
+	async clientLoginSendAuthenticationPassword(apiId: number, password: string): Promise<string> {
+		debug("clientLoginSendAuthenticationPassword")
+		let clientSession = this.clientSessions[apiId];
+		let result = await clientSession.client.invoke({
+			_: 'checkAuthenticationPassword',
+			password
+		});
+		return result;
+	}
 
-			await sleep(1000);
-			debug("authenticated=" + this.clients[apiId].authenticated);
-
-			if (this.clients[apiId].authenticated === undefined || this.clients[apiId].authenticated < 1) {
-				let result = await client.invoke({
-					_: 'requestQrCodeAuthentication'
-				});
-				debug(JSON.stringify(result));
+	async createClientSetAuthHandlerForPhoneNumberLogin(apiId: number, apiHash: string, phoneNumber: string): Promise<ClientSession> {
+		let client: typeof Client;
+		if (this.clientSessions[apiId] === undefined) {
+			client = this.initClient(apiId, apiHash);
+			let clientSession = new ClientSession(client, TelepiloyAuthState.NO_CONNECTION, phoneNumber);
+			this.clientSessions[apiId] = clientSession;
+		}
+		const authHandler = (update: IDataObject) => {
+			if (update._ === "updateAuthorizationState") {
+				debug('authHandler.Got updateAuthorizationState:', JSON.stringify(update, null, 2))
+				const authorization_state = update.authorization_state as IDataObject;
+				this.clientSessions[apiId].authState = getEnumFromString(TelepiloyAuthState, authorization_state._ as string);
+				debug("set clientSession.authState to " + this.clientSessions[apiId].authState)
 			}
-
-			///////////////////////////////
-
-			while (this.clients[apiId].authenticated == 0) {
-				await sleep(500);
-			}
-		} else if (this.clients[apiId]._client == null) {
-			await this.deleteLocalInstance(apiId);
-			throw new Error("TD database was deleted, please log in again. Please check our guide at https://telepilot.co/login-howto");
-		} else {
-			return 'Already logged in';
 		}
 
-		debug("returning for " + apiId)
-		// return this.clients[apiId];
-		return this.clients[apiId].qrCode;
+		this.clientSessions[apiId].client
+			.on('update', authHandler)
+
+		await sleep(1000);
+		return this.clientSessions[apiId];
 	}
 
-	private createClientSetAuthHandler(apiId: number, apiHash: string, qrCode: string, authenticated: number) {
-		let clients_keys = Object.keys(this.clients);
+	private initClient(apiId: number, apiHash: string) {
+		let clients_keys = Object.keys(this.clientSessions);
 		let {libFolder, libFile} = this.locateBinaryModules();
-		let client: typeof Client = undefined;
 		debug("nodeVersion:", nodeVersion);
 		debug("binaryVersion:", binaryVersion);
 		debug("addonVersion:", addonVersion);
-		if (!clients_keys.includes(apiId.toString()) || this.clients[apiId] === undefined) {
-			tdl.configure({
-				libdir: libFolder,
-				tdjson: libFile
-			});
-			client = tdl.createClient({
+		if (!clients_keys.includes(apiId.toString()) || this.clientSessions[apiId] === undefined) {
+			if (!this.tdlConfigured) {
+				tdl.configure({
+					libdir: libFolder,
+					tdjson: libFile
+				});
+				this.tdlConfigured = true;
+			}
+			return tdl.createClient({
 				apiId,
 				apiHash,
 				databaseDirectory: this.getTdDatabasePathForClient(apiId),
@@ -173,72 +219,11 @@ export class TelePilotNodeConnectionManager {
 				// useTestDc: true
 			});
 		} else {
-			client = this.clients[apiId];
+			return this.clientSessions[apiId].client;
 		}
-		client.qrCode = qrCode;
-
-		///////////////////////////
-
-		const qrCodeAuthHandler = (update: IDataObject) => {
-
-			const qrCodeWriter = (s: string) => {
-				debug(s)
-				client.qrCode += s;
-			}
-
-			if (update._ === "updateAuthorizationState") {
-				debug('Got update1:', JSON.stringify(update, null, 2))
-				const authorization_state = update.authorization_state as IDataObject;
-				if (authorization_state._ === 'authorizationStateWaitOtherDeviceConfirmation') {
-					const qr_link = authorization_state.link;
-					debug("qr_link:" + qr_link);
-					QRCode.setErrorLevel('Q');
-					debug("generating qr code");
-					QRCode.generate(qr_link, {small: true}, function (code: any) {
-						qrCodeWriter(code)
-					});
-					debug("generated qr code");
-					// return {
-					// 	status: 'Authenticating',
-					// 	message: code,
-					// };
-					client.authenticated = 1
-				} else if (authorization_state._ === 'authorizationStateReady') {
-					debug("setting authenticated to 1")
-					client.authenticated = 1
-				} else if (authorization_state._ === 'authorizationStateWaitTdlibParameters') {
-					client.authenticated = 0
-					debug("need to disable requestQrCodeAuthentication call")
-				} else if (authorization_state._ === 'authorizationStateClosed') {
-					client.authenticated = 0
-					debug("authorizationStateClosed for apiId:" + apiId)
-					// let ret = this.closeLocalSession(apiId);
-					delete this.clients[apiId];
-					// debug(ret);
-				}
-			} else if (update._ == 'authorizationStateReady') {
-				debug('Got update2:', JSON.stringify(update, null, 2))
-				client.removeListener('on', qrCodeAuthHandler);
-				client.authenticated = 1;//FIXME - check return
-				debug("removed 'on' update handler: qrCodeAuthHandler")
-			} else if (update._ === 'authorizationStateWaitPhoneNumber') {
-
-			} else if (update._ === 'authorizationStateWaitTdlibParameters') {
-
-			} else {
-				// debug("strange else")
-				// debug(update._)
-				// authenticated = -1;//FIXME - check return
-			}
-		}
-
-		client
-			.on('update', qrCodeAuthHandler)
-		// this.clients[apiId].authenticated = authenticated;
-		return client;
 	}
 
-	// @ts-ignore
+// @ts-ignore
 	private locateBinaryModules() {
 		let _lib_prebuilt_package = "tdlib-binaries-prebuilt/prebuilds/";
 
@@ -283,5 +268,25 @@ export class TelePilotNodeConnectionManager {
 	markClientAsClosed(apiId: number) {
 		debug("markClientAsClosed apiId:" + apiId)
 		this.closeLocalSession(apiId);
+	}
+
+	getAuthStateForCredential(apiId: number) {
+		if (this.clientSessions[apiId] === undefined) {
+			return TelepiloyAuthState.NO_CONNECTION;
+		} else {
+			const clientSession = this.clientSessions[apiId];
+			return clientSession.authState;
+		}
+	}
+
+	getAllClientSessions() {
+		return Object.entries(this.clientSessions).map(([key, value]) => {
+			// Perform some transformation on each ClientSession instance
+			return {
+				apiId: key,
+				authState: value.authState,
+				phoneNumber: value.phoneNumber
+			};
+		});
 	}
 }
