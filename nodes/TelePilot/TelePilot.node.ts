@@ -116,12 +116,14 @@ export class TelePilot implements INodeType {
 			if (operation === 'login') {
 
 				const loginWithPhoneNumberHelpCommand = () => {
-					return "Here is list of supported commands:<br />" +
-						"/start - start login via phone number and code (MFA is supported)<br />" +
-						"/stop - terminates current ClientSession for this Credential<br />" +
-						"/clear - deletes local tdlib database, new login is required<br />" +
-						"/cred - shows with which Credential we are working (name + apiId, apiHash, phoneNumber)<br />" +
-						"/stat - show all open Telegram sessions"
+					return {
+						text: "Following commands are supported:\n\n" +
+						"/start - start login via Phone Number and code (MFA is also supported if set)\n" +
+						"/stop - terminates current ClientSession for this Credential\n" +
+						"/clear - deletes local tdlib database, new login is required\n" +
+						"/cred - shows which Telegram Credential is used in this ChatTrigger (name + apiId, apiHash, phoneNumber)\n" +
+						"/stat - print all open Telegram sessions"
+					}
 				}
 				debug('loginWithPhoneNumber')
 				const items = this.getInputData();
@@ -186,8 +188,10 @@ export class TelePilot implements INodeType {
 							break;
 						case "/clear":
 							cM.deleteLocalInstance(credentials?.apiId as number)
-							returnData.push("Telegram Account disconnected, local session has been cleared. Please login again." +
-								"Please check our guide at https://telepilot.co/login-howto");
+							returnData.push({
+								text: "Telegram Account disconnected, local session has been cleared. Please login again. " +
+											"Please check our guide at https://telepilot.co/login-howto"
+							});
 							break;
 						case "/cred":
 							let credResult = credentials;
@@ -209,7 +213,9 @@ export class TelePilot implements INodeType {
 					debug("loginWithPhoneNumber.authState: " + authState)
 					switch (authState) {
 						case TelepiloyAuthState.NO_CONNECTION:
-							returnData.push("Unexpected command. Please refer to https://telepilot.co/login-howto." + loginWithPhoneNumberHelpCommand());
+							returnData.push({
+								text: "Unexpected command. Please refer to https://telepilot.co/login-howto or try /help command\n"
+							});
 							break;
 						case TelepiloyAuthState.WAIT_CODE:
 							const code = message;
@@ -254,8 +260,10 @@ export class TelePilot implements INodeType {
 				returnData.push("Telegram Account " + credentials?.phoneNumber + " disconnected.");
 			} else if (operation === 'removeTdDatabase') {
 				result = await cM.deleteLocalInstance(credentials?.apiId as number);
-				returnData.push("Telegram Account disconnected, local session has been cleared. Please login again." +
-					"Please check our guide at https://telepilot.co/login-howto");
+				returnData.push({
+					text: "Telegram Account disconnected, local session has been cleared.\nPlease login again. Please check our guide at https://telepilot.co/login-howto\n" +
+						"Or use /help"
+				});
 			}
 		} else {
 			const clientSession = await cM.createClientSetAuthHandlerForPhoneNumberLogin(
@@ -264,9 +272,11 @@ export class TelePilot implements INodeType {
 				credentials?.phoneNumber as string,
 			);
 			if (clientSession.authState != TelepiloyAuthState.WAIT_READY) {
-				returnData.push("Telegram account not logged in. " +
-					"Please use ChatTrigger node together with loginWithPhoneNumber action. " +
-					"Please check our guide at https://telepilot.co/login-howto");
+				returnData.push({
+					text: "Telegram account not logged in.\n" +
+						"Please use ChatTrigger node together with loginWithPhoneNumber action.\n" +
+						"Please check our guide at https://telepilot.co/login-howto or use /help"
+				});
 				await cM.closeLocalSession(credentials?.apiId as number)
 			} else {
 				client = clientSession.client;
