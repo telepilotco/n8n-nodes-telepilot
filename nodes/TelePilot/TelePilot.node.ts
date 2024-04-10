@@ -8,7 +8,7 @@ import {
 	NodeOperationError
 } from 'n8n-workflow';
 import {Container} from 'typedi';
-import {sleep, TelePilotNodeConnectionManager, TelepiloyAuthState} from './TelePilotNodeConnectionManager';
+import {sleep, TelePilotNodeConnectionManager, TelepilotAuthState} from './TelePilotNodeConnectionManager';
 
 import {
 	operationChat,
@@ -141,7 +141,7 @@ export class TelePilot implements INodeType {
 						case "/start":
 							let authState = cM.getAuthStateForCredential(credentials?.apiId as number)
 							debug("loginWithPhoneNumber./start.authState: " + authState)
-							if (authState == TelepiloyAuthState.NO_CONNECTION) {
+							if (authState == TelepilotAuthState.NO_CONNECTION) {
 								await cM.createClientSetAuthHandlerForPhoneNumberLogin(
 									credentials?.apiId as number,
 									credentials?.apiHash as string,
@@ -150,14 +150,14 @@ export class TelePilot implements INodeType {
 								authState = cM.getAuthStateForCredential(credentials?.apiId as number)
 								debug("loginWithPhoneNumber./start2.authState: " + authState)
 
-								if (authState == TelepiloyAuthState.WAIT_CODE) {
+								if (authState == TelepilotAuthState.WAIT_CODE) {
 									returnData.push("Please provide AuthCode:");
-								} else if (authState == TelepiloyAuthState.WAIT_PASSWORD) {
+								} else if (authState == TelepilotAuthState.WAIT_PASSWORD) {
 									returnData.push("MFA Password:");
 								}
 							}
 							switch (authState) {
-								case TelepiloyAuthState.WAIT_PHONE_NUMBER:
+								case TelepilotAuthState.WAIT_PHONE_NUMBER:
 									await cM.clientLoginWithPhoneNumber(
 										credentials?.apiId as number,
 										credentials?.apiHash as string,
@@ -165,15 +165,15 @@ export class TelePilot implements INodeType {
 									)
 									await sleep(1000);
 									authState = cM.getAuthStateForCredential(credentials?.apiId as number)
-									if (authState == TelepiloyAuthState.WAIT_CODE) {
+									if (authState == TelepilotAuthState.WAIT_CODE) {
 										returnData.push("Please provide AuthCode:");
-									} else if (authState == TelepiloyAuthState.WAIT_READY) {
+									} else if (authState == TelepilotAuthState.WAIT_READY) {
 										returnData.push("You have succesfully logged in. You can close this chat and start using Telepilot.");
 									} else {
 										returnData.push("Unexpected authState: " + authState);
 									}
 									break;
-								case TelepiloyAuthState.WAIT_READY:
+								case TelepilotAuthState.WAIT_READY:
 									returnData.push("You are logged in with phoneNumber " + credentials?.phoneNumber);
 									break;
 								default:
@@ -212,12 +212,12 @@ export class TelePilot implements INodeType {
 					let authState = cM.getAuthStateForCredential(credentials?.apiId as number)
 					debug("loginWithPhoneNumber.authState: " + authState)
 					switch (authState) {
-						case TelepiloyAuthState.NO_CONNECTION:
+						case TelepilotAuthState.NO_CONNECTION:
 							returnData.push({
 								text: "Unexpected command. Please refer to https://telepilot.co/login-howto or try /help command\n"
 							});
 							break;
-						case TelepiloyAuthState.WAIT_CODE:
+						case TelepilotAuthState.WAIT_CODE:
 							const code = message;
 							await cM.clientLoginSendAuthenticationCode(
 								credentials?.apiId as number,
@@ -225,15 +225,15 @@ export class TelePilot implements INodeType {
 							)
 							await sleep(1000);
 							authState = cM.getAuthStateForCredential(credentials?.apiId as number)
-							if (authState == TelepiloyAuthState.WAIT_PASSWORD) {
+							if (authState == TelepilotAuthState.WAIT_PASSWORD) {
 								returnData.push("MFA Password:");
-							} else if (authState == TelepiloyAuthState.WAIT_READY) {
+							} else if (authState == TelepilotAuthState.WAIT_READY) {
 								returnData.push("You have succesfully logged in. You can close this chat and start using Telepilot.");
 							} else {
 								returnData.push("Unexpected authState: " + authState);
 							}
 							break;
-						case TelepiloyAuthState.WAIT_PASSWORD:
+						case TelepilotAuthState.WAIT_PASSWORD:
 							const password = message;
 							await cM.clientLoginSendAuthenticationPassword(
 								credentials?.apiId as number,
@@ -242,7 +242,7 @@ export class TelePilot implements INodeType {
 							await sleep(1000);
 							returnData.push("authState:" + cM.getAuthStateForCredential(credentials?.apiId as number));
 							break;
-						case TelepiloyAuthState.WAIT_READY:
+						case TelepilotAuthState.WAIT_READY:
 							returnData.push("You are logged in with phoneNumber " + credentials?.phoneNumber);
 							break;
 						default:
@@ -271,13 +271,15 @@ export class TelePilot implements INodeType {
 				credentials?.apiHash as string,
 				credentials?.phoneNumber as string,
 			);
-			if (clientSession.authState != TelepiloyAuthState.WAIT_READY) {
+			debug("clientSession.authState=" + clientSession.authState)
+			if (clientSession.authState != TelepilotAuthState.WAIT_READY) {
 				returnData.push({
 					text: "Telegram account not logged in.\n" +
 						"Please use ChatTrigger node together with loginWithPhoneNumber action.\n" +
 						"Please check our guide at https://telepilot.co/login-howto or use /help"
 				});
 				await cM.closeLocalSession(credentials?.apiId as number)
+				throw new Error("Please login: https://telepilot.co/login-howto") as NodeOperationError
 			} else {
 				client = clientSession.client;
 			}

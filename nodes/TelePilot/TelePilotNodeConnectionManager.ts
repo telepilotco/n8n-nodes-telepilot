@@ -15,7 +15,7 @@ const nodeVersion = pjson.version;
 const binaryVersion = pjson.dependencies["@telepilotco/tdlib-binaries-prebuilt"].replace("^", "");
 const addonVersion = pjson.dependencies["@telepilotco/tdl"].replace("^", "");
 
-export enum TelepiloyAuthState {
+export enum TelepilotAuthState {
 	NO_CONNECTION = "NO_CONNECTION",
 	WAIT_TDLIB_PARAMS = "authorizationStateWaitTdlibParameters",
 	WAIT_ENCRYPTION_KEY = "authorizationStateWaitEncryptionKey",
@@ -41,10 +41,10 @@ function getEnumFromString(enumObj: any, str: string): any {
 
 class ClientSession {
 	client: typeof Client;
-	authState: TelepiloyAuthState;
+	authState: TelepilotAuthState;
 	phoneNumber: string;
 
-	constructor(client: typeof Client, authState: TelepiloyAuthState, phoneNumber: string) {
+	constructor(client: typeof Client, authState: TelepilotAuthState, phoneNumber: string) {
 		this.client = client;
 		this.authState = authState;
 		this.phoneNumber = phoneNumber
@@ -79,6 +79,7 @@ export class TelePilotNodeConnectionManager {
 		// let result = await clientSession.client.invoke({
 		// 	_: 'close'
 		// })
+		clientSession.client.off
 		let result = clientSession.client.close();
 		delete this.clientSessions[apiId];
 		debug(Object.keys(this.clientSessions))
@@ -129,7 +130,7 @@ export class TelePilotNodeConnectionManager {
 		let clientSession = this.clientSessions[apiId];
 
 		debug("clientLoginWithPhoneNumber.authState:" + clientSession.authState)
-		if (clientSession.authState == TelepiloyAuthState.WAIT_PHONE_NUMBER) {
+		if (clientSession.authState == TelepilotAuthState.WAIT_PHONE_NUMBER) {
 			let result = await clientSession.client.invoke({
 				_: 'setAuthenticationPhoneNumber',
 				phone_number
@@ -175,15 +176,17 @@ export class TelePilotNodeConnectionManager {
 		let client: typeof Client;
 		if (this.clientSessions[apiId] === undefined) {
 			client = this.initClient(apiId, apiHash);
-			let clientSession = new ClientSession(client, TelepiloyAuthState.NO_CONNECTION, phoneNumber);
+			let clientSession = new ClientSession(client, TelepilotAuthState.NO_CONNECTION, phoneNumber);
 			this.clientSessions[apiId] = clientSession;
 		}
 		const authHandler = (update: IDataObject) => {
 			if (update._ === "updateAuthorizationState") {
 				debug('authHandler.Got updateAuthorizationState:', JSON.stringify(update, null, 2))
 				const authorization_state = update.authorization_state as IDataObject;
-				this.clientSessions[apiId].authState = getEnumFromString(TelepiloyAuthState, authorization_state._ as string);
-				debug("set clientSession.authState to " + this.clientSessions[apiId].authState)
+				if (this.clientSessions[apiId] !== undefined) {
+					this.clientSessions[apiId].authState = getEnumFromString(TelepilotAuthState, authorization_state._ as string);
+					debug("set clientSession.authState to " + this.clientSessions[apiId].authState)
+				}
 			}
 		}
 
@@ -272,7 +275,7 @@ export class TelePilotNodeConnectionManager {
 
 	getAuthStateForCredential(apiId: number) {
 		if (this.clientSessions[apiId] === undefined) {
-			return TelepiloyAuthState.NO_CONNECTION;
+			return TelepilotAuthState.NO_CONNECTION;
 		} else {
 			const clientSession = this.clientSessions[apiId];
 			return clientSession.authState;

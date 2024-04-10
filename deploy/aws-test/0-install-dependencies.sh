@@ -1,5 +1,5 @@
 ##install node via nvm
-sudo apt-get install make python3 gcc g++ -y
+sudo apt-get update && apt-get install make python3 gcc g++ jq tree -y
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
 source ~/.bashrc
 nvm install 18.16.1
