@@ -18,7 +18,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     outputs:
       PACKAGE_VERSION: ${{ steps.set_var.outputs.PACKAGE_VERSION }}
     strategy:
@@ -71,7 +71,7 @@ jobs:
   build-and-test-in-docker:
     needs: [build]
     name: linux-${{ matrix.platform }}-${{ matrix.libc }} - build the node addon in docker
-    runs-on: [ ubuntu-latest ]
+    runs-on: [ self-hosted ]
     strategy:
       max-parallel: 2
       fail-fast: false
@@ -156,7 +156,7 @@ jobs:
   publish:
     name: 'Publish to npm'
     needs: [build, build-and-test-in-docker]
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     env:
       NPM_REGISTRY: ${{ github.event.inputs.npm_registry || 'https://registry.npmjs.org' }}
       CUSTOM_REGISTRY_AUTH: ${{ secrets.CUSTOM_REGISTRY_AUTH }}
