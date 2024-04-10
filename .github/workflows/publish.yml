@@ -73,6 +73,7 @@ jobs:
     name: linux-${{ matrix.platform }}-${{ matrix.libc }} - build the node addon in docker
     runs-on: [ ubuntu-latest ]
     strategy:
+      max-parallel: 2
       fail-fast: false
       matrix:
         platform:
@@ -140,11 +141,11 @@ jobs:
       - name: Run n8n in Ubuntu n8n
         if: matrix.libc == 'glibc'
         run: |
-          N8N_HOST=0.0.0.0 N8N_PORT=5678 N8N_ENCRYPTION_KEY=${{ secrets.N8N_KEY }} npx --yes n8n@1.21.0 \
+          N8N_HOST=0.0.0.0 N8N_PORT=5678 N8N_ENCRYPTION_KEY=${{ secrets.N8N_KEY }} npx --yes n8n@1.29.1 \
             import:credentials -i ~/.n8n/nodes/node_modules/@telepilotco/n8n-nodes-telepilot/deploy/test-n8n-imports/credentials/credential-dummy.json
-          npx n8n@1.21.0 \
+          npx n8n@1.29.1 \
             import:workflow -i ~/.n8n/nodes/node_modules/@telepilotco/n8n-nodes-telepilot/deploy/test-n8n-imports/workflows/Telepilot_getMe.json
-          npx n8n@1.21.0 execute --id r2a0u5tez9fg1WW6 > execute-result.log 2>&1 || exit 0
+          npx n8n@1.29.1 execute --id r2a0u5tez9fg1WW6 > execute-result.log 2>&1 || exit 0
       - name: Test Telepilot GetMe execution result
         run: |
           cat execute-result.log
