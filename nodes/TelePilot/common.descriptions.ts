@@ -208,9 +208,24 @@ export const operationChat: INodeProperties = {
 },
 	options: [
 		{
+			name: 'Add Chat Members',
+			value: 'addChatMembers',
+			action: 'Adds multiple new members to a chat',
+		},
+		{
 			name: 'Close Chat',
 			value: 'closeChat',
 			action: 'Close chat',
+		},
+		{
+			name: 'Create SuperGroup or Channel',
+			value: 'createNewSupergroupChat',
+			action: 'Create supergroup or channel',
+		},
+		{
+			name: 'Delete Chat',
+			value: 'deleteChat',
+			action: 'Delete chat',
 		},
 		{
 			name: 'Get Chat',
@@ -252,6 +267,11 @@ export const operationChat: INodeProperties = {
 			value: 'searchPublicChats',
 			action: 'Search public chats',
 		},
+		{
+			name: 'Send Chat Action',
+			value: 'sendChatAction',
+			action: 'Sends a chat action',
+		},
 	],
 default: 'getChatHistory',
 	noDataExpression: true,
@@ -289,9 +309,14 @@ export const operationMessage: INodeProperties = {
 			action: 'Get message',
 		},
 		{
-			name: 'Send Message',
+			name: 'Send Message with Photo',
+			value: 'sendMessagePhoto',
+			action: 'Send message with photo',
+		},
+		{
+			name: 'Send Text Message',
 			value: 'sendMessage',
-			action: 'Send message',
+			action: 'Send text message',
 		},
 	],
 default: 'sendMessage',
@@ -369,6 +394,7 @@ export const variable_chat_id: INodeProperties = {
 			'getChat',
 			'getChatHistory',
 			'sendMessage',
+			'sendMessagePhoto',
 			'deleteMessages',
 			'forwardMessages',
 			'toggleChatIsMarkedAsUnread',
@@ -376,7 +402,10 @@ export const variable_chat_id: INodeProperties = {
 			'editMessageText',
 			'joinChat',
 			'openChat',
-			'closeChat'
+			'closeChat',
+			'deleteChat',
+			'addChatMembers',
+			'sendChatAction',
 		],
 			resource: ['chat', 'message'],
 	},
@@ -477,6 +506,36 @@ default: '',
 	placeholder: 'Sample message text',
 	description: 'Text of the messages',
 };
+
+export const variable_local_file_path: INodeProperties = {
+	displayName: 'Message Photo',
+	name: 'localFilePath',
+	type: 'string',
+	required: true,
+	displayOptions: {
+		show: {
+			operation: ['sendMessagePhoto'],
+			resource: ['message'],
+		},
+	},
+	default: '',
+	placeholder: '/tmp/my-pic.png',
+	description: 'Local path to the file',
+};
+
+export const variable_photo_caption: INodeProperties = {
+	displayName: 'Photo Caption',
+	name: 'photoCaption',
+	type: 'string',
+	displayOptions: {
+		show: {
+			operation: ['sendMessagePhoto'],
+			resource: ['message'],
+		},
+	},
+	default: '',
+	placeholder: 'My best photo',
+};
 export const variable_revoke: INodeProperties = {
 	displayName: 'Delete for All Users?',
 		name: 'revoke',
@@ -560,13 +619,13 @@ export const variable_reply_to_msg_id: INodeProperties = {
 	type: 'string',
 	displayOptions: {
 		show: {
-			operation: ['sendMessage'],
+			operation: ['sendMessage', 'sendMessagePhoto'],
 			resource: ['message'],
 		},
 	},
 	default: '',
 	placeholder: 'Text',
-	description: 'Identifier of the Remote file to download',
+	description: 'Identifier of Message',
 };
 
 export const variable_supergroup_id: INodeProperties = {
@@ -584,3 +643,115 @@ export const variable_supergroup_id: INodeProperties = {
 	description: 'Identifier of the Supergroup',
 };
 
+export const variable_title: INodeProperties = {
+	displayName: 'Title',
+	name: 'title',
+	type: 'string',
+	displayOptions: {
+		show: {
+			operation: ['createNewSupergroupChat'],
+			resource: ['chat'],
+		},
+	},
+	default: '',
+	placeholder: 'Text',
+	description: 'Title of the new chat or channel',
+};
+
+export const variable_is_channel: INodeProperties = {
+	displayName: 'Is Channel?',
+	name: 'is_channel',
+	type: 'boolean',
+	displayOptions: {
+		show: {
+			operation: ['createNewSupergroupChat'],
+			resource: ['chat'],
+		},
+	},
+	default: false,
+	placeholder: 'false',
+	description: 'Whether to create a channel',
+};
+
+export const variable_description: INodeProperties = {
+	displayName: 'Description',
+	name: 'description',
+	type: 'string',
+	displayOptions: {
+		show: {
+			operation: ['createNewSupergroupChat'],
+			resource: ['chat'],
+		},
+	},
+	default: '',
+	placeholder: 'Text',
+	description: 'Chat description; 0-255 characters',
+};
+
+export const variable_user_ids: INodeProperties = {
+	displayName: 'User IDs',
+	name: 'user_ids',
+	type: 'string',
+	required: true,
+	displayOptions: {
+		show: {
+			operation: ['addChatMembers'],
+			resource: ['chat'],
+		},
+	},
+	default: '',
+	placeholder: '122323,2322222',
+	description: 'Comma-separated list of user_ids to be added to Supergroup or Channel',
+};
+
+export const variable_chat_action: INodeProperties = {
+	displayName: 'Action',
+	name: 'action',
+	type: 'options',
+	required: true,
+	displayOptions: {
+		show: {
+			operation: ['sendChatAction'],
+			resource: ['chat'],
+		},
+	},
+	options: [
+		{
+			action: "Cancel",
+			name: "Cancel",
+			value: "chatActionCancel"
+		},
+		{
+			action: "Recording voice note",
+			name: "Recording Voice Note",
+			value: "chatActionRecordingVoiceNote"
+		},
+		{
+			action: "Typing",
+			name: "Typing",
+			value: "chatActionTyping"
+		},
+		{
+			action: "Uploading document",
+			name: "Uploading Document",
+			value: "chatActionUploadingDocument"
+		},
+		{
+			action: "Uploading photo",
+			name: "Uploading Photo",
+			value: "chatActionUploadingPhoto"
+		},
+		{
+			action: "Uploading video",
+			name: "Uploading Video",
+			value: "chatActionUploadingVideo"
+		},
+		{
+			action: "Uploading voice note",
+			name: "Uploading Voice Note",
+			value: "chatActionUploadingVoiceNote"
+		},
+	],
+	default: 'chatActionTyping',
+	description: 'The action description',
+};

@@ -19,11 +19,14 @@ import {
 	operationMessage,
 	operationUser,
 	optionResources,
+	variable_chat_action,
 	variable_chat_id,
+	variable_description,
 	variable_file_id,
 	variable_force,
 	variable_from_chat_id,
 	variable_from_message_id,
+	variable_is_channel,
 	variable_is_marked_as_unread,
 	variable_message_id,
 	variable_message_ids,
@@ -33,8 +36,12 @@ import {
 	variable_reply_to_msg_id,
 	variable_revoke,
 	variable_supergroup_id,
+	variable_title,
 	variable_user_id,
-	variable_username
+	variable_user_ids,
+	variable_username,
+	variable_local_file_path,
+	variable_photo_caption
 } from './common.descriptions'
 
 const debug = require('debug')('telepilot-node');
@@ -83,9 +90,16 @@ export class TelePilot implements INodeType {
 			variable_message_ids,
 			variable_message_id,
 			variable_messageText,
+			variable_local_file_path,
+			variable_photo_caption,
 			variable_revoke,
 			variable_username,
 			variable_query,
+			variable_title,
+			variable_description,
+			variable_is_channel,
+			variable_user_ids,
+			variable_chat_action,
 
 			//Variables Files
 			variable_file_id,
@@ -411,6 +425,52 @@ export class TelePilot implements INodeType {
 						is_marked_as_unread,
 					});
 					returnData.push(result);
+				} else if (operation === 'createNewSupergroupChat') {
+					const title = this.getNodeParameter('title', 0) as string;
+					const is_channel = this.getNodeParameter('is_channel', 0) as boolean;
+					const description = this.getNodeParameter('description', 0) as string;
+					const result = await client.invoke({
+						_: 'createNewSupergroupChat',
+						title,
+						is_channel,
+						description,
+						location: null,
+						for_import: false,
+					});
+					returnData.push(result);
+				} else if (operation === 'deleteChat') {
+					const chat_id = this.getNodeParameter('chat_id', 0) as string;
+					const result = await client.invoke({
+						_: 'deleteChat',
+						chat_id,
+					});
+					returnData.push(result);
+				} else if (operation === 'addChatMembers') {
+					const chat_id = this.getNodeParameter('chat_id', 0) as string;
+					const user_ids = this.getNodeParameter('user_ids', 0) as string;
+
+					const idsArray = user_ids
+						.toString()
+						.split(',')
+						.map((s) => s.toString().trim());
+					const result = await client.invoke({
+						_: 'addChatMembers',
+						chat_id,
+						user_ids: idsArray,
+					});
+					returnData.push(result);
+				} else if (operation === 'sendChatAction') {
+					const chat_id = this.getNodeParameter('chat_id', 0) as string;
+					const action = { //constructing ChatAction object
+						_: this.getNodeParameter('action', 0) as string
+					};
+
+					const result = await client.invoke({
+						_: 'sendChatAction',
+						chat_id,
+						action,
+					});
+					returnData.push(result);
 				}
 			} else if (resource === 'file') {
 				if (operation === 'getRemoteFile') {
@@ -453,6 +513,32 @@ export class TelePilot implements INodeType {
 							text: {
 								_: 'formattedText',
 								text: messageText,
+							},
+						},
+					});
+					returnData.push(result);
+				} else if (operation === 'sendMessagePhoto') {
+					const chat_id = this.getNodeParameter('chat_id', 0) as string;
+					const localFilePath = this.getNodeParameter('localFilePath', 0) as string;
+					let photoCaption: string | null = this.getNodeParameter('photoCaption', 0) as string;
+					const reply_to_msg_id = this.getNodeParameter('reply_to_msg_id', 0) as string;
+
+					if (photoCaption === '' && photoCaption.length == 0) {
+						photoCaption = null;
+					}
+					const result = await client.invoke({
+						_: 'sendMessage',
+						chat_id,
+						reply_to_msg_id,
+						input_message_content: {
+							_: 'inputMessagePhoto',
+							photo: {
+								_: 'inputFileLocal',
+								path: localFilePath,
+							},
+							caption: {
+								_: 'formattedText',
+								text: photoCaption,
 							},
 						},
 					});

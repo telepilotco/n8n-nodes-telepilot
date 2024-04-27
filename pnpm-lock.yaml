@@ -5,21 +5,15 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@telepilotco/tdl':
+    specifier: ^7.4.1
+    version: 7.4.1
   '@telepilotco/tdlib-binaries-prebuilt':
     specifier: ^1.8.14
     version: 1.8.14
-  '@types/qrcode-terminal':
-    specifier: ^0.12.0
-    version: 0.12.2
   debug:
     specifier: ^4.3.4
     version: 4.3.4
-  qrcode-terminal:
-    specifier: ^0.12.0
-    version: 0.12.0
-  tdl:
-    specifier: ^7.4.0-10
-    version: 7.4.0
   typedi:
     specifier: ^0.10.0
     version: 0.10.0
@@ -1557,6 +1551,18 @@ packages:
     resolution: {integrity: sha512-d/keJiNKfpHo+GmSB8QcsAwBx8h+V1UbdozA5TD+eSLXprNY53JAYub47J9evsSKWDdNG5uVj0FiMozLKuzowQ==}
     dev: true
 
+  /@telepilotco/tdl@7.4.1:
+    resolution: {integrity: sha512-fH6dLyIGKQ7lPkT0bSGg+isjz5vb886BMIVqALq07dyvvNkii+fYTQ/0yIBpfru+qzsWmfvQF7aoWhXSRFH3BA==}
+    requiresBuild: true
+    dependencies:
+      debug: 4.3.4
+      eventemitter3: 4.0.7
+      node-addon-api: 6.1.0
+      node-gyp-build: 4.7.1
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
+
   /@telepilotco/tdlib-binaries-prebuilt@1.8.14:
     resolution: {integrity: sha512-zDqfist7Y4q5mRBhimo1TKHWqtNt5gc6fk/Mw2iJL12LFDFnu00MdH47ZDUi61Dqd0JuJn3kr9zVRA9pl6LHUQ==}
     requiresBuild: true
@@ -1653,10 +1659,6 @@ packages:
   /@types/node@14.18.63:
     resolution: {integrity: sha512-fAtCfv4jJg+ExtXhvCkCqUKZ+4ok/JQk01qDKhL5BDDoS3AxKXhV5/MAVUZyQnSEd2GT92fkgZl0pz0Q0AzcIQ==}
     dev: true
-
-  /@types/qrcode-terminal@0.12.2:
-    resolution: {integrity: sha512-v+RcIEJ+Uhd6ygSQ0u5YYY7ZM+la7GgPbs0V/7l/kFs2uO4S8BcIUEMoP7za4DNIqNnUD5npf0A/7kBhrCKG5Q==}
-    dev: false
 
   /@types/qs@6.9.10:
     resolution: {integrity: sha512-3Gnx08Ns1sEoCrWssEgTSJs/rsT2vhGP+Ja9cnnk9k4ALxinORlQneLXFeFKOTJMOeZUFD1s7w+w2AphTpvzZw==}
@@ -6406,11 +6408,6 @@ packages:
       long: 4.0.0
     dev: true
 
-  /qrcode-terminal@0.12.0:
-    resolution: {integrity: sha512-EXtzRZmC+YGmGlDFbXKxQiMZNwCLEO6BANKXG4iCtSIM0yqc/pappSx3RIKr4r0uh5JsBckOXeKrB3Iz7mdQpQ==}
-    hasBin: true
-    dev: false
-
   /qs@6.11.0:
     resolution: {integrity: sha512-MvjoMCJwEarSbUYk5O+nmoSzSutSsTwF85zcHPQ9OrlFoZOYIjaqBAJIqIXjptyD5vThxGq52Xu/MaJzRkIk4Q==}
     engines: {node: '>=0.6'}
@@ -7364,18 +7361,6 @@ packages:
     resolution: {integrity: sha512-51LAVKUSZSVfI05vjPESNc5vwqqZpbXCsU+/+wxlOrUjk2SnFTt97v9ZgQrD4YmxYW1Px6w2KjaDitCfkvgxMQ==}
     engines: {node: '>=8.0.0'}
     dev: true
-
-  /tdl@7.4.0:
-    resolution: {integrity: sha512-oW3vmrDpj589wRRium5s4/3YBWZsf0+EAAiPXjZrC+57ap/ZNg7+XFCP2BoRzFphQ2eW1Z8bcL2mNoOv4kRmqQ==}
-    requiresBuild: true
-    dependencies:
-      debug: 4.3.4
-      eventemitter3: 4.0.7
-      node-addon-api: 6.1.0
-      node-gyp-build: 4.7.1
-    transitivePeerDependencies:
-      - supports-color
-    dev: false
 
   /tedious@14.7.0:
     resolution: {integrity: sha512-d3qlmZcvZyt7akyPHiOdR+knfzObWZH3mW+gouQTSb7YTSwtpHuYHcvsQabfbY7oOvgbs51xRb7CwOahWK/t9w==}
