@@ -461,6 +461,22 @@ default: '0',
 	description:
 	'Identifier of the message starting from which history must be fetched; use 0 to get results from the last message',
 };
+export const variable_limit: INodeProperties = {
+	displayName: 'Limit',
+	name: 'limit',
+	type: 'string',
+	required: true,
+	displayOptions: {
+	show: {
+		operation: ['getChatHistory'],
+			resource: ['chat'],
+	},
+},
+default: '0',
+	placeholder: '100',
+	description:
+	'Maximum number of messages to be returned; up to 100 messages can be retrieved at once',
+};
 export const variable_message_ids: INodeProperties = {
 	displayName: 'Message IDs',
 		name: 'message_ids',
