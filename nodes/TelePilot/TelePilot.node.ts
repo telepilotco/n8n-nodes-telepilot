@@ -349,12 +349,14 @@ export class TelePilot implements INodeType {
 				if (operation === 'getChatHistory') {
 					const chat_id = this.getNodeParameter('chat_id', 0) as string;
 					const from_message_id = this.getNodeParameter('from_message_id', 0) as string;
+					const limit = this.getNodeParameter('limit', 0) as number;
+
 					result = await client.invoke({
 						_: 'getChatHistory',
 						chat_id,
 						from_message_id,
 						offset: 0,
-						limit: 1,
+						limit,
 						only_local: false,
 					});
 					returnData.push(result);
