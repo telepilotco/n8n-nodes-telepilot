@@ -28,9 +28,9 @@ jobs:
     env:
       NPM_REGISTRY: ${{ github.event.inputs.npm_registry || 'https://registry.npmjs.org' }}
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
@@ -61,7 +61,7 @@ jobs:
   #      workspace: # optional, default is ./
 
     - run: npm pack
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
         name: telepilot
         path: telepilotco-n8n-nodes-telepilot-${{ env.PACKAGE_VERSION }}.tgz
@@ -83,7 +83,7 @@ jobs:
           - glibc
           - musl
     steps:
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: telepilot
           path: .
@@ -161,8 +161,8 @@ jobs:
       NPM_REGISTRY: ${{ github.event.inputs.npm_registry || 'https://registry.npmjs.org' }}
       CUSTOM_REGISTRY_AUTH: ${{ secrets.CUSTOM_REGISTRY_AUTH }}
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: lts/*
           cache: npm
@@ -175,7 +175,7 @@ jobs:
           echo $CUSTOM_REGISTRY_AUTH >> ~/.npmrc
           npm config set strict-ssl false
           fi
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: telepilot
           path: .
