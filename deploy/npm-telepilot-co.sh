@@ -4,8 +4,8 @@ screen -S verdaccio -dm bash -c "mkdir -p /tmp/storage && sudo chmod 777 /tmp/st
 sudo apt-get install make python3 gcc g++ -y
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
 source ~/.bashrc
-nvm install 18.16.1
-nvm use 18.16.1
+nvm install 20.15.1
+nvm use 20.15.1
 npm install -g pnpm
 
 

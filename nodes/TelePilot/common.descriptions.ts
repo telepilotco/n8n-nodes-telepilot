@@ -1,5 +1,5 @@
 /* eslint-disable n8n-nodes-base/node-filename-against-convention */
-import type { INodeProperties } from 'n8n-workflow';
+import type { INodeProperties, NodePropertyTypes } from 'n8n-workflow';
 
 //Resources
 export const optionResources: INodeProperties = {
@@ -14,6 +14,10 @@ export const optionResources: INodeProperties = {
 	{
 		name: 'Contact',
 		value: 'contact',
+	},
+	{
+		name: 'Custom Request',
+		value: 'request',
 	},
 	{
 		name: 'File',
@@ -165,6 +169,27 @@ default: 'getContacts',
 	noDataExpression: true,
 };
 
+//Custom action
+export const operationCustom: INodeProperties = {
+	displayName: 'Operation',
+	name: 'operation',
+	type: 'options',
+	displayOptions: {
+		show: {
+			resource: ['request'],
+		},
+	},
+	options: [
+		{
+			name: 'Custom Request',
+			value: 'customRequest',
+			action: 'Make custom request',
+		}
+	],
+	default: 'customRequest',
+	noDataExpression: true,
+};
+
 //Operations group
 export const operationGroup: INodeProperties = {
 	displayName: 'Operation',
@@ -309,9 +334,24 @@ export const operationMessage: INodeProperties = {
 			action: 'Get message',
 		},
 		{
+			name: 'Send Message with Audio',
+			value: 'sendMessageAudio',
+			action: 'Send a message with an audio file',
+		},
+		{
+			name: 'Send Message with File',
+			value: 'sendMessageFile',
+			action: 'Send a message with any file type',
+		},
+		{
 			name: 'Send Message with Photo',
 			value: 'sendMessagePhoto',
 			action: 'Send message with photo',
+		},
+		{
+			name: 'Send Message with Video',
+			value: 'sendMessageVideo',
+			action: 'Send message with video',
 		},
 		{
 			name: 'Send Text Message',
@@ -395,6 +435,9 @@ export const variable_chat_id: INodeProperties = {
 			'getChatHistory',
 			'sendMessage',
 			'sendMessagePhoto',
+			'sendMessageVideo',
+			'sendMessageAudio',
+			'sendMessageFile',
 			'deleteMessages',
 			'forwardMessages',
 			'toggleChatIsMarkedAsUnread',
@@ -523,7 +566,7 @@ default: '',
 	description: 'Text of the messages',
 };
 
-export const variable_local_file_path: INodeProperties = {
+export const variable_local_photo_path: INodeProperties = {
 	displayName: 'Message Photo',
 	name: 'localFilePath',
 	type: 'string',
@@ -537,6 +580,22 @@ export const variable_local_file_path: INodeProperties = {
 	default: '',
 	placeholder: '/tmp/my-pic.png',
 	description: 'Local path to the file',
+};
+
+export const variable_video_photo_path: INodeProperties = {
+	displayName: 'Message Video',
+	name: 'videoFilePath',
+	type: 'string',
+	required: true,
+	displayOptions: {
+		show: {
+			operation: ['sendMessageVideo'],
+			resource: ['message'],
+		},
+	},
+	default: '',
+	placeholder: '/tmp/my-pic.avi',
+	description: 'Local path to the video file',
 };
 
 export const variable_photo_caption: INodeProperties = {
@@ -635,7 +694,7 @@ export const variable_reply_to_msg_id: INodeProperties = {
 	type: 'string',
 	displayOptions: {
 		show: {
-			operation: ['sendMessage', 'sendMessagePhoto'],
+			operation: ['sendMessage', 'sendMessagePhoto', 'sendMessageAudio', 'sendMessageFile', 'sendMessageVideo'],
 			resource: ['message'],
 		},
 	},
@@ -770,4 +829,134 @@ export const variable_chat_action: INodeProperties = {
 	],
 	default: 'chatActionTyping',
 	description: 'The action description',
+};
+
+// Add new variable definitions for audio and file
+export const variable_audio_path: INodeProperties = {
+	displayName: 'Audio Source',
+	name: 'audioSource',
+	type: 'options' as NodePropertyTypes,
+	default: 'filePath',
+	description: 'Whether to use a local file path or binary data from previous node',
+	required: true,
+	displayOptions: {
+		show: {
+			operation: ['sendMessageAudio'],
+			resource: ['message'],
+		},
+	},
+	options: [
+		{
+			name: 'Local File Path',
+			value: 'filePath',
+			description: 'Use a local file path',
+		},
+		{
+			name: 'Binary Data',
+			value: 'binaryData',
+			description: 'Use binary data from previous node',
+		},
+	],
+};
+
+export const variable_audio_file_path: INodeProperties = {
+	displayName: 'Audio File Path',
+	name: 'audioFilePath',
+	type: 'string' as NodePropertyTypes,
+	default: '',
+	description: 'Path to local audio file',
+	required: true,
+	displayOptions: {
+		show: {
+			operation: ['sendMessageAudio'],
+			resource: ['message'],
+			audioSource: ['filePath'],
+		},
+	},
+};
+
+export const variable_audio_binary_property_name: INodeProperties = {
+	displayName: 'Binary Property',
+	name: 'audioBinaryPropertyName',
+	type: 'string' as NodePropertyTypes,
+	default: 'data',
+	description: 'Name of the binary property containing the audio data',
+	required: true,
+	displayOptions: {
+		show: {
+			operation: ['sendMessageAudio'],
+			resource: ['message'],
+			audioSource: ['binaryData'],
+		},
+	},
+};
+
+export const variable_file_path: INodeProperties = {
+	displayName: 'File Path',
+	name: 'filePath',
+	type: 'string' as NodePropertyTypes,
+	default: '',
+	description: 'Path to local file',
+	required: true,
+	displayOptions: {
+		show: {
+			operation: ['sendMessageFile'],
+			resource: ['message'],
+		},
+	},
+};
+
+export const variable_audio_caption: INodeProperties = {
+	displayName: 'Audio Caption',
+	name: 'audioCaption',
+	type: 'string' as NodePropertyTypes,
+	default: '',
+	description: 'Optional caption for the audio file',
+	displayOptions: {
+		show: {
+			operation: ['sendMessageAudio'],
+			resource: ['message'],
+		},
+	},
+};
+
+export const variable_send_as_voice: INodeProperties = {
+	displayName: 'Send as Voice Message',
+	name: 'sendAsVoice',
+	type: 'boolean' as NodePropertyTypes,
+	default: false,
+	description: 'Whether to send as a voice message with waveform visualization (true) or as a regular audio file (false)',
+	displayOptions: {
+		show: {
+			operation: ['sendMessageAudio'],
+			resource: ['message'],
+		},
+	},
+};
+
+export const variable_file_caption: INodeProperties = {
+	displayName: 'File Caption',
+	name: 'fileCaption',
+	type: 'string' as NodePropertyTypes,
+	default: '',
+	description: 'Optional caption for the file',
+	displayOptions: {
+		show: {
+			operation: ['sendMessageFile', 'sendMessageVideo'],
+			resource: ['message'],
+		},
+	},
+};
+
+export const variable_json: INodeProperties = {
+	displayName: 'Request (JSON)',
+	name: 'request_json',
+	type: 'json',
+	displayOptions: {
+		show: {
+			operation: ['customRequest'],
+			resource: ['request'],
+		},
+	},
+	default: '',
 };
