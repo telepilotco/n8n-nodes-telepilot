@@ -358,6 +358,11 @@ export const operationMessage: INodeProperties = {
 			value: 'sendMessage',
 			action: 'Send text message',
 		},
+		{
+			name: 'Get Message Link',
+			value: 'getMessageLink',
+			action: 'Get direct link to a specific message in a group or supergroup',
+		},
 	],
 default: 'sendMessage',
 	noDataExpression: true,
@@ -449,6 +454,7 @@ export const variable_chat_id: INodeProperties = {
 			'deleteChat',
 			'addChatMembers',
 			'sendChatAction',
+			'getMessageLink',
 		],
 			resource: ['chat', 'message'],
 	},
@@ -542,7 +548,7 @@ export const variable_message_id: INodeProperties = {
 	required: true,
 	displayOptions: {
 	show: {
-		operation: ['getMessage', 'editMessageText'],
+		operation: ['getMessage', 'editMessageText', 'getMessageLink'],
 			resource: ['message'],
 	},
 },

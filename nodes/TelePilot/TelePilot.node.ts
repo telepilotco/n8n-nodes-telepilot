@@ -538,6 +538,15 @@ export class TelePilot implements INodeType {
 						message_id,
 					});
 					returnData.push(result);
+				} else if (operation === 'getMessageLink') {
+					const chat_id = this.getNodeParameter('chat_id', 0) as string;
+					const message_id = this.getNodeParameter('message_id', 0) as string;
+					const result = await client.invoke({
+						_: 'getMessageLink',
+						chat_id,
+						message_id,
+					});
+					returnData.push(result);
 				} else if (operation === 'sendMessage') {
 					const chat_id = this.getNodeParameter('chat_id', 0) as string;
 					const messageText = this.getNodeParameter('messageText', 0) as string;
