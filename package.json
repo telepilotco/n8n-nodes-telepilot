@@ -1,6 +1,6 @@
 {
   "name": "@telepilotco/n8n-nodes-telepilot",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Your personal Telegram CoPilot",
   "keywords": [
     "telepilot.co",

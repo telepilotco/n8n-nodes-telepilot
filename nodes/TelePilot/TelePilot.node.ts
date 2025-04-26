@@ -37,6 +37,7 @@ import {
 	variable_query,
 	variable_remote_file_id,
 	variable_reply_to_msg_id,
+	variable_message_thread_id,
 	variable_revoke,
 	variable_supergroup_id,
 	variable_title,
@@ -97,7 +98,7 @@ export class TelePilot implements INodeType {
 			//Chat
 			variable_chat_id,
 			variable_from_chat_id,
-			//Chat
+			//Message
 			variable_is_marked_as_unread,
 			variable_from_message_id,
 			variable_limit,
@@ -118,6 +119,7 @@ export class TelePilot implements INodeType {
 			variable_username,
 			variable_query,
 			variable_title,
+			variable_message_thread_id,
 			variable_description,
 			variable_is_channel,
 			variable_user_ids,
@@ -551,10 +553,12 @@ export class TelePilot implements INodeType {
 					const chat_id = this.getNodeParameter('chat_id', 0) as string;
 					const messageText = this.getNodeParameter('messageText', 0) as string;
 					const reply_to_msg_id = this.getNodeParameter('reply_to_msg_id', 0) as string;
+					const message_thread_id = this.getNodeParameter('message_thread_id', 0) as number;
 					const result = await client.invoke({
 						_: 'sendMessage',
 						chat_id,
 						reply_to_msg_id,
+						message_thread_id,
 						input_message_content: {
 							_: 'inputMessageText',
 							text: {
@@ -569,6 +573,7 @@ export class TelePilot implements INodeType {
 					const videoFilePath = this.getNodeParameter('videoFilePath', 0) as string;
 					let videoCaption: string | null = this.getNodeParameter('fileCaption', 0) as string;
 					const reply_to_msg_id = this.getNodeParameter('reply_to_msg_id', 0) as string;
+					const message_thread_id = this.getNodeParameter('message_thread_id', 0) as number;
 
 					if (videoCaption === '' && videoCaption.length == 0) {
 						videoCaption = null;
@@ -578,6 +583,7 @@ export class TelePilot implements INodeType {
 						_: 'sendMessage',
 						chat_id,
 						reply_to_msg_id,
+						message_thread_id,
 						input_message_content: {
 							_: 'inputMessageVideo',
 							video: {
@@ -813,6 +819,7 @@ export class TelePilot implements INodeType {
 					const filePath = this.getNodeParameter('filePath', 0) as string;
 					let fileCaption: string | null = this.getNodeParameter('fileCaption', 0) as string;
 					const reply_to_msg_id = this.getNodeParameter('reply_to_msg_id', 0) as string;
+					const message_thread_id = this.getNodeParameter('message_thread_id', 0) as number;
 
 					if (fileCaption === '' && fileCaption.length == 0) {
 						fileCaption = null;
@@ -821,6 +828,7 @@ export class TelePilot implements INodeType {
 						_: 'sendMessage',
 						chat_id,
 						reply_to_msg_id,
+						message_thread_id,
 						input_message_content: {
 							_: 'inputMessageDocument',
 							document: {
@@ -839,6 +847,7 @@ export class TelePilot implements INodeType {
 					const localFilePath = this.getNodeParameter('localFilePath', 0) as string;
 					let photoCaption: string | null = this.getNodeParameter('photoCaption', 0) as string;
 					const reply_to_msg_id = this.getNodeParameter('reply_to_msg_id', 0) as string;
+					const message_thread_id = this.getNodeParameter('message_thread_id', 0) as number;
 
 					if (photoCaption === '' && photoCaption.length == 0) {
 						photoCaption = null;
@@ -847,6 +856,7 @@ export class TelePilot implements INodeType {
 						_: 'sendMessage',
 						chat_id,
 						reply_to_msg_id,
+						message_thread_id,
 						input_message_content: {
 							_: 'inputMessagePhoto',
 							photo: {
@@ -898,19 +908,21 @@ export class TelePilot implements INodeType {
 					const from_chat_id = this.getNodeParameter('from_chat_id', 0) as string;
 
 					const message_ids: string = this.getNodeParameter('message_ids', 0) as string;
-					debug(message_ids);
+					const message_thread_id = this.getNodeParameter('message_thread_id', 0) as number;
+
 					const idsArray = message_ids
 						.toString()
 						.split(',')
 						.map((s) => s.toString().trim())
 						.filter((s) => s.length > 0);
-					debug(idsArray);
+
 
 					const result = await client.invoke({
 						_: 'forwardMessages',
 						chat_id,
 						from_chat_id,
 						message_ids: idsArray,
+						message_thread_id,
 					});
 					returnData.push(result);
 				}
