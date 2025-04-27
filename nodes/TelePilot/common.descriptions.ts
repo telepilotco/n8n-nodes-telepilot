@@ -329,6 +329,11 @@ export const operationMessage: INodeProperties = {
 			action: 'Forward messages',
 		},
 		{
+			name: 'Get Message Link',
+			value: 'getMessageLink',
+			action: 'Get direct link to a specific message in a group or supergroup',
+		},
+		{
 			name: 'Get Messages',
 			value: 'getMessage',
 			action: 'Get message',
@@ -357,12 +362,7 @@ export const operationMessage: INodeProperties = {
 			name: 'Send Text Message',
 			value: 'sendMessage',
 			action: 'Send text message',
-		},
-		{
-			name: 'Get Message Link',
-			value: 'getMessageLink',
-			action: 'Get direct link to a specific message in a group or supergroup',
-		},
+		}
 	],
 default: 'sendMessage',
 	noDataExpression: true,
@@ -707,6 +707,21 @@ export const variable_reply_to_msg_id: INodeProperties = {
 	default: '',
 	placeholder: 'Text',
 	description: 'Identifier of Message',
+};
+
+export const variable_message_thread_id: INodeProperties = {
+	displayName: 'Reply to threadID',
+	name: 'message_thread_id',
+	type: 'number',
+	displayOptions: {
+		show: {
+			operation: ['sendMessage', 'sendMessagePhoto', 'forwardMessages', 'sendMessageFile', 'sendMessageVideo'],
+			resource: ['message'],
+		},
+	},
+	default: '',
+	placeholder: 'Text',
+	description: 'If not 0, a message thread identifier in which the message will be sent',
 };
 
 export const variable_supergroup_id: INodeProperties = {
