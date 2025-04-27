@@ -1,0 +1,28 @@
+name: Verify Publish
+
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  dry-run-publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20' # or whatever Node.js version you need
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Publish dry-run
+        run: npm publish --dry-run --no-git-checks
