@@ -54,7 +54,8 @@ import {
 	variable_file_caption,
 	variable_audio_binary_property_name,
 	variable_send_as_voice,
-	variable_json
+	variable_json,
+	variable_url
 } from './common.descriptions'
 
 const debug = require('debug')('telepilot-node');
@@ -124,6 +125,7 @@ export class TelePilot implements INodeType {
 			variable_is_channel,
 			variable_user_ids,
 			variable_chat_action,
+			variable_url,
 
 			//Variable Custom Request
 			variable_json,
@@ -547,6 +549,13 @@ export class TelePilot implements INodeType {
 						_: 'getMessageLink',
 						chat_id,
 						message_id,
+					});
+					returnData.push(result);
+				} else if (operation === 'getMessageLinkInfo') {
+					const url = this.getNodeParameter('url', 0) as string;
+					const result = await client.invoke({
+						_: 'getMessageLinkInfo',
+						url,
 					});
 					returnData.push(result);
 				} else if (operation === 'sendMessage') {
