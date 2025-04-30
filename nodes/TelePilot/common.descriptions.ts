@@ -334,6 +334,11 @@ export const operationMessage: INodeProperties = {
 			action: 'Get direct link to a specific message in a group or supergroup',
 		},
 		{
+			name: 'Get Message Link Info',
+			value: 'getMessageLinkInfo',
+			action: 'Returns information about a public or private message link',
+		},
+		{
 			name: 'Get Messages',
 			value: 'getMessage',
 			action: 'Get message',
@@ -980,4 +985,18 @@ export const variable_json: INodeProperties = {
 		},
 	},
 	default: '',
+};
+
+export const variable_url: INodeProperties = {
+	displayName: 'Telegram Message URL',
+	name: 'url',
+	type: 'string' as NodePropertyTypes,
+	displayOptions: {
+		show: {
+			operation: ['getMessageLinkInfo'],
+			resource: ['message'],
+		},
+	},
+	default: '',
+	placeholder: 'https://t.me/telepilotco/42'
 };
