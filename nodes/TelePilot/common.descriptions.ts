@@ -367,6 +367,11 @@ export const operationMessage: INodeProperties = {
 			name: 'Send Text Message',
 			value: 'sendMessage',
 			action: 'Send text message',
+		},
+		{
+			name: 'View Messages',
+			value: 'viewMessages',
+			action: 'Mark messages as viewed by the user',
 		}
 	],
 default: 'sendMessage',
@@ -460,6 +465,7 @@ export const variable_chat_id: INodeProperties = {
 			'addChatMembers',
 			'sendChatAction',
 			'getMessageLink',
+			'viewMessages'
 		],
 			resource: ['chat', 'message'],
 	},
@@ -538,13 +544,28 @@ export const variable_message_ids: INodeProperties = {
 	required: true,
 	displayOptions: {
 	show: {
-		operation: ['deleteMessages', 'forwardMessages'],
+		operation: ['deleteMessages', 'forwardMessages', 'viewMessages'],
 			resource: ['message'],
 	},
 },
 default: '',
 	placeholder: '123,234,345',
 	description: 'Comma-separated identifiers of the messages to be deleted or forwarded',
+};
+export const variable_message_force_read: INodeProperties = {
+	displayName: 'Force Read',
+	name: 'force_read',
+	type: 'boolean',
+	required: true,
+	displayOptions: {
+		show: {
+			operation: ['viewMessages'],
+			resource: ['message'],
+		},
+	},
+	default: true,
+	placeholder: '12345678',
+	description: 'Whether to mark the specified messages as read even the chat is closed',
 };
 export const variable_message_id: INodeProperties = {
 	displayName: 'Message ID',
