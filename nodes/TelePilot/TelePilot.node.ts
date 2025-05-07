@@ -33,6 +33,7 @@ import {
 	variable_is_marked_as_unread,
 	variable_message_id,
 	variable_message_ids,
+	variable_message_force_read,
 	variable_messageText,
 	variable_query,
 	variable_remote_file_id,
@@ -55,7 +56,7 @@ import {
 	variable_audio_binary_property_name,
 	variable_send_as_voice,
 	variable_json,
-	variable_url
+	variable_url,
 } from './common.descriptions'
 
 const debug = require('debug')('telepilot-node');
@@ -105,6 +106,7 @@ export class TelePilot implements INodeType {
 			variable_limit,
 			variable_message_ids,
 			variable_message_id,
+			variable_message_force_read,
 			variable_messageText,
 			variable_local_photo_path,
 			variable_photo_caption,
@@ -556,6 +558,23 @@ export class TelePilot implements INodeType {
 					const result = await client.invoke({
 						_: 'getMessageLinkInfo',
 						url,
+					});
+					returnData.push(result);
+				} else if (operation === 'viewMessages') {
+					const chat_id = this.getNodeParameter('chat_id', 0) as string;
+					const message_ids = this.getNodeParameter('message_ids', 0) as string;
+					const force_read = this.getNodeParameter('force_read', 0) as boolean;
+
+					const idsArray = message_ids
+						.toString()
+						.split(',')
+						.map((s) => s.toString().trim());
+					const result = await client.invoke({
+						_: 'viewMessages',
+						chat_id,
+						message_ids: idsArray,
+						source: null,
+						force_read: force_read
 					});
 					returnData.push(result);
 				} else if (operation === 'sendMessage') {
