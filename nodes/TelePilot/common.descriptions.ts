@@ -1021,3 +1021,100 @@ export const variable_url: INodeProperties = {
 	default: '',
 	placeholder: 'https://t.me/telepilotco/42'
 };
+
+export const variable_video_duration: INodeProperties = {
+	displayName: 'Duration Of The Video, In Seconds',
+	name: 'videoDuration',
+	type: 'number' as NodePropertyTypes,
+	displayOptions: {
+		show: {
+			operation: ['sendMessageVideo'],
+			resource: ['message'],
+		},
+	},
+	default: '',
+	placeholder: '30'
+};
+
+export const variable_video_width: INodeProperties = {
+	displayName: 'Video Width',
+	name: 'videoWidth',
+	type: 'number' as NodePropertyTypes,
+	displayOptions: {
+		show: {
+			operation: ['sendMessageVideo'],
+			resource: ['message'],
+		},
+	},
+	default: '',
+	placeholder: '320'
+};
+
+export const variable_video_height: INodeProperties = {
+	displayName: 'Video Height',
+	name: 'videoHeight',
+	type: 'number' as NodePropertyTypes,
+	displayOptions: {
+		show: {
+			operation: ['sendMessageVideo'],
+			resource: ['message'],
+		},
+	},
+	default: '',
+	placeholder: '320'
+};
+
+export const variable_video_supports_streaming: INodeProperties = {
+	displayName: 'On, If The Video Is Supposed To Be Streamed',
+	name: 'videoSupportsStreaming',
+	type: 'boolean' as NodePropertyTypes,
+	displayOptions: {
+		show: {
+			operation: ['sendMessageVideo'],
+			resource: ['message'],
+		},
+	},
+	default: 'true'
+};
+
+export const variable_thumbnail_width: INodeProperties = {
+	displayName: 'Thumbnail Width',
+	name: 'thumbnailWidth',
+	type: 'number' as NodePropertyTypes,
+	displayOptions: {
+		show: {
+			operation: ['sendMessageVideo'],
+			resource: ['message'],
+		},
+	},
+	default: '',
+	placeholder: '320'
+};
+
+export const variable_thumbnail_height: INodeProperties = {
+	displayName: 'Thumbnail Height',
+	name: 'thumbnailHeight',
+	type: 'number' as NodePropertyTypes,
+	displayOptions: {
+		show: {
+			operation: ['sendMessageVideo'],
+			resource: ['message'],
+		},
+	},
+	default: '',
+	placeholder: '320'
+};
+
+export const variable_thumbnail_file_path: INodeProperties = {
+	displayName: 'JPEG Thumnail Of The Video (Local File Path)',
+	name: 'thumbnailFilePath',
+	type: 'string' as NodePropertyTypes,
+	displayOptions: {
+		show: {
+			operation: ['sendMessageVideo'],
+			resource: ['message'],
+		},
+	},
+	default: '',
+	placeholder: '/home/telepilot/my-video-thumbnail.jpeg'
+};

@@ -57,6 +57,13 @@ import {
 	variable_send_as_voice,
 	variable_json,
 	variable_url,
+	variable_video_duration,
+	variable_video_width,
+	variable_video_height,
+	variable_video_supports_streaming,
+	variable_thumbnail_width,
+	variable_thumbnail_height,
+	variable_thumbnail_file_path,
 } from './common.descriptions'
 
 const debug = require('debug')('telepilot-node');
@@ -128,6 +135,13 @@ export class TelePilot implements INodeType {
 			variable_user_ids,
 			variable_chat_action,
 			variable_url,
+			variable_video_duration,
+			variable_video_width,
+			variable_video_height,
+			variable_video_supports_streaming,
+			variable_thumbnail_width,
+			variable_thumbnail_height,
+			variable_thumbnail_file_path,
 
 			//Variable Custom Request
 			variable_json,
@@ -600,6 +614,15 @@ export class TelePilot implements INodeType {
 					const chat_id = this.getNodeParameter('chat_id', 0) as string;
 					const videoFilePath = this.getNodeParameter('videoFilePath', 0) as string;
 					let videoCaption: string | null = this.getNodeParameter('fileCaption', 0) as string;
+					let videoDuration: number | null = this.getNodeParameter('videoDuration', 0) as number;
+					let videoWidth: number | null = this.getNodeParameter('videoWidth', 0) as number;
+					let videoHeight: number | null = this.getNodeParameter('videoHeight', 0) as number;
+					let videoSupportsStreaming: boolean | null = this.getNodeParameter('videoSupportsStreaming', 0) as boolean;
+
+					let thumbnailWidth: number | null = this.getNodeParameter('thumbnailWidth', 0) as number;
+					let thumbnailHeight: number | null = this.getNodeParameter('thumbnailHeight', 0) as number;
+					let thumbnailFilePath: string | null = this.getNodeParameter('thumbnailFilePath', 0) as string;
+
 					const reply_to_msg_id = this.getNodeParameter('reply_to_msg_id', 0) as string;
 					const message_thread_id = this.getNodeParameter('message_thread_id', 0) as number;
 
@@ -617,6 +640,19 @@ export class TelePilot implements INodeType {
 							video: {
 								_: 'inputFileLocal',
 								path: videoFilePath,
+							},
+							duration: videoDuration,
+							width: videoWidth,
+							height: videoHeight,
+							supports_streaming: videoSupportsStreaming,
+							thumbnail: {
+								_: 'inputThumbnail',
+								thumbnail: {
+									'_': 'inputFileLocal',
+									path: thumbnailFilePath
+								},
+								width: thumbnailWidth,
+								height: thumbnailHeight,
 							},
 							caption: {
 								_: 'formattedText',

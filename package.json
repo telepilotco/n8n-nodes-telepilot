@@ -1,6 +1,6 @@
 {
   "name": "@telepilotco/n8n-nodes-telepilot",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "Your personal Telegram CoPilot",
   "keywords": [
     "telepilot.co",
@@ -33,7 +33,7 @@
     "lint": "eslint nodes credentials",
     "lintfix": "eslint nodes credentials package.json --fix",
     "prepublishOnly": "npm run build && npm run lint -c .eslintrc.prepublish.js nodes credentials",
-    "start-n8n": "cd ~/projects/2025-dan/aoi_n8n && DEBUG=tdl,tdl:client,telepilot-cred,telepilot-node,telepilot-trigger,telepilot-cm N8N_LOG_LEVEL=debug npm run dev"
+    "start-n8n": "cd ~/projects/2025-telepilot/n8n && DEBUG=tdl,tdl:client,telepilot-cred,telepilot-node,telepilot-trigger,telepilot-cm N8N_LOG_LEVEL=debug npm run dev"
   },
   "n8n": {
     "n8nNodesApiVersion": 1,
