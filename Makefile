@@ -10,7 +10,10 @@ init:
 run-local:	build unlink link
 
 publish:
-	npm publish
+	npm publish --no-git-checks
+
+dryrun:
+	npm publish --dry-run --no-git-checks
 
 build:
 	npm run build
